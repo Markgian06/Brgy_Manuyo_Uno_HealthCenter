@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brgy. Manuyo Uno Health Center</title>
+  <link rel="icon" type="image/webp" href="/frontend/image/logo.webp">
+
+  <link rel="stylesheet" href="/frontend/patient/css/navigation.css">
+  <link rel="stylesheet" href="/frontend/patient/css/index.css">
+</head>
+<body> 
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="logo-container" id="logoContainer">
+        <img src="/frontend/image/logo.webp" alt="Logo" class="logo" />
+        <span class="brand-name">Barangay Manuyo Uno <br> Health Center</span>
+      </div>
+      
+      <ul class="nav-menu" id="navMenu">
+        <li class="nav-item"><a href="#home" class="nav-link active">Home</a></li>
+        
+        <li class="nav-item" id="scheduleOrAppointment">
+             <a href="#schedule" class="nav-link">Schedule</a>
+        </li>
+        
+        <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="#services" class="nav-link">Services</a></li>
+        <li class="nav-item"><a href="#contactus" class="nav-link">Contact Us</a></li>
+        
+        <li class="nav-item" id="authLink">
+             <a href="#login" class="nav-link">Login</a>
+        </li>
+      </ul>
+      
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+
+
+
+
+
+  <script>
+  const isLoggedIn = true; 
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const scheduleOrAppointment = document.getElementById("scheduleOrAppointment");
+    const authLink = document.getElementById("authLink");
+
+    if (isLoggedIn) {
+      scheduleOrAppointment.innerHTML = `<a href="#appointment" class="nav-link">Appointment</a>`;
+
+      authLink.innerHTML = `<a href="#profile" class="nav-link">Profile</a>`;
+    } else {
+      scheduleOrAppointment.innerHTML = `<a href="#schedule" class="nav-link">Schedule</a>`;
+      authLink.innerHTML = `<a href="#login" class="nav-link">Login</a>`;
+    }
+  });
+</script>
+
+
+</body>
+</html>

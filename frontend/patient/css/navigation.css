@@ -1,0 +1,430 @@
+
+.navbar {
+  background-color: #FFFFD6;
+  backdrop-filter: blur(20px) saturate(180%);
+  padding: 0 2rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 25px rgba(139, 69, 19, 0.15);
+}
+
+.navbar.scrolled {
+  background-color: rgba(255, 255, 214, 0.98);
+  box-shadow: 0 8px 35px rgba(139, 69, 19, 0.2);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.8rem 0;
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  object-fit: contain;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.brand-name {
+  font-size: 1.2rem;
+  position: relative;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 0.3rem;
+  position: relative;
+  align-items: center;
+  margin-left: auto;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #000000;
+  font-size: 1rem;
+  padding: 0.2rem 0.8rem;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+.nav-link:hover {
+  color: #8B4513;
+  transform: translateY(-2px);
+  background: rgba(139, 69, 19, 0.1);
+}
+
+.nav-link.active {
+  color: #8B4513;
+  background: rgba(233, 20, 20, 0.15);
+  font-weight: 600;
+}
+
+
+#authLink .nav-link {
+  background: linear-gradient(135deg, #8B4513, #A0522D);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+}
+
+#authLink .nav-link:hover {
+  background: linear-gradient(135deg, #A0522D, #CD853F);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
+}
+
+
+
+
+
+/* Hamburger Menu*/ 
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.hamburger:hover {
+  background: rgba(139, 69, 19, 0.1);
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: #8B4513;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+
+
+
+
+
+
+
+/* Responsive Design */
+/* Large Desktop - 1400px and above */
+@media (min-width: 1400px) {
+  .nav-container {
+    padding: 1rem 0;
+  }
+  
+  .brand-name {
+    font-size: 1.4rem;
+  }
+  
+  .nav-link {
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Desktop - 1200px to 1399px */
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .brand-name {
+    font-size: 1.15rem;
+  }
+  
+  .nav-link {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.9rem;
+  }
+  
+  .logo {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+/* Medium Desktop - 992px to 1199px */
+@media (max-width: 1199px) and (min-width: 992px) {
+  .brand-name {
+    font-size: 1.1rem;
+  }
+  
+  .nav-link {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.7rem;
+  }
+  
+  .logo {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .nav-menu {
+    gap: 0.2rem;
+  }
+}
+
+/* Small Desktop/Large Tablet - 768px to 991px */
+@media (max-width: 991px) and (min-width: 768px) {
+  .navbar {
+    padding: 0 1.5rem;
+  }
+  
+  .brand-name {
+    font-size: 1rem;
+    line-height: 1.1;
+  }
+  
+  .nav-link {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .nav-menu {
+    gap: 0.1rem;
+  }
+  
+  .logo-container {
+    gap: 0.4rem;
+  }
+}
+
+/* Tablet Portrait - 481px to 767px */
+@media (max-width: 767px) {
+  body {
+    padding-top: 80px;
+  }
+  
+  .navbar {
+    padding: 0 1rem;
+  }
+  
+  .nav-container {
+    padding: 0.5rem 0;
+  }
+  
+  .hamburger {
+    display: flex;
+  }
+  
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 75%;
+    height: 100vh;
+    background: #FFFFD6;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -10px 0 30px rgba(139, 69, 19, 0.2);
+    margin-left: 0;
+  }
+  
+  .nav-menu.active {
+    right: 0;
+  }
+  
+  .nav-link {
+    font-size: 1.3rem;
+    padding: 1rem 2rem;
+    width: 200px;
+    text-align: center;
+    border-radius: 25px;
+  }
+  
+  .brand-name {
+    font-size: 0.95rem;
+  }
+  
+  .logo {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .logo-container {
+    gap: 0.4rem;
+  }
+  
+  #authLink .nav-link {
+    width: 180px;
+    padding: 1.2rem 2rem;
+    font-size: 1.4rem;
+    border-radius: 30px;
+    margin-top: 1rem;
+  }
+}
+
+/* Mobile Landscape - 481px to 640px */
+@media (max-width: 640px) and (min-width: 481px) {
+  .brand-name {
+    font-size: 0.9rem;
+  }
+  
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .nav-menu {
+    width: 80%;
+  }
+  
+  .nav-link {
+    font-size: 1.2rem;
+    width: 180px;
+  }
+}
+
+/* Mobile Portrait - 320px to 480px */
+@media (max-width: 480px) {
+  body {
+    padding-top: 70px;
+  }
+  
+  .navbar {
+    padding: 0 0.8rem;
+  }
+  
+  .nav-container {
+    padding: 0.4rem 0;
+  }
+  
+  .brand-name {
+    font-size: 0.8rem;
+    line-height: 1.1;
+  }
+  
+  .logo {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .logo-container {
+    gap: 0.3rem;
+  }
+  
+  .nav-menu {
+    width: 90%;
+  }
+  
+  .nav-link {
+    font-size: 1.1rem;
+    width: 160px;
+    padding: 0.8rem 1.5rem;
+  }
+  
+  #authLink .nav-link {
+    width: 150px;
+    font-size: 1.2rem;
+    padding: 1rem 1.5rem;
+  }
+  
+  .hamburger span {
+    width: 22px;
+    height: 2px;
+  }
+}
+
+/* Extra Small Mobile - 320px and below */
+@media (max-width: 320px) {
+  .navbar {
+    padding: 0 0.5rem;
+  }
+  
+  .brand-name {
+    font-size: 0.75rem;
+  }
+  
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .nav-link {
+    font-size: 1rem;
+    width: 140px;
+  }
+  
+  #authLink .nav-link {
+    width: 130px;
+    font-size: 1.1rem;
+  }
+}
+
+/* Landscape Orientation Adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+  body {
+    padding-top: 60px;
+  }
+  
+  .nav-container {
+    padding: 0.3rem 0;
+  }
+  
+  .logo {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .brand-name {
+    font-size: 0.9rem;
+  }
+  
+  .nav-menu {
+    gap: 2rem;
+    padding: 2rem 0;
+  }
+  
+  .nav-link {
+    font-size: 1.1rem;
+    padding: 0.8rem 1.5rem;
+  }
+}
