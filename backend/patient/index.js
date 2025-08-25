@@ -1,4 +1,4 @@
-  const isLoggedIn = false; // Change to false to simulate logged-out state
+  const isLoggedIn = true; // Change to false to simulate logged-out state
 
   window.addEventListener("DOMContentLoaded", () => {
     const scheduleOrAppointment = document.getElementById("scheduleOrAppointment");
