@@ -1,0 +1,35 @@
+{
+  "name": "brgy_manuyo_uno_healthcenter",
+  "version": "1.0.0",
+  "description": "GROUP 7 :  System Analysis Design",
+  "main": "Back-end/patient/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon Back-end/patient/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Markgian06/Brgy_Manuyo_Uno_HealthCenter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Markgian06/Brgy_Manuyo_Uno_HealthCenter/issues"
+  },
+  "homepage": "https://github.com/Markgian06/Brgy_Manuyo_Uno_HealthCenter#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.0",
+    "nodemailer": "^7.0.5",
+    "nodemon": "^3.1.10"
+  }
+}
