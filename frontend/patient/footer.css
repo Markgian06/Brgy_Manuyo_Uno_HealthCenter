@@ -1,0 +1,129 @@
+footer {
+  background-color: #001fad;
+  color: white;
+
+}
+
+footer h4 {
+  font-size: 1rem;  
+  font-weight: 600;  
+}
+
+footer p {
+  font-size: 0.85rem; 
+  line-height: 1.4;  
+
+}
+
+.footer-container {
+  display: flex;
+  padding: 2.5rem 0;
+  gap: 4rem;
+}
+
+.footer-container img{
+   width: 2rem;
+  height: auto;
+}
+
+.copyright h4 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+
+.copyright{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-left: 2rem;
+}
+
+.location h4 {
+  margin-bottom: 0.75rem;
+}
+.location .loc-info {
+  display: flex;         
+  align-items: center;   
+  gap: 0.5rem;            
+}
+
+.Contact h4 {
+  margin-bottom: 0.75rem;
+}
+.Contact .cont-info {
+  display: flex;         
+  align-items: center;   
+  gap: 0.5rem;            
+}
+
+.Hours h4 {
+  margin-bottom: 0.75rem;
+}
+
+.Hours .Hours-info {
+  display: flex;         
+  align-items: center;   
+  gap: 0.5rem;            
+}
+
+.Socials h4 {
+  margin-bottom: 0.75rem;
+}
+
+
+.Socials .social-icons {
+  display: flex;         
+  align-items: center;   
+  gap: 0.5rem;            
+}
+
+
+
+@media (max-width: 768px) {
+
+.footer-container {
+    flex-direction: column; 
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .footer-container > div {
+    width: 100%;             
+  }
+
+  footer p {
+    font-size: 0.9rem;      
+  }
+
+.location .loc-info,
+  .Contact .cont-info,
+  .Hours .Hours-info,
+  .Socials .social-icons, .copyright{
+    justify-content: center;
+  }
+
+  .copyright{
+    padding-left: 0;
+    gap: 1rem;
+  }
+}
+
+
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  footer h4 {
+    font-size: 1.4rem;
+  }
+
+  footer p {
+    font-size: 0.5rem; 
+  }
+
+  .footer-container {
+    gap: 1.5rem;           
+
+  }
+}
