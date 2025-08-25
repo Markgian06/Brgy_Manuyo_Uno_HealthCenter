@@ -11,4 +11,4 @@ app.use(express.json());
 app.listen(port, () => {
     dbConnection();
     console.log(`Listening on port ${port}`);
-});
+});   
