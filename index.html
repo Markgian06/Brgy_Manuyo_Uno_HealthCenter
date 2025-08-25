@@ -13,6 +13,7 @@
 
   <script src="/backend/patient/schedule.js" defer></script>
   <script src="/backend/patient/navigation.js" defer></script>
+  <script src="/backend/patient/index.js"></script>
 </head>
 <body> 
 
@@ -27,15 +28,15 @@
         <li class="nav-item"><a href="/index.html" class="nav-link active">Home</a></li>
         
         <li class="nav-item" id="scheduleOrAppointment">
-             <a href="frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
+             <a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
         </li>
         
-        <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
-        <li class="nav-item"><a href="#services" class="nav-link">Services</a></li>
-        <li class="nav-item"><a href="#contactus" class="nav-link">Contact Us</a></li>
+        <li class="nav-item"><a href="/frontend/patient/html/about.html" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="/frontend/patient/html/services.html" class="nav-link">Services</a></li>
+        <li class="nav-item"><a href="/frontend/patient/html/contactus.html" class="nav-link">Contact Us</a></li>
         
         <li class="nav-item" id="authLink">
-             <a href="#login" class="nav-link">Login</a>
+             <a href="/frontend/patient/html/login.html" class="nav-link">Login</a>
         </li>
       </ul>
       
@@ -46,25 +47,6 @@
       </div>
     </div>
   </nav>
-
-
-<script>
-  const isLoggedIn = false; 
-
-  window.addEventListener("DOMContentLoaded", () => {
-    const scheduleOrAppointment = document.getElementById("scheduleOrAppointment");
-    const authLink = document.getElementById("authLink");
-
-     if (isLoggedIn) {
-        scheduleOrAppointment.innerHTML = `<a href="/frontend/patient/html/appointment.html" class="nav-link">Appointment</a>`;
-        authLink.innerHTML = `<a href="/frontend/patient/html/profile.html" class="nav-link">Profile</a>`;
-      } else {
-        scheduleOrAppointment.innerHTML = `<a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>`;
-        authLink.innerHTML = `<a href="/frontend/patient/html/login.html" class="nav-link">Login</a>`;
-      }
-    });
-</script>
-
 
 </body>
 </html>
