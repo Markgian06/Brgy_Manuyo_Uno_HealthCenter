@@ -13,7 +13,6 @@
 
   <script src="/backend/patient/schedule.js" defer></script>
   <script src="/backend/patient/navigation.js" defer></script>
-  <script src="/backend/patient/index.js"></script>
 </head>
 <body> 
 
@@ -28,7 +27,7 @@
         <li class="nav-item"><a href="/index.html" class="nav-link">Home</a></li>
         
         <li class="nav-item" id="scheduleOrAppointment">
-             <a href="/frontend/patient/html/schedule.html" class="nav-link active">Schedule</a>
+            <a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
         </li>
         
         <li class="nav-item"><a href="/frontend/patient/html/about.html" class="nav-link">About</a></li>
@@ -50,42 +49,22 @@
 
 
 
-  <section class="container" id="schedule">
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <div class="calendar-nav">
-                    <button class="nav-btn" id="prevBtn">‹</button>
-                    <div class="month-year" id="monthYear"></div>
-                    <button class="nav-btn" id="nextBtn">›</button>
-                </div>
-            </div>
-            <div class="calendar-grid">
-                <div class="weekdays">
-                    <div class="weekday">Sun</div>
-                    <div class="weekday">Mon</div>
-                    <div class="weekday">Tue</div>
-                    <div class="weekday">Wed</div>
-                    <div class="weekday">Thu</div>
-                    <div class="weekday">Fri</div>
-                    <div class="weekday">Sat</div>
-                </div>
-                <div class="days" id="daysGrid"></div>
-            </div>
-        </div>
+<script>
+  const isLoggedIn = true; // Change to false to simulate logged-out state
 
-        <div class="time-slots-container" id="timeSlotsContainer">
-            <div class="time-slots-header">
-                <button class="exit-btn" id="exitBtn">×</button>
-                <h3>Available Time Slots</h3>
-                <div class="selected-date" id="selectedDate"></div>
-            </div>
-            <div class="time-slots" id="timeSlots">
-                <!-- Time slots will be generated here -->
-            </div>
-        </div>
-    </section>
-    
+  window.addEventListener("DOMContentLoaded", () => {
+    const scheduleOrAppointment = document.getElementById("scheduleOrAppointment");
+    const authLink = document.getElementById("authLink");
 
+     if (isLoggedIn) {
+        scheduleOrAppointment.innerHTML = `<a href="/frontend/patient/html/appoinment.html" class="nav-link active">Appointment</a>`;
+        authLink.innerHTML = `<a href="/frontend/patient/html/profile.html" class="nav-link">Profile</a>`;
+      } else {
+        scheduleOrAppointment.innerHTML = `<a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>`;
+        authLink.innerHTML = `<a href="/frontend/patient/html/login.html" class="nav-link">Login</a>`;
+      }
+    });
+</script>
 
 </body>
 </html>
