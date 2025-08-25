@@ -40,6 +40,23 @@
              <a href="/frontend/patient/html/login.html" class="nav-link active">Login</a>
         </li>
       </ul>
+
+      <div class="login">
+        <h1>Login</h1>
+        <form action="/signin" method="post" id="signin">
+            <label for="loginIdentifier">
+                <i class="fas fa-user"></i>
+            </label>
+            <!-- Use a single input for email or phone -->
+            <input type="text" name="loginIdentifier" placeholder="email/phone number" id="loginIdentifier" required>
+            
+            <label for="password">
+                <i class="fas fa-lock"></i>
+            </label>
+            <input type="password" name="password" placeholder="Password" id="password" required>
+            <input type="submit" value="Login">
+        </form>
+    </div>
       
       <div class="hamburger" id="hamburger">
         <span></span>

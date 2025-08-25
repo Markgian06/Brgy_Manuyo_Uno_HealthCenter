@@ -10,9 +10,10 @@
   <link rel="stylesheet" href="/frontend/patient/index.css">
   <link rel="stylesheet" href="/frontend/patient/schedule.css">
    <link rel="stylesheet" href="/frontend/patient/footer.css">
+  <link rel="stylesheet" href="/frontend/patient/contactus.css">
 
 
-  <script src="/backend/patient/schedule.js" defer></script>
+  <script src="/backend/patient/contactus.js" defer></script>
   <script src="/backend/patient/navigation.js" defer></script>
   <script src="/backend/patient/index.js"></script>
 </head>
@@ -48,6 +49,7 @@
       </div>
     </div>
   </nav>
+
 
 
 
@@ -106,6 +108,44 @@
 </footer>
 
 
+=======
+<section id="contact">
+  <div class="contact-wrapper">
+      <div class="img-container">
+          <img src="/frontend/image/contactus.webp" alt="">
+      </div> 
+      <div class="container">
+          <div class="header">
+              <h1>Contact Us</h1>
+              <p>We're here to help with all your health needs</p>
+          </div>
+          <div class="form-container">
+              <div class="health-icons">
+                  <div class="health-icon"></div>
+                  <div class="health-icon"></div>
+                  <div class="health-icon"></div>
+              </div>
+              <form id="contactForm" onsubmit="handleSubmit(event)">
+                  <div class="form-group">
+                      <input type="text" id="name" name="name" required>
+                      <label for="name">Full Name *</label>
+                  </div>
+                  <div class="form-group">
+                      <input type="text" id="contact" name="contact" required>
+                      <label for="contact">Email or Contact Number *</label>
+                  </div>
+                  <div class="form-group">
+                      <textarea id="message" name="message" required></textarea>
+                      <label for="message">Message *</label>
+                  </div>
+                  <button type="submit" class="submit-btn">
+                      Send Message
+                  </button>
+              </form>
+          </div>
+      </div>
+  </div>
+</section>
   
 </body>
 </html>
