@@ -1,4 +1,4 @@
-    document.querySelectorAll('input, textarea').forEach(input => {
+   document.querySelectorAll('input, textarea').forEach(input => {
             const label = input.nextElementSibling;
             
             if (input.value) {
