@@ -22,6 +22,7 @@ app.use(cookieParser());
 
 app.use(functionRouter);
 
+
 app.get('/', (req, res) => res.send('API WORKING'));
 app.use('/api/auth', functionRouter);
 
