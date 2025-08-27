@@ -1,3 +1,29 @@
+document.getElementById("contactForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const contacts = document.getElementById("contacts").value;
+    const message = document.getElementById("message").value;
+
+
+    if (!name || !contacts || !message) {
+        alert("All fields are required");
+        return;
+    }
+
+    try { 
+        const res = await fetch("http://localhost:5000/api/contacts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, contacts, message })
+        });
+        alert("Your message has been sent. Thank you!");
+    } catch (err) {
+        console.error("Error:", err.message);
+        alert("Something went wrong. Please try again.");
+    }
+});
+
 document.querySelectorAll('input, textarea').forEach(input => {
             const label = input.nextElementSibling;
             
@@ -25,3 +51,5 @@ document.querySelectorAll('input, textarea').forEach(input => {
                 }
             });
         });
+
+
