@@ -2,10 +2,8 @@ import Contact from "../Models/contactModel.js";
 
 export const createContact = async (req, res) => {
 
-  console.log(req.body);
+//  console.log(req.body);
 
-  
-  
 try {
     const { name, contacts, message } = req.body;
 
