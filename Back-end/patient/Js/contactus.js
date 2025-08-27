@@ -1,26 +1,25 @@
 document.getElementById("contactForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const contactus = document.getElementById("contactus").value.trim();
-    const message = document.getElementById("message").value.trim();
+    const name = document.getElementById("name").value;
+    const contacts = document.getElementById("contacts").value;
+    const message = document.getElementById("message").value;
 
-    if (!name || !contact || !message) {
+
+    if (!name || !contacts || !message) {
         alert("All fields are required");
         return;
     }
 
     try { 
-        const res = await fetch("http://localhost:5000/api/contact", {
+        const res = await fetch("http://localhost:5000/api/contacts", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, contactus, message })
+            body: JSON.stringify({ name, contacts, message })
         });
-
-        const data = await res.json();
-        alert(data.message);
+        alert("Your message has been sent. Thank you!");
     } catch (err) {
-        console.error("Error:", err);
+        console.error("Error:", err.message);
         alert("Something went wrong. Please try again.");
     }
 });

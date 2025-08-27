@@ -4,6 +4,7 @@ import { validateContact } from "../Middleware/contactMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", validateContact, createContact);
+router.post("/contacts", validateContact, createContact);
+
 
 export default router;

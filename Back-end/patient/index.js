@@ -14,7 +14,11 @@ app.use(cors({ credentials: true }));
 app.use(express.json());
 
 
-app.use("/api/contact", contactRoutes);
+app.use("/api", contactRoutes);
+/*
+app.get("/", (req, res) => {
+    res.sendFile(path.resolve('/frontend/patient/html/contactus.html'));
+});*/
 
 app.listen(port, () => {
     dbConnection();
