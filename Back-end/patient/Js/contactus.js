@@ -6,10 +6,20 @@ document.getElementById("contactForm").addEventListener("submit", async function
     const message = document.getElementById("message").value;
 
 
-    if (!name || !contacts || !message) {
-        alert("All fields are required");
+    if (!name) {
+        showAlert("   Name is required", "error");
         return;
     }
+    if (!contacts) {
+        showAlert("  Contacts are required", "error");
+        return;
+    }
+    if (!message) {
+        showAlert("  Message is required", "error");
+        return;
+    }
+
+
 
     try { 
         const res = await fetch("http://localhost:5000/api/contacts", {
@@ -17,11 +27,11 @@ document.getElementById("contactForm").addEventListener("submit", async function
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, contacts, message })
         });
-        alert("Your message has been sent. Thank you!");
+        showAlert("  Your message has been sent. Thank you!", "success");
         document.getElementById("contactForm").reset();
     } catch (err) {
         console.error("Error:", err.message);
-        alert("Something went wrong. Please try again.");
+        showAlert("  Something went wrong. Please try again.", "error");
     }
 });
 

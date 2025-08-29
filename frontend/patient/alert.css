@@ -1,0 +1,181 @@
+        .btn-success { background: #28a745; color: white; }
+        .btn-error { background: #dc3545; color: white; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-warning { background: #ffc107; color: #212529; }
+
+        .alert {
+            position: fixed;
+            top:120px;
+            right: 20px;
+            transform: translateX(-100%) scale(0.7) rotateY(90deg);
+            min-width: 400px;
+            max-width: 600px;
+            padding: 0;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(20px) saturate(150%);
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, 
+                transparent 0%,
+                rgba(255,255,255,0.8) 20%, 
+                rgba(255,255,255,1) 50%, 
+                rgba(255,255,255,0.8) 80%,
+                transparent 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite ease-in-out;
+        }
+
+        .alert::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0.3), 
+                transparent 30%, 
+                transparent 70%, 
+                rgba(255,255,255,0.3));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: borderGlow 4s infinite ease-in-out;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.5; transform: rotate(0deg); }
+            50% { opacity: 1; transform: rotate(180deg); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .alert.show {
+            opacity: 1;
+            transform: translateX(0) scale(1) rotateY(0deg);
+        }
+
+        .alert-content {
+            position: relative;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+
+
+        .alert-text {
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 500;
+            text-align: center;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            color: inherit;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .alert-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg) scale(1.15);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .alert-close:active {
+            transform: rotate(90deg) scale(0.95);
+        }
+
+        .alert.success {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 50%, #55efc4 100%);
+            color: white;
+            box-shadow: 0 25px 80px rgba(0, 184, 148, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .alert.error {
+            background: linear-gradient(135deg, #d63031 0%, #e17055 50%, #ff7675 100%);
+            color: white;
+            box-shadow: 0 25px 80px rgba(214, 48, 49, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .alert.info {
+            background: linear-gradient(135deg, #0984e3 0%, #74b9ff 50%, #a29bfe 100%);
+            color: white;
+            box-shadow: 0 25px 80px rgba(9, 132, 227, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .alert.warning {
+            background: linear-gradient(135deg, #fdcb6e 0%, #f39c12 50%, #e17055 100%);
+            color: #2d3436;
+            box-shadow: 0 25px 80px rgba(253, 203, 110, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .alert-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 0 0 12px 12px;
+            transform-origin: left;
+            animation: progress 4s linear forwards;
+        }
+
+        @keyframes progress {
+            from { transform: scaleX(1); }
+            to { transform: scaleX(0); }
+        }
+
+        .alert:hover {
+            transform: translateX(0) scale(1.05) rotateY(2deg);
+            box-shadow: 0 35px 100px rgba(0, 0, 0, 0.5), 
+                        0 0 0 1px rgba(255, 255, 255, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .alert:active {
+            transform: translateX(0) scale(1.02) rotateY(0deg);
+        }
