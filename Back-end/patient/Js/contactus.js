@@ -18,6 +18,7 @@ document.getElementById("contactForm").addEventListener("submit", async function
             body: JSON.stringify({ name, contacts, message })
         });
         alert("Your message has been sent. Thank you!");
+        document.getElementById("contactForm").reset();
     } catch (err) {
         console.error("Error:", err.message);
         alert("Something went wrong. Please try again.");
