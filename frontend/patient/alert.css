@@ -1,3 +1,4 @@
+
         .btn-success { background: #28a745; color: white; }
         .btn-error { background: #dc3545; color: white; }
         .btn-info { background: #17a2b8; color: white; }
@@ -182,7 +183,7 @@
 
 
 
-        
+
           /* ===== RESPONSIVE ===== */
 
         @media (min-width: 1200px) and (max-width: 1399px) {
