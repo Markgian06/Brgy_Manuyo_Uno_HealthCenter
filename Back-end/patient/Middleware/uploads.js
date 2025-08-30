@@ -5,7 +5,7 @@ var storage = multer.memoryStorage();
 var uploads = multer ({
     storage: storage,
     limits: {
-        fileSize: 1024 * 1024 * 2
+        fileSize: 1024 * 1024 * 5
     }
 })
 
