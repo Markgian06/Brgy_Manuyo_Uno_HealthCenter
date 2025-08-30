@@ -17,7 +17,57 @@
 </head>
 <body> 
 
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="logo-container" id="logoContainer">
+        <img src="/frontend/image/logo.webp" alt="Logo" class="logo" />
+        <span class="brand-name">Barangay Manuyo Uno <br> Health Center</span>
+      </div>
+      
+      <ul class="nav-menu" id="navMenu">
+        <li class="nav-item"><a href="/index.html" class="nav-link">Home</a></li>
+        
+        <li class="nav-item" id="scheduleOrAppointment">
+             <a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
+        </li>
+        
+        <li class="nav-item"><a href="/frontend/patient/html/about.html" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="/frontend/patient/html/services.html" class="nav-link">Services</a></li>
+        <li class="nav-item"><a href="/frontend/patient/html/contactus.html" class="nav-link">Contact Us</a></li>
+        
+        <li class="nav-item" id="authLink">
+             <a href="/frontend/patient/html/login.html" class="nav-link active">Login</a>
+        </li>
+      </ul>
 
+      <div class="login">
+        <h1>Login</h1>
+        <form id="signin-form" action="/signin" method="post">
+            <div class="form-group">
+                <label for="loginIdentifier">
+                    <i class="fas fa-user"></i>
+                </label>
+                <input type="text" name="loginIdentifier" placeholder="email/phone number" id="loginIdentifier" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                </label>
+                <input type="password" name="password" placeholder="Password" id="password" required>
+            </div>
+
+            <input type="submit" value="Login">
+        </form>
+    </div>
+      
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
 
 
  <footer>
