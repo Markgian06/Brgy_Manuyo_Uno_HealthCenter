@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(functionRouter);
 
 app.get("/", (req, res) => {
-    res.sendFile(path.resolve('frontend/patient/html', 'login.html'));
+    res.sendFile(path.resolve('', 'login.html'));
 });
 
 app.get('/', (req, res) => res.send('API WORKING'));
