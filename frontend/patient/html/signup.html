@@ -21,20 +21,6 @@
         <h2>Create an Account</h2>
         <form action="/signup" method="post" id="signup" enctype="multipart/form-data">
 
-          <div class="form-group">
-              <label>Valid ID Pictures (Required - Upload 2 photos)</label>
-              <div class="file-upload" id="fileUpload">
-                  <input type="file" id="ID_image" name="ID_image" class="file-input" multiple accept="image/*" required>
-                  <label for="ID_image" class="file-label">
-                      📁 Choose ID Pictures
-                  </label>
-                  <div class="file-info">
-                      <p>Upload exactly 1 ID pictures (Front and Back)</p>
-                  </div>
-                  <div class="file-preview" id="filePreview"></div>
-              </div>
-          </div>
-
             <div class="two-columns">
                 <div class="form-group">
                     <label for="firstName">First Name</label>
@@ -74,16 +60,30 @@
             </div>
 
             <div class="two-columns">
-                <div class="form-group">
-                    <label for="contactNum">Contact Number</label>
-                    <input type="tel" id="contactNum" name="contactNum" required>
-                </div>
-            </div>
+              <div class="form-group">
+                  <span class="country-code">Contact number</span>
+                  <input type="tel" id="contactNum" name="contactNum" placeholder="e.g., 09171234567" required>
+              </div>
+          </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
+
+            <div class="form-group">
+              <label>Valid ID Pictures (Required - Upload 2 photos)</label>
+              <div class="file-upload" id="fileUpload">
+                  <input type="file" id="ID_image" name="ID_image" class="file-input" multiple accept="image/*" required>
+                  <label for="ID_image" class="file-label">
+                      📁 Choose ID Pictures
+                  </label>
+                  <div class="file-info">
+                      <p>Upload exactly 1 ID pictures (Front and Back)</p>
+                  </div>
+                  <div class="file-preview" id="filePreview"></div>
+              </div>
+          </div>
             
             <button type="submit">Create Account</button>
             <div id="message"></div>
