@@ -12,6 +12,7 @@
 
 
 
+   <script src="/Back-end/patient/Js/login.js"></script>
   <script src="/Back-end/patient/Js/navigation.js" defer></script>
   <script src="/Back-end/patient/Js/index.js"></script>
 </head>
@@ -50,17 +51,21 @@
 
        <div class="login">
         <h1>Login</h1>
-        <form action="/signin" method="post" id="signin">
-            <label for="loginIdentifier">
-                <i class="fas fa-user"></i>
-            </label>
-            <!-- Use a single input for email or phone -->
-            <input type="text" name="loginIdentifier" placeholder="email/phone number" id="loginIdentifier" required>
+        <form id="signin-form" action="/signin" method="post">
+            <div class="form-group">
+                <label for="loginIdentifier">
+                    <i class="fas fa-user"></i>
+                </label>
+                <input type="text" name="loginIdentifier" placeholder="email/phone number" id="loginIdentifier" required>
+            </div>
             
-            <label for="password">
-                <i class="fas fa-lock"></i>
-            </label>
-            <input type="password" name="password" placeholder="Password" id="password" required>
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                </label>
+                <input type="password" name="password" placeholder="Password" id="password" required>
+            </div>
+
             <input type="submit" value="Login">
         </form>
     </div>
