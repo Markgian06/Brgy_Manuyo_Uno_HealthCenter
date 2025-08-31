@@ -37,6 +37,7 @@ function generateCalendar(month, year) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
+
     const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     dayHeaders.forEach(day => {
         const dayHeader = document.createElement('div');
@@ -53,6 +54,7 @@ function generateCalendar(month, year) {
         calendar.appendChild(dayHeader);
     });
     
+
     for (let i = 0; i < firstDay; i++) {
         const emptyDay = document.createElement('div');
         emptyDay.className = 'calendar-day disabled';
@@ -68,6 +70,7 @@ function generateCalendar(month, year) {
         calendar.appendChild(emptyDay);
     }
     
+
     for (let day = 1; day <= daysInMonth; day++) {
         const dayElement = document.createElement('div');
         dayElement.className = 'calendar-day';
@@ -76,6 +79,7 @@ function generateCalendar(month, year) {
         const currentDate = new Date(year, month, day);
         currentDate.setHours(0, 0, 0, 0);
         
+
         dayElement.style.cssText = `
             aspect-ratio: 1;
             display: flex;
@@ -99,6 +103,7 @@ function generateCalendar(month, year) {
         } else {
             dayElement.addEventListener('click', () => selectDate(day, month, year, dayElement));
             
+
             dayElement.addEventListener('mouseenter', () => {
                 if (!dayElement.classList.contains('selected')) {
                     dayElement.style.background = '#e8f5e8';
@@ -119,6 +124,7 @@ function generateCalendar(month, year) {
 }
 
 function selectDate(day, month, year, element) {
+
     document.querySelectorAll('.calendar-day.selected').forEach(el => {
         el.classList.remove('selected');
         el.style.background = 'white';
@@ -149,6 +155,7 @@ function selectDate(day, month, year, element) {
     selectedDate = new Date(year, month, day);
     document.getElementById('selectedDate').value = selectedDate.toISOString().split('T')[0];
     
+
     const dateAlert = document.querySelector('#selectedDate').parentNode.querySelector('#showAlert');
     if (dateAlert) {
         dateAlert.textContent = '';
@@ -172,6 +179,7 @@ function generateTimeSlots() {
         timeSlot.className = 'time-slot';
         timeSlot.textContent = time;
         
+
         timeSlot.style.cssText = `
             padding: 12px 16px;
             border: 2px solid #e1e5e9;
@@ -206,6 +214,7 @@ function generateTimeSlots() {
             timeSlot.appendChild(indicator);
             
         } else {
+          
             const indicator = document.createElement('span');
             indicator.textContent = '●';
             indicator.style.cssText = `
@@ -216,8 +225,6 @@ function generateTimeSlots() {
                 font-size: 12px;
             `;
             timeSlot.appendChild(indicator);
-            
-            timeSlot.addEventListener('click', () => selectTime(time, timeSlot));
             
             timeSlot.addEventListener('mouseenter', () => {
                 if (!timeSlot.classList.contains('selected')) {
@@ -240,14 +247,16 @@ function generateTimeSlots() {
     });
 }
 
+// Select Time Function
 function selectTime(time, element) {
+
     document.querySelectorAll('.time-slot.selected').forEach(el => {
         el.classList.remove('selected');
         el.style.background = 'white';
         el.style.color = '#333';
         el.style.borderColor = '#e1e5e9';
     });
-    
+
     element.classList.add('selected');
     element.style.cssText += `
         background: #4CAF50 !important;
@@ -269,7 +278,9 @@ function selectTime(time, element) {
     console.log('Full Appointment:', selectedDate.toDateString(), 'at', selectedTime);
 }
 
+
 document.addEventListener('DOMContentLoaded', function() {
+
     const prevBtn = document.getElementById('prevMonth');
     if (prevBtn) {
         prevBtn.addEventListener('click', () => {
@@ -281,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
             generateCalendar(currentMonth, currentYear);
         });
     }
-    
+
     const nextBtn = document.getElementById('nextMonth');
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
@@ -294,6 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+
     generateCalendar(currentMonth, currentYear);
 });
 

@@ -1,4 +1,5 @@
-.appointment {
+
+       .appointment {
             margin: 150px;
             background: white;
             padding: 40px;
@@ -348,7 +349,6 @@
         }
 
         /* Responsive Design */
-
         /* Large desktops (1200px – 1399px) */
         @media (max-width: 1399px) {
             .appointment {
