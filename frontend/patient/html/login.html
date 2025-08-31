@@ -12,7 +12,14 @@
    <link rel="stylesheet" href="/frontend/patient/footer.css">
 
 
-   <script src="/Back-end/patient/Js/login.js" defer></script>
+  
+  <link rel="stylesheet" href="/frontend/patient/footer.css">
+  <link rel="stylesheet" href="/frontend/patient/alert.css">
+
+   <script src="/Back-end/patient/Js/login.js"></script>
+  
+  <script src="/Back-end/patient/Js/alert.js" defer></script>
+
   <script src="/Back-end/patient/Js/navigation.js" defer></script>
   <script src="/Back-end/patient/Js/index.js"></script>
 
@@ -41,7 +48,7 @@
              <a href="/frontend/patient/html/login.html" class="nav-link active">Login</a>
         </li>
       </ul>
-      
+
       <div class="hamburger" id="hamburger">
         <span></span>
         <span></span>
@@ -49,6 +56,29 @@
       </div>
     </div>
   </nav>
+
+  
+       <div class="login">
+        <h1>Login</h1>
+        <form id="signin-form" action="/signin" method="post">
+            <div class="form-group">
+                <label for="loginIdentifier">
+                    <i class="fas fa-user"></i>
+                </label>
+                <input type="text" name="loginIdentifier" placeholder="email/phone number" id="loginIdentifier" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                </label>
+                <input type="password" name="password" placeholder="Password" id="password" required>
+            </div>
+
+            <input type="submit" value="Login">
+        </form>
+    </div>
+    
 
 
   <br><br><br><br><br><br><br><br><br>

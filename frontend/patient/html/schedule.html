@@ -9,11 +9,13 @@
   <link rel="stylesheet" href="/frontend/patient/navigation.css">
   <link rel="stylesheet" href="/frontend/patient/index.css">
   <link rel="stylesheet" href="/frontend/patient/footer.css">
+    <link rel="stylesheet" href="/frontend/patient/alert.css">
 
   <link rel="stylesheet" href="/frontend/patient/schedule.css">
   <script src="/Back-end/patient/Js/schedule.js" defer></script>
 
- <script src="/Back-end/patient/Js/navigation.js" defer></script>
+  <script src="/Back-end/patient/Js/alert.js" defer></script>
+  <script src="/Back-end/patient/Js/navigation.js" defer></script>
   <script src="/Back-end/patient/Js/index.js"></script>
 </head>
 <body defer> 
@@ -49,9 +51,7 @@
     </div>
   </nav>
 
-
-
-  <section class="container" id="schedule">
+  <div class="container" id="schedule">
         <div class="calendar-container">
             <div class="calendar-header">
                 <div class="calendar-nav">
@@ -84,7 +84,7 @@
                 <!-- Time slots will be generated here -->
             </div>
         </div>
-    </section>
+    </div>
     
  <footer>
    <div class="footer-container"> 
@@ -122,7 +122,6 @@
   </div>
   </div>
 </footer> 
-
 
 </body>
 </html>
