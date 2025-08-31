@@ -14,8 +14,9 @@ const port = process.env.PORT || 5000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({credentials: true}));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));    
 app.use('/frontend', express.static('frontend'));
+app.use('/Back-end', express.static('Back-end'));
 
 app.use(cors({ credentials: true }));
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use(functionRouter);
 app.get('/', (req, res) => {
     res.sendFile(path.resolve('./index.html'));
 });
+
 
 
 
