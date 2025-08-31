@@ -21,7 +21,7 @@ document.getElementById('signin-form').addEventListener('submit', async function
         const data = await response.json();
 
         if (response.ok) {
-            window.location.href = 'forgetpassword.html';
+            window.location.href = './forgetpassword.html';
         } else {
             alert(data.message || 'Login failed. Please check your credentials.');
         }

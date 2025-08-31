@@ -9,6 +9,6 @@
         authLink.innerHTML = `<a href="/frontend/patient/html/profile.html" class="nav-link">Profile</a>`;
       } else {
         scheduleOrAppointment.innerHTML = `<a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>`;
-        authLink.innerHTML = `<a href="/frontend/patient/html/login.html" class="nav-link">Login</a>`;
+        authLink.innerHTML = `<a href="frontend/patient/html/login.html" class="nav-link">Login</a>`;
       }
     });

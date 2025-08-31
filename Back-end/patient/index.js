@@ -15,7 +15,7 @@ const port = process.env.PORT || 5000;
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({credentials: true}));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('frontend'));
+app.use('/frontend', express.static('frontend'));
 
 app.use(cors({ credentials: true }));
 app.use(express.json());
@@ -23,18 +23,19 @@ app.use(cookieParser());
 
 app.use(functionRouter);
 
-app.get("/", (req, res) => {
-    res.sendFile(path.resolve('', 'login.html'));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve('./index.html'));
 });
+
+
 
 app.get('/', (req, res) => res.send('API WORKING'));
 app.use('/api/auth', functionRouter);
 
+
 app.use("/api", contactRoutes);
-/*
-app.get("/", (req, res) => {
-    res.sendFile(path.resolve('/frontend/patient/html/contactus.html'));
-});*/
+
 
 
 app.listen(port, () => {

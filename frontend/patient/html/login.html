@@ -14,6 +14,8 @@
 
   <script src="/Back-end/patient/Js/navigation.js" defer></script>
   <script src="/Back-end/patient/Js/index.js"></script>
+  
+
 </head>
 <body> 
 
@@ -25,7 +27,7 @@
       </div>
       
       <ul class="nav-menu" id="navMenu">
-        <li class="nav-item"><a href="/index.html" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
         
         <li class="nav-item" id="scheduleOrAppointment">
              <a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
@@ -131,7 +133,7 @@
         const data = await response.json();
 
         if (response.ok) {
-            window.location.href = './forgetpassword.html';
+            window.location.href = '/frontend/patient/html/forgetpassword.html';
         } else {
             alert(data.message || 'Login failed. Please check your credentials.');
         }
