@@ -1,4 +1,3 @@
-// Calendar and Time Slot Functionality
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 let selectedDate = null;
@@ -24,7 +23,6 @@ const unavailableSlots = {
     '2025-09-10': ['8:00 AM', '1:30 PM', '4:30 PM']
 };
 
-// Generate Calendar
 function generateCalendar(month, year) {
     const calendar = document.getElementById('calendar');
     const calendarTitle = document.getElementById('calendarTitle');
@@ -39,7 +37,7 @@ function generateCalendar(month, year) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    // Add day headers
+
     const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     dayHeaders.forEach(day => {
         const dayHeader = document.createElement('div');
@@ -56,7 +54,7 @@ function generateCalendar(month, year) {
         calendar.appendChild(dayHeader);
     });
     
-    // Add empty cells for days before the first day of the month
+
     for (let i = 0; i < firstDay; i++) {
         const emptyDay = document.createElement('div');
         emptyDay.className = 'calendar-day disabled';
@@ -72,7 +70,7 @@ function generateCalendar(month, year) {
         calendar.appendChild(emptyDay);
     }
     
-    // Add days of the month
+
     for (let day = 1; day <= daysInMonth; day++) {
         const dayElement = document.createElement('div');
         dayElement.className = 'calendar-day';
@@ -81,7 +79,7 @@ function generateCalendar(month, year) {
         const currentDate = new Date(year, month, day);
         currentDate.setHours(0, 0, 0, 0);
         
-        // Style the day element
+
         dayElement.style.cssText = `
             aspect-ratio: 1;
             display: flex;
@@ -95,7 +93,6 @@ function generateCalendar(month, year) {
             border: 1px solid #f0f0f0;
         `;
         
-        // Disable past dates and Sundays (or customize based on your needs)
         if (currentDate < today || currentDate.getDay() === 0) {
             dayElement.className += ' disabled';
             dayElement.style.cssText += `
@@ -106,7 +103,7 @@ function generateCalendar(month, year) {
         } else {
             dayElement.addEventListener('click', () => selectDate(day, month, year, dayElement));
             
-            // Add hover effects
+
             dayElement.addEventListener('mouseenter', () => {
                 if (!dayElement.classList.contains('selected')) {
                     dayElement.style.background = '#e8f5e8';
@@ -126,16 +123,14 @@ function generateCalendar(month, year) {
     }
 }
 
-// Select Date Function
 function selectDate(day, month, year, element) {
-    // Remove previous selection
+
     document.querySelectorAll('.calendar-day.selected').forEach(el => {
         el.classList.remove('selected');
         el.style.background = 'white';
         el.style.color = '#333';
     });
     
-    // Add selection to clicked day
     element.classList.add('selected');
     element.style.cssText += `
         background: #4CAF50 !important;
@@ -144,7 +139,6 @@ function selectDate(day, month, year, element) {
         transform: scale(1.1);
     `;
     
-    // Add checkmark
     if (!element.querySelector('.checkmark')) {
         const checkmark = document.createElement('span');
         checkmark.className = 'checkmark';
@@ -161,20 +155,16 @@ function selectDate(day, month, year, element) {
     selectedDate = new Date(year, month, day);
     document.getElementById('selectedDate').value = selectedDate.toISOString().split('T')[0];
     
-    // Clear any error messages
+
     const dateAlert = document.querySelector('#selectedDate').parentNode.querySelector('#showAlert');
     if (dateAlert) {
         dateAlert.textContent = '';
         dateAlert.style.display = 'none';
     }
     
-    // Generate time slots for selected date
     generateTimeSlots();
-    
-    console.log('Selected Date:', selectedDate.toDateString());
-}
+    }
 
-// Generate Time Slots
 function generateTimeSlots() {
     const timeSlotsContainer = document.getElementById('timeSlots');
     if (!timeSlotsContainer || !selectedDate) return;
@@ -189,7 +179,7 @@ function generateTimeSlots() {
         timeSlot.className = 'time-slot';
         timeSlot.textContent = time;
         
-        // Basic styling
+
         timeSlot.style.cssText = `
             padding: 12px 16px;
             border: 2px solid #e1e5e9;
@@ -212,7 +202,6 @@ function generateTimeSlots() {
                 text-decoration: line-through;
             `;
             
-            // Add unavailable indicator
             const indicator = document.createElement('span');
             indicator.textContent = '✕';
             indicator.style.cssText = `
@@ -225,7 +214,7 @@ function generateTimeSlots() {
             timeSlot.appendChild(indicator);
             
         } else {
-            // Add available indicator
+          
             const indicator = document.createElement('span');
             indicator.textContent = '●';
             indicator.style.cssText = `
@@ -237,10 +226,6 @@ function generateTimeSlots() {
             `;
             timeSlot.appendChild(indicator);
             
-            // Add click event
-            timeSlot.addEventListener('click', () => selectTime(time, timeSlot));
-            
-            // Add hover effects
             timeSlot.addEventListener('mouseenter', () => {
                 if (!timeSlot.classList.contains('selected')) {
                     timeSlot.style.borderColor = '#4CAF50';
@@ -264,15 +249,14 @@ function generateTimeSlots() {
 
 // Select Time Function
 function selectTime(time, element) {
-    // Remove previous selection
+
     document.querySelectorAll('.time-slot.selected').forEach(el => {
         el.classList.remove('selected');
         el.style.background = 'white';
         el.style.color = '#333';
         el.style.borderColor = '#e1e5e9';
     });
-    
-    // Add selection to clicked time
+
     element.classList.add('selected');
     element.style.cssText += `
         background: #4CAF50 !important;
@@ -284,7 +268,6 @@ function selectTime(time, element) {
     
     selectedTime = time;
     
-    // Clear any error messages
     const timeAlert = document.querySelector('#timeSlots').parentNode.querySelector('#showAlert');
     if (timeAlert) {
         timeAlert.textContent = '';
@@ -295,9 +278,9 @@ function selectTime(time, element) {
     console.log('Full Appointment:', selectedDate.toDateString(), 'at', selectedTime);
 }
 
-// Calendar Navigation
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Previous month button
+
     const prevBtn = document.getElementById('prevMonth');
     if (prevBtn) {
         prevBtn.addEventListener('click', () => {
@@ -309,8 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
             generateCalendar(currentMonth, currentYear);
         });
     }
-    
-    // Next month button
+
     const nextBtn = document.getElementById('nextMonth');
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
@@ -323,11 +305,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Initialize calendar
+
     generateCalendar(currentMonth, currentYear);
 });
 
-// Validation Functions
 function validateDateSelection() {
     if (!selectedDate) {
         const dateAlert = document.querySelector('#selectedDate').parentNode.querySelector('#showAlert');
@@ -354,7 +335,6 @@ function validateTimeSelection() {
     return true;
 }
 
-// Get Selected Appointment Data
 function getSelectedAppointment() {
     return {
         date: selectedDate,
@@ -369,7 +349,6 @@ function getSelectedAppointment() {
     };
 }
 
-// Reset Selections
 function resetSelections() {
     selectedDate = null;
     selectedTime = null;
@@ -411,7 +390,6 @@ function validateAppointmentForm() {
     if (isValid) {
         const appointment = getSelectedAppointment();
         console.log('Valid appointment:', appointment);
-        // Proceed with form submission
     }
     
     return isValid;
