@@ -349,35 +349,48 @@ async function submitAppointment() {
         const selectedTime = document.getElementById('selectedTime')?.value || '';
         
         
-        if (!firstName) return showAlert("First name is required", "error");
-        if (!lastName) return showAlert("Last name is required", "error");
-        if (!gender) return showAlert("Please select your gender", "error");
+        if (!firstName) {
+           showAlert("First name is required", "error");
+           return
+        } 
+
+        if (!lastName){
+            showAlert("Last name is required", "error");
+            return 
+        }
+
+        if (!gender){
+            showAlert("Please select your gender", "error");
+            return
+        }  
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !emailRegex.test(email)) {
-            return showAlert("Please enter a valid email address", "error");
+            showAlert("Please enter a valid email address", "error");
+            return 
         }
 
         const contactRegex = /^[0-9]{11}$/; 
         if (!contactNumber || !contactRegex.test(contactNumber)) {
-            return showAlert("Please enter a valid 11-digit contact number", "error");
+            showAlert("Please enter a valid 11-digit contact number", "error");
+            return 
         }
 
-        if (!reason) return showAlert("Reason for appointment is required", "error");
-        if (!selectedDate) return showAlert("Please select a date", "error");
-        if (!selectedTime) return showAlert("Please select a time", "error");
-
-        if (!selectedDate) {
+        if (!reason){
+            showAlert("Reason for appointment is required", "error");
+            return 
+        } 
+        if (!selectedDate){
             showAlert("Please select a date", "error");
-         return;
-         }
+            return 
+        }
 
         if (!selectedTime) {
             showAlert("Please select a time", "error");
          return;
          }
 
-         
+
         if (typeof selectedDate === 'undefined') {
             showAlert('Error: selectedDate is not defined. Please select a date first.', "error");
             return;
