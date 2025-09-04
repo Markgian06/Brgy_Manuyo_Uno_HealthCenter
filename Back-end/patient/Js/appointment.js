@@ -14,14 +14,7 @@ const timeSlots = [
     '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM'
 ];
 
-// Simulated unavailable time slots (you can modify this based on your backend data)
-const unavailableSlots = {
-    '2025-09-01': ['9:00 AM', '2:00 PM', '3:30 PM'],
-    '2025-09-02': ['10:00 AM', '11:30 AM'],
-    '2025-09-03': ['8:30 AM', '1:00 PM', '4:00 PM'],
-    '2025-09-05': ['9:30 AM', '11:00 AM', '2:30 PM'],
-    '2025-09-10': ['8:00 AM', '1:30 PM', '4:30 PM']
-};
+let unavailableSlots = {};
 
 function generateCalendar(month, year) {
     const calendar = document.getElementById('calendar');
@@ -37,7 +30,6 @@ function generateCalendar(month, year) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-
     const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     dayHeaders.forEach(day => {
         const dayHeader = document.createElement('div');
@@ -54,7 +46,6 @@ function generateCalendar(month, year) {
         calendar.appendChild(dayHeader);
     });
     
-
     for (let i = 0; i < firstDay; i++) {
         const emptyDay = document.createElement('div');
         emptyDay.className = 'calendar-day disabled';
@@ -70,7 +61,6 @@ function generateCalendar(month, year) {
         calendar.appendChild(emptyDay);
     }
     
-
     for (let day = 1; day <= daysInMonth; day++) {
         const dayElement = document.createElement('div');
         dayElement.className = 'calendar-day';
@@ -79,7 +69,6 @@ function generateCalendar(month, year) {
         const currentDate = new Date(year, month, day);
         currentDate.setHours(0, 0, 0, 0);
         
-
         dayElement.style.cssText = `
             aspect-ratio: 1;
             display: flex;
@@ -103,7 +92,6 @@ function generateCalendar(month, year) {
         } else {
             dayElement.addEventListener('click', () => selectDate(day, month, year, dayElement));
             
-
             dayElement.addEventListener('mouseenter', () => {
                 if (!dayElement.classList.contains('selected')) {
                     dayElement.style.background = '#e8f5e8';
@@ -124,11 +112,12 @@ function generateCalendar(month, year) {
 }
 
 function selectDate(day, month, year, element) {
-
     document.querySelectorAll('.calendar-day.selected').forEach(el => {
         el.classList.remove('selected');
         el.style.background = 'white';
         el.style.color = '#333';
+        const checkmark = el.querySelector('.checkmark');
+        if (checkmark) checkmark.remove();
     });
     
     element.classList.add('selected');
@@ -155,7 +144,6 @@ function selectDate(day, month, year, element) {
     selectedDate = new Date(year, month, day);
     document.getElementById('selectedDate').value = selectedDate.toISOString().split('T')[0];
     
-
     const dateAlert = document.querySelector('#selectedDate').parentNode.querySelector('#showAlert');
     if (dateAlert) {
         dateAlert.textContent = '';
@@ -163,7 +151,7 @@ function selectDate(day, month, year, element) {
     }
     
     generateTimeSlots();
-    }
+}
 
 function generateTimeSlots() {
     const timeSlotsContainer = document.getElementById('timeSlots');
@@ -179,7 +167,6 @@ function generateTimeSlots() {
         timeSlot.className = 'time-slot';
         timeSlot.textContent = time;
         
-
         timeSlot.style.cssText = `
             padding: 12px 16px;
             border: 2px solid #e1e5e9;
@@ -214,7 +201,6 @@ function generateTimeSlots() {
             timeSlot.appendChild(indicator);
             
         } else {
-          
             const indicator = document.createElement('span');
             indicator.textContent = '●';
             indicator.style.cssText = `
@@ -225,6 +211,8 @@ function generateTimeSlots() {
                 font-size: 12px;
             `;
             timeSlot.appendChild(indicator);
+            
+            timeSlot.addEventListener('click', () => selectTime(time, timeSlot));
             
             timeSlot.addEventListener('mouseenter', () => {
                 if (!timeSlot.classList.contains('selected')) {
@@ -247,14 +235,14 @@ function generateTimeSlots() {
     });
 }
 
-// Select Time Function
 function selectTime(time, element) {
-
     document.querySelectorAll('.time-slot.selected').forEach(el => {
         el.classList.remove('selected');
         el.style.background = 'white';
         el.style.color = '#333';
         el.style.borderColor = '#e1e5e9';
+        el.style.transform = 'translateY(0)';
+        el.style.boxShadow = 'none';
     });
 
     element.classList.add('selected');
@@ -278,9 +266,22 @@ function selectTime(time, element) {
     console.log('Full Appointment:', selectedDate.toDateString(), 'at', selectedTime);
 }
 
+function convertTo24Hour(time12h) {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    
+    if (hours === '12') {
+        hours = '00';
+    }
+    
+    if (modifier === 'PM') {
+        hours = parseInt(hours, 10) + 12;
+    }
+    
+    return `${hours.toString().padStart(2, '0')}:${minutes}`;
+}
 
 document.addEventListener('DOMContentLoaded', function() {
-
     const prevBtn = document.getElementById('prevMonth');
     if (prevBtn) {
         prevBtn.addEventListener('click', () => {
@@ -305,92 +306,106 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-
+    const appointmentForm = document.getElementById('appointmentForm');
+    if (appointmentForm) {
+        appointmentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await submitAppointment();
+        });
+    }
+    
     generateCalendar(currentMonth, currentYear);
 });
 
-function validateDateSelection() {
-    if (!selectedDate) {
-        const dateAlert = document.querySelector('#selectedDate').parentNode.querySelector('#showAlert');
-        if (dateAlert) {
-            dateAlert.textContent = 'Please select an appointment date';
-            dateAlert.style.color = '#e74c3c';
-            dateAlert.style.display = 'block';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+async function submitAppointment() {
+    console.log('submitAppointment called');
+    
+    try {
+        const submitBtn = document.querySelector('.submit-btn');
+        submitBtn.textContent = 'Waiting For Admin Response...';
+        submitBtn.disabled = true;
+        
+        const firstName = document.getElementById('firstName')?.value || '';
+        const lastName = document.getElementById('lastName')?.value || '';
+        const middleName = document.getElementById('middleName')?.value || '';
+        const gender = document.getElementById('gender')?.value || '';
+        const email = document.getElementById('email')?.value || '';
+        const contactNumber = document.getElementById('contactNumber')?.value || '';
+        const reason = document.getElementById('reason')?.value || '';
+        const selectedDate = document.getElementById('selectedDate')?.value || '';
+        const selectedTime = document.getElementById('selectedTime')?.value || '';
+        
+        if (typeof selectedDate === 'undefined') {
+            alert('Error: selectedDate is not defined. Please select a date first.');
+            return;
         }
-        return false;
-    }
-    return true;
-}
-
-function validateTimeSelection() {
-    if (!selectedTime) {
-        const timeAlert = document.querySelector('#timeSlots').parentNode.querySelector('#showAlert');
-        if (timeAlert) {
-            timeAlert.textContent = 'Please select an appointment time';
-            timeAlert.style.color = '#e74c3c';
-            timeAlert.style.display = 'block';
+        
+        if (typeof selectedTime === 'undefined') {
+            alert('Error: selectedTime is not defined. Please select a time first.');
+            return;
         }
-        return false;
-    }
-    return true;
-}
+        
+        if (typeof convertTo24Hour !== 'function') {
+            alert('Error: convertTo24Hour function is not defined.');
+            return;
+        }
+    
 
-function getSelectedAppointment() {
-    return {
-        date: selectedDate,
-        time: selectedTime,
-        dateString: selectedDate ? selectedDate.toISOString().split('T')[0] : null,
-        formattedDate: selectedDate ? selectedDate.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        }) : null
-    };
-}
+        const formData = {
+         firstName,
+         lastName,
+         middleName,
+         gender,
+         email,
+         contactNumber,
+         reason,
+         selectedDate,  
+         selectedTime: convertTo24Hour(selectedTime), 
+         appointmentNumber: 'APP' + Date.now()
+        };
 
-function resetSelections() {
-    selectedDate = null;
-    selectedTime = null;
-    
-    document.querySelectorAll('.calendar-day.selected').forEach(el => {
-        el.classList.remove('selected');
-        el.style.background = 'white';
-        el.style.color = '#333';
-        el.style.transform = 'scale(1)';
-        const checkmark = el.querySelector('.checkmark');
-        if (checkmark) checkmark.remove();
-    });
-    
-    document.querySelectorAll('.time-slot.selected').forEach(el => {
-        el.classList.remove('selected');
-        el.style.background = 'white';
-        el.style.color = '#333';
-        el.style.borderColor = '#e1e5e9';
-        el.style.transform = 'translateY(0)';
-        el.style.boxShadow = 'none';
-    });
-    
-    document.getElementById('timeSlots').innerHTML = '';
-    document.getElementById('selectedDate').value = '';
-}
+        
+        console.log('Final formData being sent:', formData);
 
-// Example usage in form validation
-function validateAppointmentForm() {
-    let isValid = true;
-    
-    if (!validateDateSelection()) {
-        isValid = false;
-    }
-    
-    if (!validateTimeSelection()) {
-        isValid = false;
-    }
-    
-    if (isValid) {
-        const appointment = getSelectedAppointment();
-        console.log('Valid appointment:', appointment);
-    }
-    
-    return isValid;
+        
+        const response = await fetch('http://localhost:5000/api/appointments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('Appointment booked successfully!');
+            document.querySelector('form')?.reset();
+        } else {
+            alert('Error: ' + data.message);
+        }
+        
+    } catch (error) {
+        console.error('Caught error:', error);
+        alert('Failed to book appointment: ' + error.message);
+    } 
 }

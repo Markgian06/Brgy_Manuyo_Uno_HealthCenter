@@ -65,4 +65,4 @@ function showAlert(message, type = "success") {
             if (backdrop && e.target === backdrop) {
                 closeAlert();
             }
-        });
+        })
