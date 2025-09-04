@@ -261,9 +261,6 @@ function selectTime(time, element) {
         timeAlert.textContent = '';
         timeAlert.style.display = 'none';
     }
-    
-    console.log('Selected Time:', selectedTime);
-    console.log('Full Appointment:', selectedDate.toDateString(), 'at', selectedTime);
 }
 
 function convertTo24Hour(time12h) {
@@ -334,10 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
 async function submitAppointment() {
-    console.log('submitAppointment called');
     
     try {
         const submitBtn = document.querySelector('.submit-btn');
@@ -354,18 +348,48 @@ async function submitAppointment() {
         const selectedDate = document.getElementById('selectedDate')?.value || '';
         const selectedTime = document.getElementById('selectedTime')?.value || '';
         
+        
+        if (!firstName) return showAlert("First name is required", "error");
+        if (!lastName) return showAlert("Last name is required", "error");
+        if (!gender) return showAlert("Please select your gender", "error");
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            return showAlert("Please enter a valid email address", "error");
+        }
+
+        const contactRegex = /^[0-9]{11}$/; 
+        if (!contactNumber || !contactRegex.test(contactNumber)) {
+            return showAlert("Please enter a valid 11-digit contact number", "error");
+        }
+
+        if (!reason) return showAlert("Reason for appointment is required", "error");
+        if (!selectedDate) return showAlert("Please select a date", "error");
+        if (!selectedTime) return showAlert("Please select a time", "error");
+
+        if (!selectedDate) {
+            showAlert("Please select a date", "error");
+         return;
+         }
+
+        if (!selectedTime) {
+            showAlert("Please select a time", "error");
+         return;
+         }
+
+         
         if (typeof selectedDate === 'undefined') {
-            alert('Error: selectedDate is not defined. Please select a date first.');
+            showAlert('Error: selectedDate is not defined. Please select a date first.', "error");
             return;
         }
         
         if (typeof selectedTime === 'undefined') {
-            alert('Error: selectedTime is not defined. Please select a time first.');
+            showAlert('Error: selectedTime is not defined. Please select a time first.', "error");
             return;
         }
         
         if (typeof convertTo24Hour !== 'function') {
-            alert('Error: convertTo24Hour function is not defined.');
+            showAlert('Error: convertTo24Hour function is not defined.',"error");
             return;
         }
     
@@ -383,10 +407,7 @@ async function submitAppointment() {
          appointmentNumber: 'APP' + Date.now()
         };
 
-        
-        console.log('Final formData being sent:', formData);
-
-        
+    
         const response = await fetch('http://localhost:5000/api/appointments', {
             method: 'POST',
             headers: {
@@ -398,14 +419,13 @@ async function submitAppointment() {
         const data = await response.json();
         
         if (data.success) {
-            alert('Appointment booked successfully!');
+            showAlert('Appointment booked successfully!',"success");
             document.querySelector('form')?.reset();
         } else {
-            alert('Error: ' + data.message);
+            showAlert('Error: ' + data.message,"error");
         }
         
     } catch (error) {
-        console.error('Caught error:', error);
-        alert('Failed to book appointment: ' + error.message);
+        showAlert('Failed to book appointment: ' + error.message, "error");
     } 
 }

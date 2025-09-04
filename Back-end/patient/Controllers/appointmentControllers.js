@@ -16,7 +16,6 @@ export const createAppointment = async (req, res) => {
       appointmentNumber
     } = req.body;
 
-    // Create new appointment doc
     const appointment = new Appointment({
       firstName,
       lastName,

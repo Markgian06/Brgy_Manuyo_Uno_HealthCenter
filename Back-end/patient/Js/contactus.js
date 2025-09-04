@@ -5,7 +5,6 @@ document.getElementById("contactForm").addEventListener("submit", async function
     const contacts = document.getElementById("contacts").value;
     const message = document.getElementById("message").value;
 
-  // --- Name Validation ---
     if (!name) {
         showAlert("⚠️ Name is required", "warning");
         return;
@@ -15,13 +14,10 @@ document.getElementById("contactForm").addEventListener("submit", async function
         return;
     }
 
-    // --- Contact Validation ---
     if (!contacts) {
         showAlert("⚠️ Contact is required", "warning");
         return;
     }
-
-    // Simple email pattern
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailPattern.test(contacts)) {
@@ -29,7 +25,6 @@ document.getElementById("contactForm").addEventListener("submit", async function
         return;
     }
 
-    // --- Message Validation ---
     if (!message) {
         showAlert("⚠️ Message is required", "warning");
         return;
