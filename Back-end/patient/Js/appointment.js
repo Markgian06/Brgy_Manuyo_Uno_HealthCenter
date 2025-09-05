@@ -255,8 +255,15 @@ function selectTime(time, element) {
     `;
     
     selectedTime = time;
+    const hiddenInput = document.getElementById('selectedTime');
+    if (hiddenInput) {
+        hiddenInput.value = time;
+    }
+
+    console.log("✅ Selected Time:", time);
+
     
-    const timeAlert = document.querySelector('#timeSlots').parentNode.querySelector('#showAlert');
+    const timeAlert = document.querySelector('#timeSlots').parentNode.querySelector('#timeSlotsAlert');
     if (timeAlert) {
         timeAlert.textContent = '';
         timeAlert.style.display = 'none';
@@ -328,99 +335,80 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
-
 async function submitAppointment() {
-    
-    try {
-        const submitBtn = document.querySelector('.submit-btn');
-        submitBtn.textContent = 'Waiting For Admin Response...';
-        submitBtn.disabled = true;
-        
-        const firstName = document.getElementById('firstName')?.value || '';
-        const lastName = document.getElementById('lastName')?.value || '';
-        const middleName = document.getElementById('middleName')?.value || '';
-        const gender = document.getElementById('gender')?.value || '';
-        const email = document.getElementById('email')?.value || '';
-        const contactNumber = document.getElementById('contactNumber')?.value || '';
-        const reason = document.getElementById('reason')?.value || '';
-        const selectedDate = document.getElementById('selectedDate')?.value || '';
-        const selectedTime = document.getElementById('selectedTime')?.value || '';
-        
-        
-        if (!firstName) {
-           showAlert("First name is required", "error");
-           return
+    try {   
+        const firstName = document.getElementById('firstName')?.value;
+        const lastName = document.getElementById('lastName')?.value;
+        const middleName = document.getElementById('middleName')?.value;
+        const gender = document.getElementById('gender')?.value;
+        const email = document.getElementById('email')?.value;
+        const contactNumber = document.getElementById('contactNumber')?.value;
+        const reason = document.getElementById('reason')?.value;
+        const selectedDate = document.getElementById('selectedDate')?.value;
+        const selectedTime = document.getElementById('selectedTime')?.value;
+
+
+
+        if (!firstName || firstName.length < 2) {
+            showAlert("First name is required", "error", "firstNameAlert");
+            return;
         } 
 
-        if (!lastName){
-            showAlert("Last name is required", "error");
-            return 
+        if (!lastName || lastName.length < 2) {
+            showAlert("Last name is required", "error", "lastNameAlert");
+            return; 
         }
 
         if (!gender){
-            showAlert("Please select your gender", "error");
-            return
+            showAlert("Please select your gender", "error","genderAlert");
+            return;
         }  
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !emailRegex.test(email)) {
-            showAlert("Please enter a valid email address", "error");
-            return 
+            showAlert("Please enter a valid email address", "error", "emailAlert");
+            return; 
         }
 
         const contactRegex = /^[0-9]{11}$/; 
         if (!contactNumber || !contactRegex.test(contactNumber)) {
-            showAlert("Please enter a valid 11-digit contact number", "error");
-            return 
+            showAlert("Please enter a valid 11-digit contact number", "error", "contactNumberAlert");
+            return; 
         }
 
         if (!reason){
-            showAlert("Reason for appointment is required", "error");
-            return 
+            showAlert("Reason for appointment is required", "error", "reasonAlert");
+            return; 
         } 
         if (!selectedDate){
-            showAlert("Please select a date", "error");
-            return 
+            showAlert("Please select a date", "error","calendarAlert");
+            return; 
         }
 
         if (!selectedTime) {
-            showAlert("Please select a time", "error");
-         return;
-         }
-
-
-        if (typeof selectedDate === 'undefined') {
-            showAlert('Error: selectedDate is not defined. Please select a date first.', "error");
+            showAlert("Please select a time", "error", "timeSlotsAlert");
             return;
         }
-        
-        if (typeof selectedTime === 'undefined') {
-            showAlert('Error: selectedTime is not defined. Please select a time first.', "error");
-            return;
-        }
-        
+
         if (typeof convertTo24Hour !== 'function') {
             showAlert('Error: convertTo24Hour function is not defined.',"error");
             return;
         }
     
-
         const formData = {
-         firstName,
-         lastName,
-         middleName,
-         gender,
-         email,
-         contactNumber,
-         reason,
-         selectedDate,  
-         selectedTime: convertTo24Hour(selectedTime), 
-         appointmentNumber: 'APP' + Date.now()
+            firstName,
+            lastName,
+            middleName,
+            gender,
+            email,
+            contactNumber,
+            reason,
+            selectedDate,  
+            selectedTime: convertTo24Hour(selectedTime), 
+            appointmentNumber: 'APP' + Date.now()
         };
 
-    
+
         const response = await fetch('http://localhost:5000/api/appointments', {
             method: 'POST',
             headers: {
@@ -430,10 +418,30 @@ async function submitAppointment() {
         });
         
         const data = await response.json();
-        
+
         if (data.success) {
             showAlert('Appointment booked successfully!',"success");
             document.querySelector('form')?.reset();
+            document.getElementById('selectedDate').value = '';
+            document.getElementById('selectedTime').value = '';
+
+    document.querySelectorAll('.calendar-day.selected').forEach(el => {
+        el.classList.remove('selected');
+        el.style.background = 'white';
+        el.style.color = '#333';
+        const checkmark = el.querySelector('.checkmark');
+        if (checkmark) checkmark.remove();
+    });
+
+    document.querySelectorAll('.time-slot.selected').forEach(el => {
+        el.classList.remove('selected');
+        el.style.background = 'white';
+        el.style.color = '#333';
+        el.style.borderColor = '#e1e5e9';
+        el.style.transform = 'translateY(0)';
+        el.style.boxShadow = 'none';
+    });
+
         } else {
             showAlert('Error: ' + data.message,"error");
         }

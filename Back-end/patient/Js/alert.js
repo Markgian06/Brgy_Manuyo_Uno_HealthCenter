@@ -1,68 +1,25 @@
-function showAlert(message, type = "success") {
-            const existing = document.querySelector('.alert');
-            if (existing) existing.remove();
+function showAlert(message, type = "error", targetId = "formAlert") {
+    const alertElement = document.getElementById(targetId);
 
-            const alertBox = document.createElement('div');
-            alertBox.className = `alert ${type}`;
+    if (alertElement) {
+        clearAlert(targetId);
 
-            let icon;
-            switch(type) {
-                case 'success': icon = '✓'; break;
-                case 'error': icon = '✕'; break;
-                case 'info': icon = 'ⓘ'; break;
-                case 'warning': icon = '⚠'; break;
-                default: icon = 'ⓘ';
-            }
+        alertElement.innerHTML = `
+            ${message} 
+            <button class="alert-close" onclick="clearAlert('${targetId}')">&times;</button>
+        `;
+        alertElement.className = `alert ${type}`;
 
-            alertBox.innerHTML = `
-                <div class="alert-content">
-                    <span class="alert-text">${message}</span>
-                    <button class="alert-close" onclick="closeAlert()">&times;</button>
-                </div>
-                ${(type === "success" || type === "info") ? '<div class="alert-progress"></div>' : ''}
-            `;
+        const duration = type === "success" ? 5000 : 3000;
 
-            document.body.appendChild(alertBox);
+        setTimeout(() => clearAlert(targetId), duration);
+    }
+}
 
-            requestAnimationFrame(() => {
-                alertBox.classList.add('show');
-            });
-
-            if (type === "success" || type === "info") {
-                setTimeout(() => closeAlert(), 4000);
-            }
-        }
-
-        function closeAlert() {
-            const alertBox = document.querySelector('.alert');
-            const backdrop = document.querySelector('.alert-backdrop');
-            
-            if (alertBox) {
-                alertBox.classList.remove('show');
-                alertBox.style.transform = 'translate(-50%, -50%) scale(0.8) rotateY(-90deg)';
-                alertBox.style.opacity = '0';
-                
-                if (backdrop) {
-                    backdrop.classList.remove('show');
-                }
-                
-                setTimeout(() => {
-                    if (alertBox.parentNode) alertBox.remove();
-                    if (backdrop && backdrop.parentNode) backdrop.remove();
-                }, 600);
-            }
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeAlert();
-            }
-        });
-
-        document.addEventListener('click', function(e) {
-            const alertBox = document.querySelector('.alert');
-            const backdrop = document.querySelector('.alert-backdrop');
-            if (backdrop && e.target === backdrop) {
-                closeAlert();
-            }
-        })
+function clearAlert(targetId) {
+    const target = document.getElementById(targetId);
+    if (target) {
+        target.innerHTML = "";
+        target.className = "";
+    }
+}
