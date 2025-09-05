@@ -16,6 +16,52 @@ const timeSlots = [
 
 let unavailableSlots = {};
 
+async function fetchExistingAppointments(date) {
+    try {
+        console.log('🔍 Checking appointments for date:', date);
+        
+            const response = await fetch(`http://localhost:5000/api/appointments?date=${encodeURIComponent(date)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('✅ Found existing appointments:', data.bookedTimes);
+            return data.bookedTimes || [];
+        } else {
+            console.warn('⚠️ API returned error:', data.message);
+            return [];
+        }
+    } catch (error) {
+        console.error('❌ Error fetching appointments:', error);
+        return [];
+    }
+}
+
+function convertTo12Hour(time24h) {
+    const [hours, minutes] = time24h.split(':');
+    let hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    
+    if (hour === 0) {
+        hour = 12;
+    } else if (hour > 12) {
+        hour = hour - 12;
+    }
+    
+    return `${hour}:${minutes} ${ampm}`;
+}
+
+
+
 function generateCalendar(month, year) {
     const calendar = document.getElementById('calendar');
     const calendarTitle = document.getElementById('calendarTitle');
@@ -153,37 +199,93 @@ function selectDate(day, month, year, element) {
     generateTimeSlots();
 }
 
-function generateTimeSlots() {
+async function generateTimeSlots() {
     const timeSlotsContainer = document.getElementById('timeSlots');
     if (!timeSlotsContainer || !selectedDate) return;
     
     timeSlotsContainer.innerHTML = '';
     
     const dateString = selectedDate.toISOString().split('T')[0];
-    const unavailable = unavailableSlots[dateString] || [];
+    const existingAppointments = await fetchExistingAppointments(dateString);
     
-    timeSlots.forEach(time => {
-        const timeSlot = document.createElement('div');
-        timeSlot.className = 'time-slot';
-        timeSlot.textContent = time;
+    const bookedTimes = existingAppointments.map(appointment => {
+        return convertTo12Hour(appointment.selectedTime);
+    });
+
+     const manualUnavailable = unavailableSlots[dateString] || [];
+     const allUnavailable = [...new Set([...manualUnavailable, ...bookedTimes])];
+
+  timeSlots.forEach(time => {
+    const timeSlot = document.createElement('div');
+    timeSlot.className = 'time-slot';
+    timeSlot.textContent = time;
+
+    timeSlot.style.cssText = `
+        padding: 12px 16px;
+        border: 2px solid #e1e5e9;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
+        font-weight: 500;
+        position: relative;
+        margin: 5px;
+    `;
+    
+    if (allUnavailable.includes(time)) {
+        timeSlot.className += ' unavailable';
         
-        timeSlot.style.cssText = `
-            padding: 12px 16px;
-            border: 2px solid #e1e5e9;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: white;
-            font-weight: 500;
-            position: relative;
-            margin: 5px;
-        `;
+        const isBooked = bookedTimes.includes(time);
         
-        if (unavailable.includes(time)) {
-            timeSlot.className += ' unavailable';
+        if (isBooked) {
+            // RED styling for booked appointments
+            timeSlot.style.cssText += `
+                background: #ffebee;
+                border: 2px solid #f44336;
+                color: #c62828;
+                cursor: not-allowed;
+                text-decoration: line-through;
+                font-weight: bold;
+            `;
+            
+            const indicator = document.createElement('span');
+            indicator.textContent = '✕';
+            indicator.style.cssText = `
+                position: absolute;
+                top: 2px;
+                right: 5px;
+                color: #f44336;
+                font-size: 14px;
+                font-weight: bold;
+            `;
+            timeSlot.appendChild(indicator);
+            
+            const tooltip = document.createElement('div');
+            tooltip.textContent = 'Already booked';
+            tooltip.style.cssText = `
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #f44336;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 10px;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s;
+                z-index: 1000;
+            `;
+            timeSlot.appendChild(tooltip);
+            
+        } else {
+            // GRAY styling for manually unavailable slots
             timeSlot.style.cssText += `
                 background: #f8f9fa;
+                border: 2px solid #dee2e6;
                 color: #999;
                 cursor: not-allowed;
                 text-decoration: line-through;
@@ -195,44 +297,76 @@ function generateTimeSlots() {
                 position: absolute;
                 top: 2px;
                 right: 5px;
-                color: #e74c3c;
+                color: #999;
                 font-size: 12px;
             `;
             timeSlot.appendChild(indicator);
             
-        } else {
-            const indicator = document.createElement('span');
-            indicator.textContent = '●';
-            indicator.style.cssText = `
+            const tooltip = document.createElement('div');
+            tooltip.textContent = 'Unavailable';
+            tooltip.style.cssText = `
                 position: absolute;
-                top: 2px;
-                right: 5px;
-                color: #4CAF50;
-                font-size: 12px;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #6c757d;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 10px;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s;
+                z-index: 1000;
             `;
-            timeSlot.appendChild(indicator);
-            
-            timeSlot.addEventListener('click', () => selectTime(time, timeSlot));
-            
-            timeSlot.addEventListener('mouseenter', () => {
-                if (!timeSlot.classList.contains('selected')) {
-                    timeSlot.style.borderColor = '#4CAF50';
-                    timeSlot.style.transform = 'translateY(-2px)';
-                    timeSlot.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.2)';
-                }
-            });
-            
-            timeSlot.addEventListener('mouseleave', () => {
-                if (!timeSlot.classList.contains('selected')) {
-                    timeSlot.style.borderColor = '#e1e5e9';
-                    timeSlot.style.transform = 'translateY(0)';
-                    timeSlot.style.boxShadow = 'none';
-                }
-            });
+            timeSlot.appendChild(tooltip);
         }
         
-        timeSlotsContainer.appendChild(timeSlot);
-    });
+        timeSlot.addEventListener('mouseenter', () => {
+            const tooltip = timeSlot.querySelector('div');
+            if (tooltip) tooltip.style.opacity = '1';
+        });
+        
+        timeSlot.addEventListener('mouseleave', () => {
+            const tooltip = timeSlot.querySelector('div');
+            if (tooltip) tooltip.style.opacity = '0';
+        });
+        
+    } else {
+        // AVAILABLE time slots - GREEN styling
+        const indicator = document.createElement('span');
+        indicator.textContent = '●';
+        indicator.style.cssText = `
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            color: #4CAF50;
+            font-size: 12px;
+        `;
+        timeSlot.appendChild(indicator);
+        
+        timeSlot.addEventListener('click', () => selectTime(time, timeSlot));
+        
+        timeSlot.addEventListener('mouseenter', () => {
+            if (!timeSlot.classList.contains('selected')) {
+                timeSlot.style.borderColor = '#4CAF50';
+                timeSlot.style.transform = 'translateY(-2px)';
+                timeSlot.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.2)';
+            }
+        });
+        
+        timeSlot.addEventListener('mouseleave', () => {
+            if (!timeSlot.classList.contains('selected')) {
+                timeSlot.style.borderColor = '#e1e5e9';
+                timeSlot.style.transform = 'translateY(0)';
+                timeSlot.style.boxShadow = 'none';
+            }
+        });
+    }
+    
+    timeSlotsContainer.appendChild(timeSlot);
+});
 }
 
 function selectTime(time, element) {

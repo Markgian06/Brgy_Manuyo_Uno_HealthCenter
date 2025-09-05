@@ -35,8 +35,10 @@ app.get('/', (req, res) => res.send('API WORKING'));
 app.use('/api/auth', functionRouter);
 
 
+
 app.use("/api", contactRoutes);
 app.use('/api', appointmentRoutes);
+
 
 
 

@@ -1,5 +1,6 @@
 import Appointment from '../Models/appointmentModels.js';
 export const createAppointment = async (req, res) => {
+
   try {
     console.log("Incoming request body:", req.body); 
 
@@ -15,6 +16,18 @@ export const createAppointment = async (req, res) => {
       selectedTime,
       appointmentNumber
     } = req.body;
+
+     const existingAppointment = await Appointment.findOne({
+      selectedDate: selectedDate,
+      selectedTime: selectedTime
+    });
+
+    if (existingAppointment) {
+      return res.status(409).json({
+        success: false,
+        message: 'This time slot is already booked. Please select a different time.'
+      });
+    }
 
     const appointment = new Appointment({
       firstName,
