@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import functionRouter from './Routes/functionRoutes.js';
+import functionRouter from './routes/functionRoutes.js';
 import dbConnection from './Controllers/dbConnection.js';
 import contactRoutes from './Routes/contactRoutes.js';
 import path from 'path';
