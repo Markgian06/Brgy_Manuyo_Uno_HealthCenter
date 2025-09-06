@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brgy. Manuyo Uno Health Center</title>
+  <link rel="icon" type="image/webp" href="/frontend/image/logo.webp">
+
+  <link rel="stylesheet" href="/frontend/patient/navigation.css">
+  <link rel="stylesheet" href="/frontend/patient/index.css">
+  <link rel="stylesheet" href="/frontend/patient/footer.css">
+  <link rel="stylesheet" href="/frontend/patient/alert.css">
+  <link rel="stylesheet" href="/frontend/patient/alert.css">
+
+
+  <link rel="stylesheet" href="/frontend/patient/contactus.css">
+  <script src="/Back-end/patient/Js/contactus.js" defer></script>
+  
+  <script src="/Back-end/patient/Js/alert.js" defer></script>  
+  <script src="/Back-end/patient/Js/navigation.js" defer></script>
+  <script src="/Back-end/patient/Js/index.js"></script>
+</head>
+<body> 
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="logo-container" id="logoContainer">
+        <img src="/frontend/image/logo.webp" alt="Logo" class="logo" />
+        <span class="brand-name">Barangay Manuyo Uno <br> Health Center</span>
+      </div>
+      
+      <ul class="nav-menu" id="navMenu">
+        <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+        
+        <li class="nav-item" id="scheduleOrAppointment">
+             <a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
+        </li>
+        
+        <li class="nav-item"><a href="/frontend/patient/html/about.html" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="/frontend/patient/html/services.html" class="nav-link">Services</a></li>
+        <li class="nav-item"><a href="/frontend/patient/html/contactus.html" class="nav-link active">Contact Us</a></li>
+        
+        <li class="nav-item" id="authLink">
+             <a href="/frontend/patient/html/login.html" class="nav-link">Login</a>
+        </li>
+      </ul>
+      
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  
+<section id="contact">
+  <div class="contact-wrapper">
+      <div class="img-container">
+          <img src="/frontend/image/contactus.webp" alt="">
+      </div> 
+      <div class="container">
+          <div class="header">
+              <h1>Contact Us</h1>
+              <p>We're here to help with all your health needs</p>
+          </div>
+          <div class="form-container">
+              <div class="health-icons">
+                  <div class="health-icon"></div>
+                  <div class="health-icon"></div>
+                  <div class="health-icon"></div>
+              </div>
+
+              <form id="contactForm">
+                  <div class="form-group">
+                      <input type="text" id="name" name="name" required>
+                      <label for="name">Full Name *</label>
+                       <small id="nameAlert"></small>
+                  </div>
+                  <div class="form-group">
+                      <input type="email" id="contacts" name="contact" required>
+                      <label for="contacts">Email *</label>
+                      <small id="contactsAlert"></small>
+                  </div>
+                  <div class="form-group">
+                      <textarea id="message" name="message" required></textarea>
+                      <label for="message">Message *</label>
+                      <small id="messageAlert"></small>
+                  </div>
+                  <button type="submit" class="submit-btn">
+                      Send Message
+                  </button>
+                  <div id="formAlert" class="alert"></div>
+              </form>
+              
+          </div>
+      </div>
+  </div>
+</section>
+
+            <div id="formAlert" class="alert"></div>
+
+  
+ <footer>
+   <div class="footer-container"> 
+    <div class="copyright">
+  <img src="/frontend/image/copyright.webp" alt=""> 2025 Barangay Manuyo Uno
+    All rights reserved. 
+    </div>
+  <div class="location">
+      <h4>Location</h4>
+        <div class="loc-info">
+          <img src="/frontend/image/map.webp" alt="Location icon">
+          <p>123 Manuyo Uno,  Las Piñas,<br> Metro Manila, Philippines</p>
+        </div>
+  </div>
+  <div class="Contact">
+      <h4>Contact Us</h4>
+        <div class="cont-info">
+          <img src="/frontend/image/phone.webp" alt="Contact icon">
+          <p>+1 1234 567819</p>
+        </div>
+  </div>
+    <div class="Socials">
+      <h4>Socials</h4>
+      <div class="social-icons">
+        <a href="#"><img src="/frontend/image/facebook.webp" alt=""><i class="#"></i></a>
+        <a href="#"><img src="/frontend/image/gmail.webp" alt=""><i class="#"></i></a>
+      </div>
+    </div>
+     <div class="Hours">
+      <h4>Hours</h4>
+        <div class="Hours-info">
+          <img src="/frontend/image/clock.webp" alt="Contact icon">
+          <p>Open Hours: Mon-Fri 8AM–5PM<br>Saturday – Sunday: Closed</p>
+        </div>
+  </div>
+  </div>
+</footer>
+
+
+</body>
+</html>
+

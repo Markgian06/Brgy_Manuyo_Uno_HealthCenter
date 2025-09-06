@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import functionRouter from './Routes/functionRoutes.js';
 import dbConnection from './Controllers/dbConnection.js';
 import contactRoutes from './Routes/contactRoutes.js';
+import appointmentRoutes from './Routes/appointmentRoutes.js';
 import path from 'path';
 
 
@@ -30,13 +31,14 @@ app.get('/', (req, res) => {
 });
 
 
-
-
 app.get('/', (req, res) => res.send('API WORKING'));
 app.use('/api/auth', functionRouter);
 
 
+
 app.use("/api", contactRoutes);
+app.use('/api', appointmentRoutes);
+
 
 
 
