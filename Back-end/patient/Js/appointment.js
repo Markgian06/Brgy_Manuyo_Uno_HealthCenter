@@ -16,52 +16,6 @@ const timeSlots = [
 
 let unavailableSlots = {};
 
-async function fetchExistingAppointments(date) {
-    try {
-        console.log('🔍 Checking appointments for date:', date);
-        
-            const response = await fetch(`http://localhost:5000/api/appointments?date=${encodeURIComponent(date)}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            console.log('✅ Found existing appointments:', data.bookedTimes);
-            return data.bookedTimes || [];
-        } else {
-            console.warn('⚠️ API returned error:', data.message);
-            return [];
-        }
-    } catch (error) {
-        console.error('❌ Error fetching appointments:', error);
-        return [];
-    }
-}
-
-function convertTo12Hour(time24h) {
-    const [hours, minutes] = time24h.split(':');
-    let hour = parseInt(hours, 10);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    
-    if (hour === 0) {
-        hour = 12;
-    } else if (hour > 12) {
-        hour = hour - 12;
-    }
-    
-    return `${hour}:${minutes} ${ampm}`;
-}
-
-
-
 function generateCalendar(month, year) {
     const calendar = document.getElementById('calendar');
     const calendarTitle = document.getElementById('calendarTitle');
@@ -114,6 +68,7 @@ function generateCalendar(month, year) {
         
         const currentDate = new Date(year, month, day);
         currentDate.setHours(0, 0, 0, 0);
+        const dayOfWeek = currentDate.getDay(); 
         
         dayElement.style.cssText = `
             aspect-ratio: 1;
@@ -128,13 +83,62 @@ function generateCalendar(month, year) {
             border: 1px solid #f0f0f0;
         `;
         
-        if (currentDate < today || currentDate.getDay() === 0) {
+        if (currentDate < today) {
             dayElement.className += ' disabled';
             dayElement.style.cssText += `
                 background: #f8f9fa;
                 color: #ccc;
                 cursor: not-allowed;
             `;
+        } else if (dayOfWeek === 0) {
+            dayElement.className += ' disabled weekend sunday';
+            dayElement.style.cssText += `
+                background: #fff3cd;
+                color: #856404;
+                cursor: not-allowed;
+                border: 2px solid #ffeaa7;
+                font-weight: bold;
+            `;
+            
+            // Add "SUN" indicator
+            const indicator = document.createElement('span');
+            indicator.textContent = 'SUN';
+            indicator.style.cssText = `
+                position: absolute;
+                bottom: 2px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 8px;
+                color: #856404;
+                font-weight: bold;
+            `;
+            dayElement.appendChild(indicator);
+            
+        } else if (dayOfWeek === 6) {
+            // Saturday - disabled but highlighted differently
+            dayElement.className += ' disabled weekend saturday';
+            dayElement.style.cssText += `
+                background: #e1f5fe;
+                color: #0277bd;
+                cursor: not-allowed;
+                border: 2px solid #81d4fa;
+                font-weight: bold;
+            `;
+            
+            // Add "SAT" indicator
+            const indicator = document.createElement('span');
+            indicator.textContent = 'SAT';
+            indicator.style.cssText = `
+                position: absolute;
+                bottom: 2px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 8px;
+                color: #0277bd;
+                font-weight: bold;
+            `;
+            dayElement.appendChild(indicator);
+            
         } else {
             dayElement.addEventListener('click', () => selectDate(day, month, year, dayElement));
             
@@ -150,6 +154,37 @@ function generateCalendar(month, year) {
                     dayElement.style.background = 'white';
                     dayElement.style.transform = 'scale(1)';
                 }
+            });
+        }
+        
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+            const tooltip = document.createElement('div');
+            tooltip.textContent = dayOfWeek === 0 ? 'Closed' : 'Closed';
+            tooltip.style.cssText = `
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #333;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 10px;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s;
+                z-index: 1000;
+                margin-bottom: 5px;
+            `;
+            dayElement.appendChild(tooltip);
+            
+            dayElement.addEventListener('mouseenter', () => {
+                tooltip.style.opacity = '1';
+            });
+            
+            dayElement.addEventListener('mouseleave', () => {
+                tooltip.style.opacity = '0';
             });
         }
         
@@ -239,7 +274,6 @@ async function generateTimeSlots() {
         const isBooked = bookedTimes.includes(time);
         
         if (isBooked) {
-            // RED styling for booked appointments
             timeSlot.style.cssText += `
                 background: #ffebee;
                 border: 2px solid #f44336;
@@ -282,7 +316,6 @@ async function generateTimeSlots() {
             timeSlot.appendChild(tooltip);
             
         } else {
-            // GRAY styling for manually unavailable slots
             timeSlot.style.cssText += `
                 background: #f8f9fa;
                 border: 2px solid #dee2e6;
@@ -334,7 +367,6 @@ async function generateTimeSlots() {
         });
         
     } else {
-        // AVAILABLE time slots - GREEN styling
         const indicator = document.createElement('span');
         indicator.textContent = '●';
         indicator.style.cssText = `
@@ -368,7 +400,6 @@ async function generateTimeSlots() {
     timeSlotsContainer.appendChild(timeSlot);
 });
 }
-
 function selectTime(time, element) {
     document.querySelectorAll('.time-slot.selected').forEach(el => {
         el.classList.remove('selected');
@@ -418,7 +449,48 @@ function convertTo24Hour(time12h) {
     
     return `${hours.toString().padStart(2, '0')}:${minutes}`;
 }
+async function fetchExistingAppointments(dateString, timeString) {
+    try {
+        const response = await fetch(
+            `http://localhost:5000/api/appointments/${encodeURIComponent(dateString)}/${encodeURIComponent(timeString)}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }
+        );
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            return data.appointments || [];
+        } else {
+            console.error('Failed to fetch appointments:', data.message);
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching appointments:', error);
+        return [];
+    }
+}
 
+function convertTo12Hour(time24) {
+    try {
+        const [hours, minutes] = time24.split(':');
+        const hour = parseInt(hours, 10);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+        return `${displayHour}:${minutes} ${ampm}`;
+    } catch (error) {
+        console.error('Error converting time:', error);
+        return time24;
+    }
+}
 document.addEventListener('DOMContentLoaded', function() {
     const prevBtn = document.getElementById('prevMonth');
     if (prevBtn) {
@@ -451,23 +523,8 @@ document.addEventListener('DOMContentLoaded', function() {
             await submitAppointment();
         });
     }
-    
     generateCalendar(currentMonth, currentYear);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 async function submitAppointment() {
     try {   
@@ -480,8 +537,6 @@ async function submitAppointment() {
         const reason = document.getElementById('reason')?.value;
         const selectedDate = document.getElementById('selectedDate')?.value;
         const selectedTime = document.getElementById('selectedTime')?.value;
-
-
 
         if (!firstName || firstName.length < 2) {
             showAlert("First name is required", "error", "firstNameAlert");
@@ -542,7 +597,6 @@ async function submitAppointment() {
             appointmentNumber: 'APP' + Date.now()
         };
 
-
         const response = await fetch('http://localhost:5000/api/appointments', {
             method: 'POST',
             headers: {
@@ -559,22 +613,26 @@ async function submitAppointment() {
             document.getElementById('selectedDate').value = '';
             document.getElementById('selectedTime').value = '';
 
-    document.querySelectorAll('.calendar-day.selected').forEach(el => {
-        el.classList.remove('selected');
-        el.style.background = 'white';
-        el.style.color = '#333';
-        const checkmark = el.querySelector('.checkmark');
-        if (checkmark) checkmark.remove();
-    });
+            document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                el.classList.remove('selected');
+                el.style.background = 'white';
+                el.style.color = '#333';
+                const checkmark = el.querySelector('.checkmark');
+                if (checkmark) checkmark.remove();
+            });
 
-    document.querySelectorAll('.time-slot.selected').forEach(el => {
-        el.classList.remove('selected');
-        el.style.background = 'white';
-        el.style.color = '#333';
-        el.style.borderColor = '#e1e5e9';
-        el.style.transform = 'translateY(0)';
-        el.style.boxShadow = 'none';
-    });
+            document.querySelectorAll('.time-slot.selected').forEach(el => {
+                el.classList.remove('selected');
+                el.style.background = 'white';
+                el.style.color = '#333';
+                el.style.borderColor = '#e1e5e9';
+                el.style.transform = 'translateY(0)';
+                el.style.boxShadow = 'none';
+            });
+
+            if (selectedDate) {
+                generateTimeSlots();
+            }
 
         } else {
             showAlert('Error: ' + data.message,"error");

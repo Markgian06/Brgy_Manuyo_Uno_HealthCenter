@@ -5,7 +5,7 @@ import { getAppointmentsByDate } from "../Controllers/getAppointmentsByDate.js";
 
 const router = express.Router();
 
-router.get("/appointments", getAppointmentsByDate);
+router.get("/appointments/date/:date", getAppointmentsByDate);
 router.post("/appointments", validateAppointment, createAppointment);
 
 
