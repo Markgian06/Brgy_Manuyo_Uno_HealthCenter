@@ -4,6 +4,8 @@ document.getElementById('signin-form').addEventListener('submit', async function
     const form = e.target;
     const formData = new FormData(form);
 
+    console.log("LOGIN");
+
     try {
         const response = await fetch(form.action, {
             method: 'POST',
@@ -19,7 +21,9 @@ document.getElementById('signin-form').addEventListener('submit', async function
         const data = await response.json();
 
         if (response.ok) {
-            window.location.href = './forgetPass.html';
+
+            window.location.href = '/frontend/patient/html/forgetpassword.html';
+
         } else {
             alert(data.message || 'Login failed. Please check your credentials.');
         }

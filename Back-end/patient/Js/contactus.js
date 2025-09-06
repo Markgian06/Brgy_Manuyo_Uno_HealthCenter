@@ -7,17 +7,17 @@ document.getElementById("contactForm").addEventListener("submit", async function
 
   // --- Name Validation ---
     if (!name) {
-        showAlert("⚠️ Name is required", "error");
+        showAlert("⚠️ Name is required", "warning");
         return;
     }
     if (name.length < 3) {
-        showAlert("⚠️ Name must be at least 3 characters", "error");
+        showAlert("⚠️ Name must be at least 3 characters", "warning");
         return;
     }
 
     // --- Contact Validation ---
     if (!contacts) {
-        showAlert("⚠️ Contact is required", "error");
+        showAlert("⚠️ Contact is required", "warning");
         return;
     }
 
@@ -25,20 +25,19 @@ document.getElementById("contactForm").addEventListener("submit", async function
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailPattern.test(contacts)) {
-        showAlert("⚠️ Enter a valid email or phone number", "error");
+        showAlert("⚠️ Enter a valid email", "warning");
         return;
     }
 
     // --- Message Validation ---
     if (!message) {
-        showAlert("⚠️ Message is required", "error");
+        showAlert("⚠️ Message is required", "warning");
         return;
     }
     if (message.length < 10) {
-        showAlert("⚠️ Message must be at least 10 characters", "error");
+        showAlert("⚠️ Message must be at least 10 characters", "warning");
         return;
     }
-
 
 
     try { 
