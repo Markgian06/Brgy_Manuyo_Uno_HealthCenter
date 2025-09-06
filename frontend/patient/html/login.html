@@ -59,7 +59,7 @@
                 <div class="signin-container">
                   <div class="leftside">
                     <h2>BARANGAY MANUYO UNO<br>HEALTH CENTER</h2>
-                    <img src="manuyologo.png" alt="Barangay Logo">
+                    <img src="/frontend/image/logo.webp" alt="Barangay Logo">
                     <button onclick="showSection('signupSection')">SIGN UP</button>
                   </div>
                   <div class="rightside">
@@ -68,7 +68,7 @@
                       <form>
                         <input type="text" placeholder="Email/Phone" required>
                         <input type="password" placeholder="Password" required>
-                        <div class="forgot"><a href="forgot.html">Forgot Password?</a></div>
+                        <div class="forgot"><a href="/frontend/patient/html/forgetpassword.html">Forgot Password?</a></div>
                         <input type="submit" value="Login">
                       </form>
                     </div>
@@ -83,7 +83,7 @@
               
             <div class="leftside">
                     <h2>BARANGAY MANUYO UNO<br>HEALTH CENTER</h2>
-                    <img src="manuyologo.png" alt="Barangay Logo">
+                    <img src="/frontend/image/logo.webp" alt="Barangay Logo">
                     <button onclick="showSection('signinSection')">SIGN IN</button>
             </div>
 
@@ -211,6 +211,7 @@
 </footer>
 
 <script>
+  
     function showSection(sectionId) {
       document.querySelectorAll(".auth-container section").forEach(sec => {
         sec.classList.remove("active");
