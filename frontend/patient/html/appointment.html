@@ -11,10 +11,10 @@
   <link rel="stylesheet" href="/frontend/patient/footer.css">
   <link rel="stylesheet" href="/frontend/patient/alert.css">
 
-  <link rel="stylesheet" href="/frontend/patient/appoinment.css">
-  <script src="/Back-end/patient/Js/appoinment.js" defer></script>
+  <link rel="stylesheet" href="/frontend/patient/appointment.css">
+  <script src="/Back-end/patient/Js/appointment.js"></script>
 
-  <script src="/Back-end/patient/Js/alert.js" defer></script>
+  <script src="/Back-end/patient/Js/alert.js"></script>
   <script src="/Back-end/patient/Js/navigation.js" defer></script>
 </head>
 <body> 
@@ -50,6 +50,9 @@
     </div>
   </nav>
 
+
+
+
   <div class="appointment">
      <h1 class="main-title">Brgy. Manuyo Uno Health Center System</h1>    
      <p class="sub-title">Book Your Appointment</p>
@@ -59,18 +62,18 @@
                 <div class="form-group">
                     <label for="firstName">First Name <span class="required">*</span></label>
                     <input type="text" id="firstName" name="firstName" required>
-                    <small id="showAlert"></small>  
+                    <small id="firstNameAlert"></small>  
                   </div>
                 <div class="form-group">
                     <label for="lastName">Last Name <span class="required">*</span></label>
                     <input type="text" id="lastName" name="lastName" required>
-                    <small id="showAlert"></small>
+                    <small id="lastNameAlert"></small>
                   </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="middleName">Middle Name</label>
+                    <label for="middleName">Middle Name (optional)</label>
                     <input type="text" id="middleName" name="middleName">
                 </div>
                 <div class="form-group">
@@ -82,7 +85,7 @@
                         <option value="other">Other</option>
                         <option value="prefer-not-to-say">Prefer not to say</option>
                     </select>
-                    <small id="showAlert"></small>
+                    <small id="genderAlert"></small>
                   </div>
             </div>
 
@@ -90,22 +93,24 @@
                 <div class="form-group">
                     <label for="email">Email Address <span class="required">*</span></label>
                     <input type="email" id="email" name="email" required>
-                    <small id="showAlert"></small>
+                    <small id="emailAlert"></small>
                 </div>
                 <div class="form-group">
                     <label for="contactNumber">Contact Number <span class="required">*</span></label>
-                    <input type="tel" id="contactNumber" name="contactNumber" required>
-                    <small id="showAlert"></small>
+                    <input type="number" id="contactNumber" name="contactNumber"  
+                    pattern="[0-9]{11}" maxlength="11" required 
+                    placeholder="Enter 11-digit number">         
+                    <small id="contactNumberAlert"></small>
                 </div>
             </div>
 
-            <div class="form-group full-width">
+            <div class="form-group">
                 <label for="reason">Reason for Appointment <span class="required">*</span></label>
                 <textarea id="reason" name="reason" placeholder="Please describe the reason for your appointment..." required></textarea>
-                <small id="showAlert"></small>
+                <small id="reasonAlert"></small>
               </div>
-
-            <div class="form-group full-width">
+              
+            <div class="form-group">
                 <label>Select Date <span class="required">*</span></label>
                 <div class="calendar-container">
                     <div class="calendar-header">
@@ -115,18 +120,20 @@
                     </div>
                     <div class="calendar" id="calendar"></div>
                 </div>
-                <small id="showAlert"></small>
-                <input type="hidden" id="selectedDate" name="selectedDate">
+                <input type="hidden" id="selectedDate" name="selectedDate" required>
+                <small id="calendarAlert"></small>
             </div>
 
-            <div class="form-group full-width">
+            <div class="form-group">
                 <label>Select Time <span class="required">*</span></label>
                 <div class="time-grid" id="timeSlots"></div>
-                <small id="showAlert"></small>
+                <input type="hidden" id="selectedTime" name="selectedTime" required>
+                <small id="timeSlotsAlert"></small>
             </div>
 
             <button type="submit" class="submit-btn">Book Appointment</button>
         </form>
+        <div id="formAlert" class="alert"></div>
     </div>
 
 

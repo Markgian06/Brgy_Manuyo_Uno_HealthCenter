@@ -22,7 +22,7 @@ document.getElementById('signin-form').addEventListener('submit', async function
 
         if (response.ok) {
 
-            window.location.href = '/frontend/patient/html/forgetpassword.html';
+            window.location.href = '/frontend/patient/html/profile.html';
 
         } else {
             alert(data.message || 'Login failed. Please check your credentials.');

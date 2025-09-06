@@ -5,37 +5,28 @@ document.getElementById("contactForm").addEventListener("submit", async function
     const contacts = document.getElementById("contacts").value;
     const message = document.getElementById("message").value;
 
-  // --- Name Validation ---
-    if (!name) {
-        showAlert("⚠️ Name is required", "warning");
-        return;
-    }
+
     if (name.length < 3) {
-        showAlert("⚠️ Name must be at least 3 characters", "warning");
+        showAlert("⚠️ Full Name is required", "warning", "nameAlert");
         return;
     }
 
-    // --- Contact Validation ---
     if (!contacts) {
-        showAlert("⚠️ Contact is required", "warning");
+        showAlert("⚠️ Email is required", "warning", "contactsAlert");
         return;
     }
-
-    // Simple email pattern
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!emailPattern.test(contacts)) {
-        showAlert("⚠️ Enter a valid email", "warning");
+        showAlert("⚠️ Enter a valid email", "warning", "contactsAlert");
         return;
     }
 
-    // --- Message Validation ---
     if (!message) {
-        showAlert("⚠️ Message is required", "warning");
+        showAlert("⚠️ Message is required", "warning", "messageAlert");
         return;
     }
     if (message.length < 10) {
-        showAlert("⚠️ Message must be at least 10 characters", "warning");
+        showAlert("⚠️ Message must be at least 10 characters", "warning", "messageAlert");
         return;
     }
 
@@ -46,7 +37,7 @@ document.getElementById("contactForm").addEventListener("submit", async function
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, contacts, message })
         });
-        showAlert("  Your message has been sent. Thank you!", "success");
+        showAlert("  Your message has been sent. Thank you!", "success",);
         document.getElementById("contactForm").reset();
     } catch (err) {
         console.error("Error:", err.message);

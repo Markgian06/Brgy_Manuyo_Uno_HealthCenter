@@ -2,10 +2,10 @@
   "name": "brgy_manuyo_uno_healthcenter",
   "version": "1.0.0",
   "description": "GROUP 7 :  System Analysis Design",
-  "main": "Back-end/patient/index.js",
+  "main": "Back-end/index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon Back-end/patient/index.js",
+    "start": "nodemon Back-end/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
