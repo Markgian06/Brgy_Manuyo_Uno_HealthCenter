@@ -17,422 +17,104 @@ const timeSlots = [
 let unavailableSlots = {};
 
 function generateCalendar(month, year) {
-    const calendar = document.getElementById('calendar');
-    const calendarTitle = document.getElementById('calendarTitle');
-    
-    if (!calendar || !calendarTitle) return;
-    
-    calendar.innerHTML = '';
-    calendarTitle.textContent = `${months[month]} ${year}`;
-    
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    dayHeaders.forEach(day => {
-        const dayHeader = document.createElement('div');
-        dayHeader.textContent = day;
-        dayHeader.style.cssText = `
-            background: #f8f9fa;
-            font-weight: bold;
-            color: #666;
-            padding: 12px;
-            text-align: center;
-            font-size: 14px;
-            border-bottom: 1px solid #e1e5e9;
-        `;
-        calendar.appendChild(dayHeader);
-    });
-    
-    for (let i = 0; i < firstDay; i++) {
-        const emptyDay = document.createElement('div');
-        emptyDay.className = 'calendar-day disabled';
-        emptyDay.style.cssText = `
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8f9fa;
-            color: #ccc;
-            cursor: not-allowed;
-        `;
-        calendar.appendChild(emptyDay);
+  const calendar = document.getElementById('calendar');
+  const calendarTitle = document.getElementById('calendarTitle');
+  if (!calendar || !calendarTitle) return;
+
+  calendar.innerHTML = '';
+  calendarTitle.textContent = `${months[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  dayHeaders.forEach(day => {
+    const dayHeader = document.createElement('div');
+    dayHeader.textContent = day;
+    dayHeader.className = "calendar-header";
+    calendar.appendChild(dayHeader);
+  });
+
+  for (let i = 0; i < firstDay; i++) {
+    const emptyDay = document.createElement('div');
+    emptyDay.className = 'calendar-day disabled';
+    calendar.appendChild(emptyDay);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dayElement = document.createElement('div');
+    dayElement.className = 'calendar-day';
+    dayElement.textContent = day;
+
+    const currentDate = new Date(year, month, day);
+    currentDate.setHours(0, 0, 0, 0);
+    const dayOfWeek = currentDate.getDay();
+
+    if (currentDate < today || dayOfWeek === 0 || dayOfWeek === 6) {
+      dayElement.classList.add('disabled');
+    } else {
+      dayElement.addEventListener('click', () => selectDate(day, month, year, dayElement));
     }
-    
-    for (let day = 1; day <= daysInMonth; day++) {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'calendar-day';
-        dayElement.textContent = day;
-        
-        const currentDate = new Date(year, month, day);
-        currentDate.setHours(0, 0, 0, 0);
-        const dayOfWeek = currentDate.getDay(); 
-        
-        dayElement.style.cssText = `
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            position: relative;
-            border: 1px solid #f0f0f0;
-        `;
-        
-        if (currentDate < today) {
-            dayElement.className += ' disabled';
-            dayElement.style.cssText += `
-                background: #f8f9fa;
-                color: #ccc;
-                cursor: not-allowed;
-            `;
-        } else if (dayOfWeek === 0) {
-            dayElement.className += ' disabled weekend sunday';
-            dayElement.style.cssText += `
-                background: #fff3cd;
-                color: #856404;
-                cursor: not-allowed;
-                border: 2px solid #ffeaa7;
-                font-weight: bold;
-            `;
-            
-            // Add "SUN" indicator
-            const indicator = document.createElement('span');
-            indicator.textContent = 'SUN';
-            indicator.style.cssText = `
-                position: absolute;
-                bottom: 2px;
-                left: 50%;
-                transform: translateX(-50%);
-                font-size: 8px;
-                color: #856404;
-                font-weight: bold;
-            `;
-            dayElement.appendChild(indicator);
-            
-        } else if (dayOfWeek === 6) {
-            // Saturday - disabled but highlighted differently
-            dayElement.className += ' disabled weekend saturday';
-            dayElement.style.cssText += `
-                background: #e1f5fe;
-                color: #0277bd;
-                cursor: not-allowed;
-                border: 2px solid #81d4fa;
-                font-weight: bold;
-            `;
-            
-            // Add "SAT" indicator
-            const indicator = document.createElement('span');
-            indicator.textContent = 'SAT';
-            indicator.style.cssText = `
-                position: absolute;
-                bottom: 2px;
-                left: 50%;
-                transform: translateX(-50%);
-                font-size: 8px;
-                color: #0277bd;
-                font-weight: bold;
-            `;
-            dayElement.appendChild(indicator);
-            
-        } else {
-            dayElement.addEventListener('click', () => selectDate(day, month, year, dayElement));
-            
-            dayElement.addEventListener('mouseenter', () => {
-                if (!dayElement.classList.contains('selected')) {
-                    dayElement.style.background = '#e8f5e8';
-                    dayElement.style.transform = 'scale(1.05)';
-                }
-            });
-            
-            dayElement.addEventListener('mouseleave', () => {
-                if (!dayElement.classList.contains('selected')) {
-                    dayElement.style.background = 'white';
-                    dayElement.style.transform = 'scale(1)';
-                }
-            });
-        }
-        
-        if (dayOfWeek === 0 || dayOfWeek === 6) {
-            const tooltip = document.createElement('div');
-            tooltip.textContent = dayOfWeek === 0 ? 'Closed' : 'Closed';
-            tooltip.style.cssText = `
-                position: absolute;
-                bottom: 100%;
-                left: 50%;
-                transform: translateX(-50%);
-                background: #333;
-                color: white;
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 10px;
-                white-space: nowrap;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.3s;
-                z-index: 1000;
-                margin-bottom: 5px;
-            `;
-            dayElement.appendChild(tooltip);
-            
-            dayElement.addEventListener('mouseenter', () => {
-                tooltip.style.opacity = '1';
-            });
-            
-            dayElement.addEventListener('mouseleave', () => {
-                tooltip.style.opacity = '0';
-            });
-        }
-        
-        calendar.appendChild(dayElement);
-    }
+
+    calendar.appendChild(dayElement);
+  }
 }
 
 function selectDate(day, month, year, element) {
-    document.querySelectorAll('.calendar-day.selected').forEach(el => {
-        el.classList.remove('selected');
-        el.style.background = 'white';
-        el.style.color = '#333';
-        const checkmark = el.querySelector('.checkmark');
-        if (checkmark) checkmark.remove();
-    });
-    
-    element.classList.add('selected');
-    element.style.cssText += `
-        background: #4CAF50 !important;
-        color: white !important;
-        font-weight: bold;
-        transform: scale(1.1);
-    `;
-    
-    if (!element.querySelector('.checkmark')) {
-        const checkmark = document.createElement('span');
-        checkmark.className = 'checkmark';
-        checkmark.textContent = '✓';
-        checkmark.style.cssText = `
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            font-size: 10px;
-        `;
-        element.appendChild(checkmark);
-    }
-    
-    selectedDate = new Date(year, month, day);
-    document.getElementById('selectedDate').value = selectedDate.toISOString().split('T')[0];
-    
-    const dateAlert = document.querySelector('#selectedDate').parentNode.querySelector('#showAlert');
-    if (dateAlert) {
-        dateAlert.textContent = '';
-        dateAlert.style.display = 'none';
-    }
-    
-    generateTimeSlots();
+  document.querySelectorAll('.calendar-day.selected').forEach(el => {
+    el.classList.remove('selected');
+    const checkmark = el.querySelector('.checkmark');
+    if (checkmark) checkmark.remove();
+  });
+
+  element.classList.add('selected');
+  const checkmark = document.createElement('span');
+  checkmark.className = 'checkmark';
+  checkmark.textContent = '';
+  element.appendChild(checkmark);
+
+  selectedDate = new Date(year, month, day);
+  document.getElementById('selectedDate').value = selectedDate.toISOString().split('T')[0];
+
+  generateTimeSlots();
 }
 
 async function generateTimeSlots() {
-    const timeSlotsContainer = document.getElementById('timeSlots');
-    if (!timeSlotsContainer || !selectedDate) return;
-    
-    timeSlotsContainer.innerHTML = '';
-    
-    const dateString = selectedDate.toISOString().split('T')[0];
-    const existingAppointments = await fetchExistingAppointments(dateString);
-    
-    const bookedTimes = existingAppointments.map(appointment => {
-        return convertTo12Hour(appointment.selectedTime);
-    });
+  const container = document.getElementById('timeSlots');
+  if (!container || !selectedDate) return;
 
-     const manualUnavailable = unavailableSlots[dateString] || [];
-     const allUnavailable = [...new Set([...manualUnavailable, ...bookedTimes])];
+  container.innerHTML = '';
+  const dateString = selectedDate.toISOString().split('T')[0];
+  const existingAppointments = await fetchExistingAppointments(dateString);
+  const bookedTimes = existingAppointments.map(a => convertTo12Hour(a.selectedTime));
+
+  const manualUnavailable = unavailableSlots[dateString] || [];
+  const allUnavailable = [...new Set([...manualUnavailable, ...bookedTimes])];
 
   timeSlots.forEach(time => {
-    const timeSlot = document.createElement('div');
-    timeSlot.className = 'time-slot';
-    timeSlot.textContent = time;
+    const slot = document.createElement('div');
+    slot.className = 'time-slot';
+    slot.textContent = time;
 
-    timeSlot.style.cssText = `
-        padding: 12px 16px;
-        border: 2px solid #e1e5e9;
-        border-radius: 12px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        background: white;
-        font-weight: 500;
-        position: relative;
-        margin: 5px;
-    `;
-    
     if (allUnavailable.includes(time)) {
-        timeSlot.className += ' unavailable';
-        
-        const isBooked = bookedTimes.includes(time);
-        
-        if (isBooked) {
-            timeSlot.style.cssText += `
-                background: #ffebee;
-                border: 2px solid #f44336;
-                color: #c62828;
-                cursor: not-allowed;
-                text-decoration: line-through;
-                font-weight: bold;
-            `;
-            
-            const indicator = document.createElement('span');
-            indicator.textContent = '✕';
-            indicator.style.cssText = `
-                position: absolute;
-                top: 2px;
-                right: 5px;
-                color: #f44336;
-                font-size: 14px;
-                font-weight: bold;
-            `;
-            timeSlot.appendChild(indicator);
-            
-            const tooltip = document.createElement('div');
-            tooltip.textContent = 'Already booked';
-            tooltip.style.cssText = `
-                position: absolute;
-                bottom: 100%;
-                left: 50%;
-                transform: translateX(-50%);
-                background: #f44336;
-                color: white;
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 10px;
-                white-space: nowrap;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.3s;
-                z-index: 1000;
-            `;
-            timeSlot.appendChild(tooltip);
-            
-        } else {
-            timeSlot.style.cssText += `
-                background: #f8f9fa;
-                border: 2px solid #dee2e6;
-                color: #999;
-                cursor: not-allowed;
-                text-decoration: line-through;
-            `;
-            
-            const indicator = document.createElement('span');
-            indicator.textContent = '✕';
-            indicator.style.cssText = `
-                position: absolute;
-                top: 2px;
-                right: 5px;
-                color: #999;
-                font-size: 12px;
-            `;
-            timeSlot.appendChild(indicator);
-            
-            const tooltip = document.createElement('div');
-            tooltip.textContent = 'Unavailable';
-            tooltip.style.cssText = `
-                position: absolute;
-                bottom: 100%;
-                left: 50%;
-                transform: translateX(-50%);
-                background: #6c757d;
-                color: white;
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 10px;
-                white-space: nowrap;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.3s;
-                z-index: 1000;
-            `;
-            timeSlot.appendChild(tooltip);
-        }
-        
-        timeSlot.addEventListener('mouseenter', () => {
-            const tooltip = timeSlot.querySelector('div');
-            if (tooltip) tooltip.style.opacity = '1';
-        });
-        
-        timeSlot.addEventListener('mouseleave', () => {
-            const tooltip = timeSlot.querySelector('div');
-            if (tooltip) tooltip.style.opacity = '0';
-        });
-        
+      slot.classList.add('unavailable');
+      slot.textContent += " (Booked)";
     } else {
-        const indicator = document.createElement('span');
-        indicator.textContent = '●';
-        indicator.style.cssText = `
-            position: absolute;
-            top: 2px;
-            right: 5px;
-            color: #4CAF50;
-            font-size: 12px;
-        `;
-        timeSlot.appendChild(indicator);
-        
-        timeSlot.addEventListener('click', () => selectTime(time, timeSlot));
-        
-        timeSlot.addEventListener('mouseenter', () => {
-            if (!timeSlot.classList.contains('selected')) {
-                timeSlot.style.borderColor = '#4CAF50';
-                timeSlot.style.transform = 'translateY(-2px)';
-                timeSlot.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.2)';
-            }
-        });
-        
-        timeSlot.addEventListener('mouseleave', () => {
-            if (!timeSlot.classList.contains('selected')) {
-                timeSlot.style.borderColor = '#e1e5e9';
-                timeSlot.style.transform = 'translateY(0)';
-                timeSlot.style.boxShadow = 'none';
-            }
-        });
+      slot.addEventListener('click', () => selectTime(time, slot));
     }
-    
-    timeSlotsContainer.appendChild(timeSlot);
-});
+
+    container.appendChild(slot);
+  });
 }
+
 function selectTime(time, element) {
-    document.querySelectorAll('.time-slot.selected').forEach(el => {
-        el.classList.remove('selected');
-        el.style.background = 'white';
-        el.style.color = '#333';
-        el.style.borderColor = '#e1e5e9';
-        el.style.transform = 'translateY(0)';
-        el.style.boxShadow = 'none';
-    });
+  document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
+  element.classList.add('selected');
 
-    element.classList.add('selected');
-    element.style.cssText += `
-        background: #4CAF50 !important;
-        color: white !important;
-        border-color: #4CAF50 !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-    `;
-    
-    selectedTime = time;
-    const hiddenInput = document.getElementById('selectedTime');
-    if (hiddenInput) {
-        hiddenInput.value = time;
-    }
-
-    console.log("✅ Selected Time:", time);
-
-    
-    const timeAlert = document.querySelector('#timeSlots').parentNode.querySelector('#timeSlotsAlert');
-    if (timeAlert) {
-        timeAlert.textContent = '';
-        timeAlert.style.display = 'none';
-    }
+  selectedTime = time;
+  document.getElementById('selectedTime').value = time;
 }
 
 function convertTo24Hour(time12h) {
@@ -635,7 +317,7 @@ async function submitAppointment() {
             }
 
         } else {
-            showAlert('Error: ' + data.message,"error");
+            showAlert(data.message,"error");
         }
         
     } catch (error) {
