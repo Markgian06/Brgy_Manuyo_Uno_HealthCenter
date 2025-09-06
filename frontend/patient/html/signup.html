@@ -9,28 +9,49 @@
    <link rel="stylesheet" href="/frontend/patient/navigation.css"> 
    <link rel="stylesheet" href="/frontend/patient/index.css">
    <link rel="stylesheet" href="/frontend/patient/footer.css">
+   <link rel="stylesheet" href="/frontend/patient/alert.css">
+     
 
+  <script src="/Back-end/patient/Js/alert.js" defer></script>
   <script src="/Back-end/patient/Js/navigation.js" defer></script>
-  <script src="/Back-end/patient/Js/index.js"></script>
 </head>
 <body>
+
+
+    <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="logo-container" id="logoContainer">
+        <img src="/frontend/image/logo.webp" alt="Logo" class="logo" />
+        <span class="brand-name">Barangay Manuyo Uno <br> Health Center</span>
+      </div>
+      
+      <ul class="nav-menu" id="navMenu">
+        <li class="nav-item"><a href="/index.html" class="nav-link">Home</a></li>
+        
+        <li class="nav-item" id="scheduleOrAppointment">
+             <a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
+        </li>
+        
+        <li class="nav-item"><a href="/frontend/patient/html/about.html" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="/frontend/patient/html/services.html" class="nav-link">Services</a></li>
+        <li class="nav-item"><a href="/frontend/patient/html/contactus.html" class="nav-link">Contact Us</a></li>
+        
+        <li class="nav-item" id="authLink">
+             <a href="/frontend/patient/html/login.html" class="nav-link">Login</a>
+        </li>
+      </ul>
+      
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
     <div class="form-container">
         <h2>Create an Account</h2>
         <form action="/signup" method="post" id="signup" enctype="multipart/form-data">
-
-          <div class="form-group">
-              <label>Valid ID Pictures (Required - Upload 2 photos)</label>
-              <div class="file-upload" id="fileUpload">
-                  <input type="file" id="ID_image" name="ID_image" class="file-input" multiple accept="image/*" required>
-                  <label for="ID_image" class="file-label">
-                      📁 Choose ID Pictures
-                  </label>
-                  <div class="file-info">
-                      <p>Upload exactly 1 ID pictures (Front and Back)</p>
-                  </div>
-                  <div class="file-preview" id="filePreview"></div>
-              </div>
-          </div>
 
             <div class="two-columns">
                 <div class="form-group">
@@ -71,16 +92,30 @@
             </div>
 
             <div class="two-columns">
-                <div class="form-group">
-                    <label for="contactNum">Contact Number</label>
-                    <input type="tel" id="contactNum" name="contactNum" required>
-                </div>
-            </div>
+              <div class="form-group">
+                  <span class="country-code">Contact number</span>
+                  <input type="tel" id="contactNum" name="contactNum" placeholder="e.g., 09171234567" required>
+              </div>
+          </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
+
+            <div class="form-group">
+              <label>Valid ID Pictures (Required - Upload 2 photos)</label>
+              <div class="file-upload" id="fileUpload">
+                  <input type="file" id="ID_image" name="ID_image" class="file-input" multiple accept="image/*" required>
+                  <label for="ID_image" class="file-label">
+                      📁 Choose ID Pictures
+                  </label>
+                  <div class="file-info">
+                      <p>Upload exactly 1 ID pictures (Front and Back)</p>
+                  </div>
+                  <div class="file-preview" id="filePreview"></div>
+              </div>
+          </div>
             
             <button type="submit">Create Account</button>
             <div id="message"></div>

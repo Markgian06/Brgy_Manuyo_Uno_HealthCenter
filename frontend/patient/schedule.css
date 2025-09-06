@@ -1,11 +1,10 @@
         .container {
-            margin: 0 auto;
             display: grid;
+            margin-top: 60px;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
             padding: 150px;
-            transition: all 0.5s ease;
-            background: transparent;
+            transition: all 0.3s ease;
         }
 
         .container.center-calendar {
@@ -145,6 +144,7 @@
         }
 
         .time-slots-container {
+            margin-bottom: 60px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -385,10 +385,6 @@
         }
 
         @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            
             .container {
                 padding: 5px;
             }

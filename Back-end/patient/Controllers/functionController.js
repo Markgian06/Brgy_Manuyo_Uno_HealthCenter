@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import transporter from "./nodemailer.js";
 
 const sendErrorResponse = (res, status, message) => {
     return res.status(status).json({ success: false, message });
@@ -21,13 +22,17 @@ export const signup = async (req, res) => {
         body('age').notEmpty().withMessage('Age is required').isInt({ min: 8 }).withMessage('Age must be at least 8 years old'),
         body('gender').notEmpty().withMessage('Gender is required').isString().withMessage('Select Gender'),
         body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
-        body('contactNum').notEmpty().withMessage('Contact Number is required').isInt({min: 11}).withMessage('Enter a valid phone number'),
+        body('contactNum')
+            .notEmpty().withMessage('Contact Number is required')
+            .isString().withMessage('Contact number must be a string')
+            .isLength({ min: 11, max: 11 }).withMessage('Enter a valid phone number'),
         body('password').notEmpty().withMessage('Password is required')
-        .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
-        .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
-        .matches(/[0-9]/).withMessage('Password must contain at least one number')
-        .matches(/[!@#$%^&*()\-+_=<>?]/).withMessage('Password must contain at least one special character')
-        ]
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
+            .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
+            .matches(/[0-9]/).withMessage('Password must contain at least one number')
+            .matches(/[!@#$%^&*()\-+_=<>?]/).withMessage('Password must contain at least one special character')
+    ];
+
 
     await Promise.all(validationRules.map(rule => rule.run(req)));
 
@@ -153,3 +158,286 @@ export const signin = async (req, res) => {
         return sendErrorResponse(res, 500, 'Internal server error');
     }
 };
+
+
+
+export const logout = async (req, res) => {
+    try{
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        });
+
+        return res.json({success: true, message: 'Logged Out'})
+
+    }
+    catch(error){
+        console.error("Logout error:", error);
+        return sendErrorResponse(res, 500, 'Internal server error');
+    }
+};
+
+
+
+export const sendVerifyOtp = async (req, res) =>{
+
+    const validationRules = [
+        body('userId').notEmpty().withMessage('User ID is required').isString(),
+    ];
+
+    await Promise.all(validationRules.map(rule => rule.run(req)));
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return sendErrorResponse(res, 400, errors.array()[0].msg);
+    }
+
+    try{
+        const {userId} = req.body;
+
+        const user = await signUpModels.findById(userId);
+
+        if (!user) {
+            return sendErrorResponse(res, 404, 'User not found');
+        }
+
+        if(user.isAccountVerified){
+            return sendErrorResponse(res, 400, 'Account is Already verified');
+        }
+
+        const otp = String(Math.floor( 100000 + Math.random() * 900000));   
+
+        user.verifyOTP = otp;
+        user.verifyOTPExpireAt = Date.now() + 2 * 60 * 1000
+
+        await user.save();
+
+        const mailOption = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: "MANUYO UNO HEALTH CENTER, Account Verification OTP",
+            html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #2c3e50;">Account Verification OTP</h2>
+                <p>Your OTP to verify your account is:</p>
+                <div style="background-color: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border-radius: 5px;">
+                    <h1 style="color: #007bff; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>
+                </div>
+                <p>Use this OTP to complete your account verification.</p>
+                <p style="color: #e74c3c;"><strong>This OTP expires in 2 minutes.</strong></p>
+                <p>If you didn't create an account, please ignore this email.</p>
+            </div>
+        `
+        }
+        await transporter.sendMail(mailOption);
+
+        res.json({success: true, message: 'Verification OTP sent on Email'});
+    }
+    catch(error){
+        console.error("Send OTP error:", error);
+        return sendErrorResponse(res, 500, 'Internal server error');
+    }
+};
+
+
+
+export const verifyEmail = async (req, res) =>{
+
+    const validationRules = [
+        body('userId').notEmpty().withMessage('User ID is required').isString(),
+        body('otp').notEmpty().withMessage('OTP is required').isString(),
+    ];
+
+    await Promise.all(validationRules.map(rule => rule.run(req)));
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return sendErrorResponse(res, 400, errors.array()[0].msg);
+    };
+
+    const {userId, otp} = req.body;
+
+    try{
+        const user = await signUpModels.findById(userId);
+
+        if (!user) {
+            return sendErrorResponse(res, 404, 'User not found');
+        };
+
+        if(user.verifyOTP === '' || user.verifyOTP !== otp){
+            return sendErrorResponse(res, 400, 'Invalid OTP');
+        }
+
+        if(user.verifyOTPExpireAt < Date.now()){
+            return sendErrorResponse(res, 400, 'OTP Expired');   
+        }
+
+        user.isAccountVerified = true;
+        user.verifyOTP = '';
+        user.verifyOTPExpireAt = undefined;
+
+        await user.save();
+        
+        return res.json({success: true, message: 'Email Verified Successfully'});
+    }
+    catch(error){
+        console.error("Verify Email error:", error);
+        return sendErrorResponse(res, 500, 'Internal server error');
+    }
+};
+
+
+
+export const isAuthenticated = async (req, res) => {
+
+    const validationRules = [
+        body('userId').notEmpty().withMessage('User ID is required').isString(),
+    ];
+
+    await Promise.all(validationRules.map(rule => rule.run(req)));
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return sendErrorResponse(res, 400, errors.array()[0].msg);
+    }
+
+    const { userId } = req.body; 
+
+    try {
+        const user = await signUpModels.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        if (!user.isAccountVerified) { 
+            return res.status(401).json({ success: false, message: 'Account not verified' });
+        }
+
+        return res.json({ success: true, message: 'Account is authenticated' });
+
+    } catch (error) {
+        console.error("Is Authenticated error:", error);
+        return sendErrorResponse(res, 500, 'Internal server error');
+    }
+};
+
+
+
+export const sendResetOtp = async (req, res) =>{
+
+    const validationRules = [
+        body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
+     ];
+
+     await Promise.all(validationRules.map(rule => rule.run(req)));
+
+     const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return sendErrorResponse(res, 400, errors.array()[0].msg);
+    };
+
+    const {email} = req.body;
+
+    try {
+        const user = await signUpModels.findOne({email});
+
+        if (!user) {
+            return sendErrorResponse(res, 404, 'User not found');
+        }
+
+        const otp = String(Math.floor( 100000 + Math.random() * 900000 ));
+
+        user.resetOTP = otp;
+        user.resetOTPExpireAt = Date.now() + 2 * 60 * 1000;
+
+        await user.save();
+
+        const mailOption = {
+            from: process.env.SENDER_EMAIL,
+                to: user.email,
+                subject: "MANUYO UNO HEALTH CENTER ACCOUNT, Password Reset OTP",
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #2c3e50;">Password Reset OTP</h2>
+                        <p>Your OTP for resetting your password is:</p>
+                        <div style="background-color: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border-radius: 5px;">
+                            <h1 style="color: #007bff; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>
+                        </div>
+                        <p>Use this OTP to proceed with resetting your password.</p>
+                        <p style="color: #e74c3c;"><strong>This OTP expires in 2 minutes.</strong></p>
+                        <p>If you didn't request this, please ignore this email.</p>
+                    </div>
+                `
+        }
+        await transporter.sendMail(mailOption);
+
+        res.json({success: true, message: "OTP sent to your email"});
+
+    }
+    catch(error) {
+        console.error("Send Reset OTP error:", error);
+        return sendErrorResponse(res, 500, 'Internal server error');
+    }
+};
+
+
+
+export const resetPassword = async (req, res) =>{
+
+    const validationRules = [
+        body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
+        body('otp').notEmpty().withMessage('OTP is required').isString(),
+        body('newPassword')
+        .notEmpty().withMessage('New Password is required')
+        .isLength({min: 8}).withMessage('Password must be at least 8 characters long')
+        .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
+        .matches(/[!@#$%^&*()\-+_=<>?]/).withMessage('Password must contain at least one special character')
+        .custom((value, { req }) => {
+            if (value !== req.body.newPassword) {
+                throw new Error('Confirm new password does not match new password');
+            }
+            return true;
+        }),
+    ];
+
+    await Promise.all(validationRules.map(rule => rule.run(req)));
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+       return sendErrorResponse(res, 400, errors.array()[0].msg);
+    }
+
+    const {email, otp, newPassword} = req.body;
+
+    try{
+        const user = await signUpModels.findOne({email});
+
+        if (!user) {
+            return sendErrorResponse(res, 404, 'User not found');
+        };
+        
+        if(user.resetOTP === "" || user.resetOTP !== otp){
+            return sendErrorResponse(res, 400, 'Invalid OTP');
+        };
+
+        if(user.resetOTPExpireAt < Date.now()){
+            return sendErrorResponse(res, 400, 'OTP Expired');
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        
+        user.password = hashedPassword;
+        user.resetOTP = '';
+        user.resetOTPExpireAt = 0;
+
+        await user.save();
+
+        return res.json({success: true, message: "Password has been reset successfully"});
+    }
+    catch(error){
+        console.error("Reset Password error:", error);
+        return sendErrorResponse(res, 500, 'Internal server error');
+    }
+}

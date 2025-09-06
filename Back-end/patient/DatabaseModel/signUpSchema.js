@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     age: {type: String, required: true},
     gender: {type: String, required: true},
     email: {type: String, required: true, unique: true},
-    contactNum: {type: Number, required: true},
+    contactNum: {type: String, required: true},
     password: {type: String, required: true},
     verifyOTP: {type: String, default: ''},
     verifyOTPExpireAt: {type: Number, default: 0},
