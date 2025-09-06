@@ -27,9 +27,34 @@
     <a href="/frontend/admin/html/account.html">Accounts</a>
   </div>
 
-  <div class="content">
-    <h2>Welcome Admin!</h2>
-  </div>
+ <div class="content">
+    <div class="welcome-card">
+        <h2>Welcome Admin!</h2>
+        <p>Upcoming Services</p>
+    </div>
 
+    <!-- New post form -->
+    <div class="new-post">
+        <textarea placeholder="Write a new post..."></textarea>
+        <input type="file" accept="image/*">
+        <button><i class="fas fa-plus"></i> Add Post</button>
+    </div>
+
+    <div class="post-card">
+        <p>System maintenance scheduled this Friday at 8 PM.</p>
+        <img src="https://via.placeholder.com/600x250" alt="Post Image">
+        <div class="post-actions">
+            <button class="btn-update"><i class="fas fa-pen"></i> Update</button>
+            <button class="btn-delete"><i class="fas fa-trash"></i> Delete</button>
+             <select class="favorite-select">
+                <option value="1">⭐ Favorite</option>
+                <option value="0">☆  Remove Favorite</option>
+            </select>
+        </div>
+    </div>
+
+
+</div>
+  
 </body>
 </html>
