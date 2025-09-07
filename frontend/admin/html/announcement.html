@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="/frontend/admin/admin.css">
   <link rel="stylesheet" href="/frontend/admin/navigation.css">
   <link rel="stylesheet" href="/frontend/admin/announcement.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 
   <script src="/Back-end/admin/js/navigation.js"></script>
 </head>
@@ -26,9 +28,38 @@
     <a href="/frontend/admin/html/account.html">Accounts</a>
   </div>
 
+ 
   <div class="content">
-    <h2>Welcome Admin!</h2>
-  </div>
+    <div class="welcome-card">
+      <h2>Welcome Admin!</h2>
+      <p>Remember to check patient notifications daily for updates.</p>
+    </div>
+    
+
+       <!-- New post form -->
+    <div class="new-post">
+        <textarea placeholder="Write a new announcement..."></textarea>
+        <button><i class="fas fa-plus"></i> Add Announcement</button>
+    </div>
+
+    <!-- Announcements list -->
+        <div class="announcement-card">
+        <div class="announcement-card-header">
+        <p>Another announcement example for testing the layout.</p>
+        <div class="announcement-actions">
+            <button class="btn-update"><i class="fas fa-pen"></i> Update</button>
+            <button class="btn-delete"><i class="fas fa-trash"></i> Delete</button>
+            <select class="favorite-select">
+                <option value="1">⭐ Favorite</option>
+                <option value="0">☆  Remove Favorite</option>
+            </select>
+        </div>
+    </div>
+</div>
+    </div>
+
+</div>
+
 
 </body>
 </html>

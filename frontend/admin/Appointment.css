@@ -1,1 +1,869 @@
+.content {
+    padding: 90px;
+}
 
+.welcome-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.welcome-card h2 {
+    color: #333333;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.welcome-card p {
+    color: #555555;
+    font-size: 1.1em;
+    margin: 0;
+    font-weight: 400;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid #000000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    color: #333;
+}
+
+.stat-card p {
+    margin: 0;
+    color: #666;
+}
+
+.controls-section {
+    margin-bottom: 2rem;
+}
+
+.controls-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-box,
+.filter-select {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #333;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.search-box:focus,
+.filter-select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    background: #007bff;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+.appointments-table {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    min-width: 600px;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.table td {
+    color: #666;
+}
+
+.table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.pagination button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #333;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background: #f8f9fa;
+}
+
+.pagination button.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: white;
+    margin: 10% auto;
+    padding: 0;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #ddd;
+    background: #f8f9fa;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.modal form {
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #333;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.modal-actions .btn {
+    min-width: 100px;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-approved {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.status-completed {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.status-cancelled {
+    background: #e2e3e5;
+    color: #383d41;
+    border: 1px solid #d6d8db;
+}
+
+/* Action buttons */
+.action-btn {
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    white-space: nowrap;
+}
+
+.action-btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.action-btn-primary:hover {
+    background: #0056b3;
+}
+
+.action-btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.action-btn-danger:hover {
+    background: #c82333;
+}
+
+/* RESPONSIVE MEDIA QUERIES */
+
+/* Large desktops (1200px – 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
+    .content {
+        padding: 70px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 2.2em;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    
+    .stat-card h3 {
+        font-size: 1.8rem;
+    }
+}
+
+/* Medium desktops / laptops (992px – 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .content {
+        padding: 60px;
+    }
+    
+    .welcome-card {
+        padding: 25px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 2em;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .stat-card {
+        padding: 1.3rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 1.7rem;
+    }
+    
+    .appointments-table {
+        padding: 1.3rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.6rem;
+    }
+}
+
+/* Tablets landscape (768px – 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    .content {
+        padding: 40px;
+    }
+    
+    .welcome-card {
+        padding: 20px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.8em;
+    }
+    
+    .welcome-card p {
+        font-size: 1em;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    
+    .stat-card {
+        padding: 1.2rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 1.5rem;
+    }
+    
+    .controls-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 0.8rem;
+    }
+    
+    .controls-grid > :last-child {
+        grid-column: 1 / -1;
+        justify-self: center;
+    }
+    
+    .appointments-table {
+        padding: 1.2rem;
+    }
+    
+    .table {
+        min-width: 500px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+}
+
+/* Tablets portrait / small devices (≤ 767px) */
+@media (max-width: 767px) {
+    .content {
+        padding: 25px;
+    }
+    
+    .welcome-card {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.6em;
+    }
+    
+    .welcome-card p {
+        font-size: 0.95em;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .stat-card p {
+        font-size: 0.9rem;
+    }
+    
+    .controls-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .controls-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .search-box,
+    .filter-select {
+        padding: 0.8rem;
+        width: 100%;
+    }
+    
+    .btn {
+        padding: 0.8rem 1.2rem;
+        width: 100%;
+    }
+    
+    .appointments-table {
+        padding: 1rem;
+        border-radius: 6px;
+    }
+    
+    .table {
+        min-width: 400px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.4rem 0.3rem;
+        font-size: 0.8rem;
+    }
+    
+    .action-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+        margin-right: 0.3rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .pagination {
+        gap: 0.3rem;
+    }
+    
+    .pagination button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        max-height: 90vh;
+    }
+    
+    .modal-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .modal form {
+        padding: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.6rem;
+    }
+    
+    .modal-actions {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .modal-actions .btn {
+        min-width: 80px;
+        flex: 1;
+    }
+}
+
+/* Large phones / small tablets (481px – 640px) */
+@media (max-width: 640px) and (min-width: 481px) {
+    .content {
+        padding: 20px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .table {
+        min-width: 350px;
+    }
+}
+
+/* Phones (≤ 480px) */
+@media (max-width: 480px) {
+    .content {
+        padding: 15px;
+    }
+    
+    .welcome-card {
+        padding: 12px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.4em;
+    }
+    
+    .welcome-card p {
+        font-size: 0.9em;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+    }
+    
+    .stat-card {
+        padding: 0.8rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 1.1rem;
+    }
+    
+    .stat-card p {
+        font-size: 0.8rem;
+    }
+    
+    .appointments-table {
+        padding: 0.8rem;
+    }
+    
+    .table {
+        min-width: 300px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.3rem 0.2rem;
+        font-size: 0.75rem;
+    }
+    
+    .action-btn {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.6rem;
+        margin-right: 0.2rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .status-badge {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.4rem;
+    }
+    
+    .pagination button {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    .modal-content {
+        width: 98%;
+        margin: 2% auto;
+    }
+    
+    .modal-header {
+        padding: 0.8rem 1rem;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .modal form {
+        padding: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+        font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .modal-actions .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Very small phones (≤ 320px) */
+@media (max-width: 320px) {
+    .content {
+        padding: 10px;
+    }
+    
+    .welcome-card {
+        padding: 10px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.2em;
+    }
+    
+    .welcome-card p {
+        font-size: 0.85em;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .stat-card {
+        padding: 0.6rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 1rem;
+    }
+    
+    .stat-card p {
+        font-size: 0.75rem;
+    }
+    
+    .appointments-table {
+        padding: 0.6rem;
+    }
+    
+    .table {
+        min-width: 280px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.25rem 0.1rem;
+        font-size: 0.7rem;
+    }
+    
+    .action-btn {
+        padding: 0.15rem 0.3rem;
+        font-size: 0.55rem;
+        margin-right: 0.1rem;
+        margin-bottom: 0.1rem;
+    }
+    
+    .status-badge {
+        font-size: 0.55rem;
+        padding: 0.1rem 0.3rem;
+    }
+    
+    .pagination button {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.75rem;
+    }
+    
+    .modal-content {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        height: 100vh;
+        max-height: 100vh;
+    }
+    
+    .modal-header {
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .modal form {
+        padding: 0.8rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.4rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Small devices in landscape (≤ 500px height) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .content {
+        padding: 15px;
+    }
+    
+    .welcome-card {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.3em;
+        margin-bottom: 5px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .stat-card {
+        padding: 0.6rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 1rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .stat-card p {
+        font-size: 0.7rem;
+    }
+    
+    .controls-section {
+        margin-bottom: 1rem;
+    }
+    
+    .appointments-table {
+        padding: 0.8rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.3rem;
+        font-size: 0.7rem;
+    }
+    
+    .modal-content {
+        margin: 2% auto;
+        max-height: 95vh;
+    }
+    
+    .modal-header {
+        padding: 0.8rem 1rem;
+    }
+    
+    .modal form {
+        padding: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 0.8rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.5rem;
+    }
+    
+    .pagination {
+        margin-top: 1rem;
+    }
+}
