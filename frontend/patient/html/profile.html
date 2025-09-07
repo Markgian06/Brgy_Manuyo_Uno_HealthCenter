@@ -31,7 +31,7 @@
       </div>
       
       <ul class="nav-menu" id="navMenu">
-        <li class="nav-item"><a href="/index.html" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
         
         <li class="nav-item" id="scheduleOrAppointment">
              <a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
@@ -61,24 +61,24 @@
         <div class="left-column">
           <div class="profile-picture"></div>
           <div class="profile-info">
-            <p class="patient-name"><span id="patientName"></span></p>
-            <p class="patient-details">Patient ID: <span id="patientId"></span></p>
-            <p class="patient-details">Age: <span id="patientAge"></span></p>
-            <p class="patient-details">Gender: <span id="patientGender"></span></p>
+            <p class="patient-name"><span id="patientName">Loading...</span></p>
+            <p class="patient-details">Patient ID: <span id="patientId">Loading...</span></p>
+            <p class="patient-details">Age: <span id="patientAge">Loading...</span></p>
+            <p class="patient-details">Gender: <span id="patientGender">Loading...</span></p>
           </div>
           
           <div class="w-full">
             <div class="input-group">
-              <label for="email_phone" class="input-label">Email / Phone no.</label>
+              <label for="email_phone" class="input-label">Email</label>
               <div style="display: flex; align-items: center;">
-                <input type="text" id="email_phone" class="input-field">
+                <input type="text" id="email_phone" class="input-field" readonly style="background-color: #f3f4f6; cursor: not-allowed;" placeholder="Loading...">
                 <button id="updateEmailPhone" class="button update-btn">UPDATE</button>
               </div>
             </div>
             <div class="input-group">
               <label for="password" class="input-label">Password</label>
               <div style="display: flex; align-items: center;">
-                <input type="password" id="password" class="input-field">
+                <input type="password" id="password" class="input-field" readonly style="background-color: #f3f4f6; cursor: not-allowed;" placeholder="••••••••••">
                 <button id="updatePassword" class="button update-btn">UPDATE</button>
               </div>
             </div>
@@ -127,6 +127,8 @@
     <!-- Logout Button -->
     <button id="logoutBtn" class="button logout-btn">LOGOUT</button>
   </div>
+
+  <div id="formAlert" class="alert"></div>
   
  <footer>
    <div class="footer-container"> 
