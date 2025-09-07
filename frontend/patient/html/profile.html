@@ -16,6 +16,10 @@
       
   <script src="/Back-end/patient/Js/alert.js" defer></script>
   <script src="/Back-end/patient/Js/navigation.js" defer></script>
+  <script src="/Back-end/patient/Js/profile.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body> 
 
@@ -27,7 +31,7 @@
       </div>
       
       <ul class="nav-menu" id="navMenu">
-        <li class="nav-item"><a href="/index.html" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
         
         <li class="nav-item" id="scheduleOrAppointment">
              <a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
@@ -50,10 +54,82 @@
     </div>
   </nav>
 
-  <div class="profile">
+  <div class="profile-container">
+    <div class="profile-card">
+      <div class="profile-card-content">
+        <!-- Left Column -->
+        <div class="left-column">
+          <div class="profile-picture"></div>
+          <div class="profile-info">
+            <p class="patient-name"><span id="patientName">Loading...</span></p>
+            <p class="patient-details">Patient ID: <span id="patientId">Loading...</span></p>
+            <p class="patient-details">Age: <span id="patientAge">Loading...</span></p>
+            <p class="patient-details">Gender: <span id="patientGender">Loading...</span></p>
+          </div>
+          
+          <div class="w-full">
+            <div class="input-group">
+              <label for="email_phone" class="input-label">Email</label>
+              <div style="display: flex; align-items: center;">
+                <input type="text" id="email_phone" class="input-field" readonly style="background-color: #f3f4f6; cursor: not-allowed;" placeholder="Loading...">
+                <button id="updateEmailPhone" class="button update-btn">UPDATE</button>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="password" class="input-label">Password</label>
+              <div style="display: flex; align-items: center;">
+                <input type="password" id="password" class="input-field" readonly style="background-color: #f3f4f6; cursor: not-allowed;" placeholder="••••••••••">
+                <button id="updatePassword" class="button update-btn">UPDATE</button>
+              </div>
+            </div>
+          </div>
+          
+          <button id="submitBtn" class="button submit-btn">SUBMIT</button>
+        </div>
 
+        <!-- Right Column -->
+        <div class="right-column">
+          <!-- Appointment History -->
+          <div class="section-card">
+            <h2 class="section-title">Appointment History</h2>
+            <div class="record-list">
+              <ul>
+                <li class="record-item">
+                  <p style="font-weight: 500; color: #4b5563;">June 15, 2024 - General Check-up</p>
+                  <p style="font-size: 0.875rem; color: #6b7280;">Dr. Maria Santos</p>
+                </li>
+                <li class="record-item">
+                  <p style="font-weight: 500; color: #4b5563;">May 20, 2024 - Vaccination</p>
+                  <p style="font-size: 0.875rem; color: #6b7280;">Nurse Ana Cruz</p>
+                </li>
+                <li class="record-item">
+                  <p style="font-weight: 500; color: #4b5563;">March 10, 2024 - Dental Check</p>
+                  <p style="font-size: 0.875rem; color: #6b7280;">Dr. Jessica Lim</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Request Medical Record -->
+          <div class="section-card request-record-section">
+            <h2 class="section-title">Request Medical record</h2>
+            <div class="content">
+              <p class="request-record-text" style="flex: 1;">
+                To request your medical records, please click the button below. Your request will be reviewed by the health center staff.
+              </p>
+              <button id="requestRecordBtn" class="button request-btn">Request</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Logout Button -->
+    <button id="logoutBtn" class="button logout-btn">LOGOUT</button>
   </div>
 
+  <div id="formAlert" class="alert"></div>
+  
  <footer>
    <div class="footer-container"> 
     <div class="copyright">

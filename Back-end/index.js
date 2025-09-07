@@ -6,7 +6,7 @@ import functionRouter from './patient/Routes/functionRoutes.js';
 import dbConnection from './patient/Controllers/dbConnection.js';
 import contactRoutes from './patient/Routes/contactRoutes.js';
 import appointmentRoutes from './patient/Routes/appointmentRoutes.js';
-
+import userRouter from './patient/routes/userRoute.js';
 
 import path from 'path';
 
@@ -46,6 +46,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(functionRouter);
+app.use(userRouter);
 
 
 app.get('/', (req, res) => {
@@ -55,6 +56,7 @@ app.get('/', (req, res) => {
 
 app.get('/', (req, res) => res.send('API WORKING'));
 app.use('/api/auth', functionRouter);
+app.use('/api/auth', userRouter);
 
 
 
