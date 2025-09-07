@@ -473,3 +473,64 @@ export const resetPassword = async (req, res) =>{
         return sendErrorResponse(res, 500, 'Internal server error');
     }
 };
+
+
+
+export const getPatientProfile = async (req, res) => {
+    try {
+        console.log('🔍 Profile request received');
+        
+        // Get the userId from the URL parameters
+        const userId = req.params.userId;
+        console.log('🔎 Searching for user with ID:', userId);
+        
+        if (!userId) {
+            console.log('❌ No userId found in URL parameters');
+            return res.status(400).json({ 
+                success: false, 
+                message: 'User ID not found in URL' 
+            });
+        }
+
+        // Find user by MongoDB _id
+        const patient = await signUpModels.findById(userId)
+            .select('patientID firstName lastName birthDate age gender email contactNum');
+
+        if (!patient) {
+            console.log('❌ Patient not found in database');
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Patient not found' 
+            });
+        }
+
+        console.log('👤 Patient found:', patient);
+
+        // Format the response
+        const patientData = {
+            patientID: patient.patientID,
+            firstName: patient.firstName,
+            lastName: patient.lastName,
+            fullName: `${patient.firstName} ${patient.lastName}`,
+            birthDate: patient.birthDate,
+            age: patient.age,
+            gender: patient.gender,
+            email: patient.email,
+            contactNum: patient.contactNum
+        };
+
+        console.log('✅ Sending patient data:', patientData);
+
+        res.status(200).json({
+            success: true,
+            data: patientData
+        });
+
+    } catch (error) {
+        console.error('💥 Error fetching patient profile:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error: ' + error.message 
+        });
+    }
+};

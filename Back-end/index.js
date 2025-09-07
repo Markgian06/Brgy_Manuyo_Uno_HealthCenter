@@ -40,31 +40,3 @@ app.listen(port, () => {
     dbConnection();
     console.log(`Listening on port ${port}`);
 });   
-
-
-
-
-
-
-
-// Checking if your are login 
-function authenticateToken(req, res, next) {
-  const token = req.headers["authorization"]?.split(" ")[1];
-  
-  if (!token) {
-    return res.redirect("/frontend/patient/html/login.html");
-  }
-
-  jwt.verify(token, "my-secret-key", (err, user) => {
-    if (err) {
-      return res.redirect("/frontend/patient/html/login.html");
-    }
-    req.user = user;
-    next();
-  });
-}
-
-// Protected route 
-app.get("/frontend/patient/html/appointment.html", authenticateToken, (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend/patient/html", "appointment.html"));
-});
