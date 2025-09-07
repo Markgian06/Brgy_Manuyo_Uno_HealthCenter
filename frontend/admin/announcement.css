@@ -1,3 +1,4 @@
+/* Base styles */
 .content {
     padding: 90px;
 }
@@ -46,6 +47,9 @@
     border-radius: 8px;
     border: 1px solid #ccc;
     outline: none;
+    box-sizing: border-box;
+    width: 100%;
+    font-family: inherit;
 }
 
 .new-post textarea:focus {
@@ -66,6 +70,7 @@
     align-items: center;
     gap: 8px;
     transition: background 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
 }
 
 .new-post button:hover {
@@ -80,7 +85,6 @@
     margin-top: 30px;
 }
 
-
 .announcement-card {
     background: #fff;
     padding: 20px;
@@ -94,22 +98,32 @@
     gap: 12px;
 }
 
+.announcement-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
 .announcement-card-header {
     display: flex;
     justify-content: space-between; 
     align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .announcement-card p {
     margin: 0;
     color: #555;
     font-size: 1em;
+    line-height: 1.5;
+    word-wrap: break-word;
 }
 
 .announcement-actions {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .announcement-actions button,
@@ -124,6 +138,7 @@
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .btn-update {
@@ -155,4 +170,444 @@
 .favorite-select:hover {
     border-color: #4a90e2;
     box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+/* RESPONSIVE MEDIA QUERIES */
+
+/* Large desktops (1200px – 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
+    .content {
+        padding: 70px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 2.2em;
+    }
+    
+    .new-post {
+        padding: 18px;
+    }
+    
+    .announcement-card {
+        padding: 18px;
+        margin: 25px auto;
+    }
+}
+
+/* Medium desktops / laptops (992px – 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .content {
+        padding: 60px;
+    }
+    
+    .welcome-card {
+        padding: 25px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 2em;
+    }
+    
+    .new-post {
+        padding: 16px;
+        gap: 10px;
+    }
+    
+    .new-post textarea {
+        height: 90px;
+        padding: 10px;
+    }
+    
+    .new-post button {
+        padding: 8px 16px;
+    }
+    
+    .announcement-list {
+        gap: 18px;
+        margin-top: 25px;
+    }
+    
+    .announcement-card {
+        padding: 16px;
+        margin: 20px auto;
+        gap: 10px;
+    }
+    
+    .announcement-actions button,
+    .favorite-select {
+        padding: 5px 8px;
+        font-size: 0.8em;
+    }
+}
+
+/* Tablets landscape (768px – 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    .content {
+        padding: 40px;
+    }
+    
+    .welcome-card {
+        padding: 20px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.8em;
+    }
+    
+    .welcome-card p {
+        font-size: 1em;
+    }
+    
+    .new-post {
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .new-post textarea {
+        height: 80px;
+        padding: 10px;
+        font-size: 0.95em;
+    }
+    
+    .new-post button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+    
+    .announcement-list {
+        gap: 16px;
+        margin-top: 20px;
+    }
+    
+    .announcement-card {
+        padding: 15px;
+        margin: 15px auto;
+        gap: 10px;
+    }
+    
+    .announcement-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .announcement-actions {
+        gap: 6px;
+    }
+    
+    .announcement-actions button,
+    .favorite-select {
+        padding: 4px 8px;
+        font-size: 0.8em;
+        gap: 3px;
+    }
+}
+
+/* Tablets portrait / small devices (≤ 767px) */
+@media (max-width: 767px) {
+    .content {
+        padding: 25px;
+    }
+    
+    .welcome-card {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.6em;
+    }
+    
+    .welcome-card p {
+        font-size: 0.95em;
+    }
+    
+    .new-post {
+        padding: 12px;
+        gap: 8px;
+        border-radius: 10px;
+    }
+    
+    .new-post textarea {
+        height: 70px;
+        padding: 8px;
+        font-size: 0.9em;
+        border-radius: 6px;
+    }
+    
+    .new-post button {
+        padding: 8px 12px;
+        font-size: 0.85em;
+        align-self: stretch;
+        justify-content: center;
+    }
+    
+    .announcement-list {
+        gap: 12px;
+        margin-top: 15px;
+    }
+    
+    .announcement-card {
+        padding: 12px;
+        margin: 10px auto;
+        gap: 8px;
+        border-radius: 10px;
+    }
+    
+    .announcement-card p {
+        font-size: 0.9em;
+    }
+    
+    .announcement-card-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .announcement-actions {
+        gap: 5px;
+        justify-content: flex-start;
+    }
+    
+    .announcement-actions button,
+    .favorite-select {
+        padding: 6px 10px;
+        font-size: 0.75em;
+        gap: 3px;
+        flex: 1;
+        justify-content: center;
+        min-width: 0;
+    }
+}
+
+/* Large phones / small tablets (481px – 640px) */
+@media (max-width: 640px) and (min-width: 481px) {
+    .content {
+        padding: 20px;
+    }
+    
+    .new-post textarea {
+        height: 65px;
+    }
+    
+    .announcement-card {
+        margin: 8px auto;
+    }
+    
+    .announcement-actions {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .announcement-actions button,
+    .favorite-select {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Phones (≤ 480px) */
+@media (max-width: 480px) {
+    .content {
+        padding: 15px;
+    }
+    
+    .welcome-card {
+        padding: 12px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.4em;
+    }
+    
+    .welcome-card p {
+        font-size: 0.9em;
+    }
+    
+    .new-post {
+        padding: 10px;
+        gap: 6px;
+    }
+    
+    .new-post textarea {
+        height: 60px;
+        padding: 6px;
+        font-size: 0.85em;
+    }
+    
+    .new-post button {
+        padding: 6px 10px;
+        font-size: 0.8em;
+        gap: 4px;
+    }
+    
+    .announcement-list {
+        gap: 10px;
+        margin-top: 12px;
+    }
+    
+    .announcement-card {
+        padding: 10px;
+        margin: 6px auto;
+        gap: 6px;
+    }
+    
+    .announcement-card p {
+        font-size: 0.85em;
+        line-height: 1.4;
+    }
+    
+    .announcement-card-header {
+        gap: 6px;
+    }
+    
+    .announcement-actions {
+        flex-direction: column;
+        gap: 3px;
+    }
+    
+    .announcement-actions button,
+    .favorite-select {
+        padding: 5px 8px;
+        font-size: 0.7em;
+        width: 100%;
+        justify-content: center;
+        gap: 2px;
+    }
+}
+
+/* Very small phones (≤ 320px) */
+@media (max-width: 320px) {
+    .content {
+        padding: 10px;
+    }
+    
+    .welcome-card {
+        padding: 10px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.2em;
+    }
+    
+    .welcome-card p {
+        font-size: 0.85em;
+    }
+    
+    .new-post {
+        padding: 8px;
+        gap: 5px;
+    }
+    
+    .new-post textarea {
+        height: 50px;
+        padding: 5px;
+        font-size: 0.8em;
+    }
+    
+    .new-post button {
+        padding: 5px 8px;
+        font-size: 0.75em;
+        gap: 2px;
+    }
+    
+    .announcement-list {
+        gap: 8px;
+        margin-top: 10px;
+    }
+    
+    .announcement-card {
+        padding: 8px;
+        margin: 4px auto;
+        gap: 5px;
+    }
+    
+    .announcement-card p {
+        font-size: 0.8em;
+        line-height: 1.3;
+    }
+    
+    .announcement-card-header {
+        gap: 5px;
+    }
+    
+    .announcement-actions {
+        gap: 2px;
+    }
+    
+    .announcement-actions button,
+    .favorite-select {
+        padding: 4px 6px;
+        font-size: 0.65em;
+        gap: 1px;
+    }
+}
+
+/* Small devices in landscape (≤ 500px height) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .content {
+        padding: 15px;
+    }
+    
+    .welcome-card {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.3em;
+        margin-bottom: 5px;
+    }
+    
+    .new-post {
+        padding: 10px;
+        gap: 6px;
+    }
+    
+    .new-post textarea {
+        height: 50px;
+        padding: 6px;
+        font-size: 0.85em;
+    }
+    
+    .new-post button {
+        padding: 5px 10px;
+        font-size: 0.8em;
+    }
+    
+    .announcement-list {
+        gap: 8px;
+        margin-top: 10px;
+    }
+    
+    .announcement-card {
+        padding: 8px;
+        margin: 5px auto;
+        gap: 5px;
+    }
+    
+    .announcement-card p {
+        font-size: 0.8em;
+        line-height: 1.3;
+    }
+    
+    .announcement-card-header {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .announcement-actions {
+        flex-direction: row;
+        gap: 3px;
+        flex-wrap: wrap;
+    }
+    
+    .announcement-actions button,
+    .favorite-select {
+        padding: 3px 6px;
+        font-size: 0.7em;
+        flex: none;
+        min-width: 50px;
+    }
 }
