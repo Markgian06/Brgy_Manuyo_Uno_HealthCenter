@@ -4,7 +4,7 @@ const userToken = async (req, res, next) =>{
     const {token} = req.cookies;
 
     if(!token){
-        return res.json({success: false, message: 'Not Authorized. Login Again'});
+        return res.redirect("/frontend/patient/html/login.html?error=notAuthorized");
     }
 
     try{
@@ -18,14 +18,14 @@ const userToken = async (req, res, next) =>{
             req.body.userId = tokenDecode.id
         }
         else{
-            return res.json({success: false, message: 'Not Authorized. Login Again'});
+            return res.redirect("/frontend/patient/html/login.html?error=notAuthorized");
         }
 
         next();
 
     }
     catch(error){
-        return res.json({success: false, message: error.message});
+        return res.redirect("/frontend/patient/html/login.html?error=notAuthorized");
     }
 }
 

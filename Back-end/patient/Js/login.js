@@ -1,3 +1,4 @@
+// LOGIN FORM HANDLER
 document.getElementById('signin-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -21,9 +22,7 @@ document.getElementById('signin-form').addEventListener('submit', async function
         const data = await response.json();
 
         if (response.ok) {
-
-            window.location.href = '/frontend/patient/html/profile.html';
-
+            window.location.href = '/';
         } else {
             alert(data.message || 'Login failed. Please check your credentials.');
         }
@@ -33,21 +32,74 @@ document.getElementById('signin-form').addEventListener('submit', async function
     }
 });
 
+// SIGNUP FORM HANDLER - THIS WAS MISSING!
+document.addEventListener('DOMContentLoaded', function() {
+    const signupForm = document.getElementById('signup') || document.getElementById('signup-form');
+    
+    if (signupForm) {
+        console.log("Signup form found, adding event listener");
+        
+        signupForm.addEventListener('submit', async function(e) {
+            e.preventDefault(); // PREVENT traditional form submission
+            console.log("Signup form submitted - preventing default");
 
-    function showSection(sectionId) {
-      document.querySelectorAll(".auth-container section").forEach(sec => {
-        sec.classList.remove("active");
-      });
-      document.getElementById(sectionId).classList.add("active");
+            const formData = new FormData(signupForm);
+            
+            // Log form data for debugging
+            console.log("Signup form data:");
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+
+            try {
+                console.log("Sending signup request...");
+                const response = await fetch('/signup', {
+                    method: 'POST',
+                    body: formData // Keep as FormData for file uploads
+                });
+
+                console.log("Signup response status:", response.status);
+                const result = await response.json();
+                console.log("Signup result:", result);
+
+                if (response.ok && result.success) {
+                    alert(result.message || "Successfully Registered");
+                    
+                    // DON'T redirect immediately - just switch to login section
+                    if (typeof showSection === 'function') {
+                        showSection('signinSection'); // Switch back to login
+                    } else {
+                        // If no section switching, redirect to login page
+                        window.location.href = "/frontend/patient/html/login.html";
+                    }
+                } else {
+                    alert(result.message || "Failed to register");
+                }
+            } catch (error) {
+                console.error("Signup error:", error);
+                alert("Network error. Please try again later.");
+            }
+        });
+    } else {
+        console.log("No signup form found on this page");
     }
+});
 
+// SECTION SWITCHING
+function showSection(sectionId) {
+    document.querySelectorAll(".auth-container section").forEach(sec => {
+        sec.classList.remove("active");
+    });
+    document.getElementById(sectionId).classList.add("active");
+}
 
-
-// File preview functionality
+// FILE PREVIEW FUNCTIONALITY
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('ID_image');
     const filePreview = document.getElementById('filePreview');
     const fileInfo = document.querySelector('.file-info');
+    
+    if (!fileInput) return; // Exit if no file input found
     
     let selectedFiles = [];
     
@@ -86,13 +138,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button type="button" class="remove-btn" onclick="removeFile(${index})">&times;</button>
             `;
             
-            filePreview.appendChild(previewItem);
+            if (filePreview) {
+                filePreview.appendChild(previewItem);
+            }
         };
         
         reader.readAsDataURL(file);
     }
     
     function updateFileCount() {
+        if (!fileInfo) return;
+        
         const count = selectedFiles.length;
         let countElement = document.querySelector('.file-count');
         
@@ -126,6 +182,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     function refreshPreview() {
+        if (!filePreview) return;
+        
         filePreview.innerHTML = '';
         selectedFiles.forEach((file, index) => {
             createPreview(file, index);
@@ -142,3 +200,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize count display
     updateFileCount();
 });
+
+// URL PARAMETER HANDLING
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get("error") === "notAuthorized") {
+    alert("⚠️ Please login first");
+}

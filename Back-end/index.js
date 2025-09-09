@@ -7,44 +7,36 @@ import dbConnection from './patient/Controllers/dbConnection.js';
 import contactRoutes from './patient/Routes/contactRoutes.js';
 import appointmentRoutes from './patient/Routes/appointmentRoutes.js';
 import userRouter from './patient/routes/userRoute.js';
-
 import path from 'path';
 
+import { fileURLToPath } from "url";
+import userToken from "./patient/Middleware/userToken.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 5000;
-
-// Checking if your are login
-function authenticateToken(req, res, next) {
-  const token = req.headers["authorization"]?.split(" ")[1];
-  if (!token) {
-    return res.redirect("/frontend/patient/html/login.html");
-  }
-  jwt.verify(token, "my-secret-key", (err, user) => {
-    if (err) {
-      return res.redirect("/frontend/patient/html/login.html");
-    }
-    req.user = user;
-    next();
-  });
-}
-
-// Protected route for appointment page
-app.get("/frontend/patient/html/appointment.html", authenticateToken, (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend/patient/html", "appointment.html"));
-});
-
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({credentials: true}));
 app.use(express.urlencoded({ extended: true }));    
-app.use('/frontend', express.static('frontend'));
-app.use('/Back-end', express.static('Back-end'));
+
 
 app.use(cors({ credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
+app.get("/frontend/patient/html/appointment.html", userToken, (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/patient/html/appointment.html"));
+});
+
+// Protect profile.html
+app.get("/frontend/patient/html/profile.html", userToken, (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/patient/html/profile.html"));
+});
+
+app.use('/frontend', express.static('frontend'));
+app.use('/Back-end', express.static('Back-end'));
 app.use(functionRouter);
 app.use(userRouter);
 

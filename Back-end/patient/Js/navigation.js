@@ -34,3 +34,24 @@
           hamburger.classList.remove('active');
         });
       });
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const res = await fetch("/check-auth", {
+            credentials: "include" // make sure cookies are sent
+          });
+          const data = await res.json();
+      
+          if (data.loggedIn) {
+            // Change Login → Profile
+            const authLink = document.getElementById("authLink");
+            authLink.innerHTML = `<a href="/frontend/patient/html/profile.html" class="nav-link">Profile</a>`;
+      
+            // Change Schedule → Appointment
+            const scheduleItem = document.getElementById("scheduleOrAppointment");
+            scheduleItem.innerHTML = `<a href="/frontend/patient/html/appointment.html" class="nav-link">Appointment</a>`;
+          }
+        } catch (err) {
+          console.error("Auth check failed:", err);
+        }
+      });
