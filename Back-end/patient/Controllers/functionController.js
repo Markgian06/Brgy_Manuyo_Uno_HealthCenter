@@ -49,8 +49,12 @@ export const signup = async (req, res) => {
     try {
 
         const existingUser = await signUpModels.findOne({email});
+        const existingContact = await signUpModels.findOne({contactNum});
 
         if(existingUser){
+            return res.json({success: false, message: 'User already exists'})
+        }
+        if(existingContact){
             return res.json({success: false, message: 'User already exists'})
         }
 
