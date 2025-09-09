@@ -13,6 +13,7 @@
      
   <script src="/Back-end/patient/Js/alert.js" defer></script>
   <script src="/Back-end/patient/Js/navigation.js" defer></script>
+  <script src="/Back-end/patient/Js/signup.js" defer></script>
 </head>
 <body>
 
@@ -25,7 +26,7 @@
       </div>
       
       <ul class="nav-menu" id="navMenu">
-        <li class="nav-item"><a href="/index.html" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
         
         <li class="nav-item" id="scheduleOrAppointment">
              <a href="/frontend/patient/html/schedule.html" class="nav-link">Schedule</a>
@@ -48,11 +49,10 @@
     </div>
   </nav>
 
-  <div id="formAlert" class="alert"></div>
 
     <div class="form-container">
         <h2>Create an Account</h2>
-        <form action="/signup" method="post" id="signup" enctype="multipart/form-data">
+        <form id="signup" enctype="multipart/form-data">
 
             <div class="two-columns">
                 <div class="form-group">
