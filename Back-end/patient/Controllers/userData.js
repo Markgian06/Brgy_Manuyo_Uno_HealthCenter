@@ -1,4 +1,6 @@
 import signUpModels from "../DatabaseModel/signUpSchema.js";
+import jwt from "jsonwebtoken";
+
 
 export const getUserData = async (req, res) =>{
     try{
@@ -82,3 +84,20 @@ export const getPatientProfile = async (req, res) => {
         });
     }
 };
+
+export const checkAuth = async (req, res) => {
+    try {
+      const token = req.cookies.token;
+      if (!token) return res.json({ loggedIn: false });
+  
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await signUpModels.findById(decoded.id).select("-password");
+  
+      if (!user) return res.json({ loggedIn: false });
+  
+      res.json({ loggedIn: true, user });
+    } catch (error) {
+      console.error("Auth check error:", error);
+      res.json({ loggedIn: false });
+    }
+  };
