@@ -12,10 +12,10 @@ import path from 'path';
 import { fileURLToPath } from "url";
 import userToken from "./patient/Middleware/userToken.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 5000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({credentials: true}));
