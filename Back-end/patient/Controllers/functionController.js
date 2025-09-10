@@ -477,3 +477,19 @@ export const resetPassword = async (req, res) =>{
         return sendErrorResponse(res, 500, 'Internal server error');
     }
 };
+
+
+
+export const logged = async (req, res) =>{
+    try {
+        const token = req.cookies?.token;            // <-- safe optional chaining
+        if (!token) return res.json({ success: false });
+    
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // optionally return user id for debug
+        return res.json({ success: true, userId: decoded?.id || null });
+      } catch (err) {
+        // token invalid / expired
+        return res.json({ success: false });
+      }
+}
