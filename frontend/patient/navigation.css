@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #FFFFD6;
+  background-color: #FFFFFF;
   backdrop-filter: blur(20px) saturate(180%);
   padding: 0 2rem;
   position: fixed;
@@ -11,7 +11,7 @@
 }
 
 .navbar.scrolled {
-  background-color: rgba(255, 255, 214, 0.98);
+  background-color: #FFFFFF;
   box-shadow: 0 8px 35px rgba(139, 69, 19, 0.2);
 }
 
@@ -44,6 +44,8 @@
   font-size: 1.2rem;
   position: relative;
   letter-spacing: 0.2px;
+  font-weight: 600;
+  color: #B22222;
   text-transform: uppercase;
   line-height: 1.2;
 }
@@ -77,27 +79,27 @@
 }
 
 .nav-link:hover {
-  color: #8B4513;
+  color: #2F6B2E;
   transform: translateY(-2px);
   background: rgba(139, 69, 19, 0.1);
 }
 
 .nav-link.active {
-  color: #8B4513;
+  color: #2F6B2E;
   background: rgba(233, 20, 20, 0.15);
   font-weight: 600;
 }
 
 
 #authLink .nav-link {
-  background: linear-gradient(135deg, #8B4513, #A0522D);
+  background: #2F6B2E;
   color: white;
   font-weight: 600;
   box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
 }
 
 #authLink .nav-link:hover {
-  background: linear-gradient(135deg, #A0522D, #CD853F);
+  background: #2F6B2E;
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
 }
@@ -123,7 +125,7 @@
 .hamburger span {
   width: 25px;
   height: 3px;
-  background: #8B4513;
+  background: #000000;
   margin: 3px 0;
   transition: all 0.3s ease;
   border-radius: 2px;
@@ -254,7 +256,7 @@
     right: -100%;
     width: 75%;
     height: 100vh;
-    background: #FFFFD6;
+    background: #FFFFFF;
     flex-direction: column;
     justify-content: center;
     align-items: center;

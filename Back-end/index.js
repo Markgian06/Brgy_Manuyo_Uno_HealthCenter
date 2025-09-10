@@ -61,9 +61,6 @@ app.use('/api/auth', functionRouter);
 app.use("/api", contactRoutes);
 app.use('/api', appointmentRoutes);
 
-
-
-
 app.listen(port, () => {
     dbConnection();
     console.log(`Listening on port ${port}`);
