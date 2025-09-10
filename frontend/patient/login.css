@@ -61,7 +61,6 @@
 
 .leftside {
   flex: 1;
-  background: rgba(196, 168, 128, 0.7);
   color: white;
   display: flex;
   flex-direction: column;
@@ -89,8 +88,8 @@
   padding: 10px 30px;
   border: none;
   border-radius: 25px;
-  background: white;
-  color: rgb(8, 8, 8);
+  background:#004080;
+  color: white;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
@@ -98,12 +97,11 @@
 }
 
 .leftside button:hover {
-  background: #ddd;
+  background:  #005fcc;
 }
 
 .rightside {
   flex: 1;
-  background: rgba(255, 255, 230, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -133,7 +131,7 @@
 .login input[type="submit"] {
   width: 100%;
   padding: 10px;
-  background: #8B0000;
+  background: #004080;
   color: #fff;
   border: none;
   border-radius: 25px;
@@ -142,13 +140,14 @@
 }
 
 .login input[type="submit"]:hover {
-  background: #004080;
+  background: #005fcc;
 }
 
 .forgot {
-  text-align: left;
-  margin-bottom: 10px;
+  text-align: right;
+  margin-bottom: 30px;
   padding-left: 2px;
+
 }
 
 .forgot a {
@@ -338,7 +337,7 @@ label {
 
 button[type="submit"] {
   padding: 12px;
-  background: #8B0000;
+  background: #004080;
   color: white;
   border: none;
   border-radius: 25px;
@@ -350,7 +349,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background: #004080;
+  background: #005fcc;
 }
 
 /* ===== Responsive ===== */
