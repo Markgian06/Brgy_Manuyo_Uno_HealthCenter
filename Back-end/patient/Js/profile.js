@@ -25,13 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
         passwordInput.placeholder = '••••••••••';
     }
 
-    // if (updateEmailBtn) {
-    //     updateEmailBtn.addEventListener('click', function(e) {
-    //         e.preventDefault();
-    //         localStorage.setItem('updateType', 'email');
-    //         window.location.href = '/forgetpassword.html';
-    //     });
-    // }
+    if (updateEmailPhoneBtn) {
+        updateEmailPhoneBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.setItem('updateType', 'email');
+            window.location.href = '/frontend/patient/html/updateGmail.html';
+        });
+    }
     
     if (updatePasswordBtn) {
         updatePasswordBtn.addEventListener('click', function(e) {

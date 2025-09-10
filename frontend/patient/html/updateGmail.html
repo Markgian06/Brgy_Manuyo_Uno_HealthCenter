@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Update Gmail</title>
+   <link rel="stylesheet" href="/frontend/patient/updateGmail.css">
+   <script src="/Back-end/patient/Js/updateGmail.js" defer></script>
+</head>
+<body>
+  <section class="FP">
+    <div class="form-container">
+      <h2>Update Gmail</h2>
+
+      <!-- Step 1: Enter new Gmail -->
+      <form id="gmail-form" class="w-full">
+        <div class="input-group">
+          <div class="input-wrapper">
+              <label for="newGmail">New Gmail:</label>
+              <input type="email" id="newGmail" name="newGmail" required>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">SEND OTP</button>
+      </form>
+      <a href="/frontend/patient/html/profile.html">Back to profile</a>
+      <!-- Step 2: Verify OTP -->
+      <form id="otp-form" class="w-full hidden">
+        <div class="input-group">
+          <div class="input-wrapper">
+              <label for="otp">Enter OTP:</label>
+              <input type="text" id="otp" name="otp" required>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">VERIFY & UPDATE</button>
+      </form>
+
+      <div id="message-box" class="message-box hidden">
+        <div class="message-content">
+          <h3 id="message-title"></h3>
+          <p id="message-text"></p>
+          <button id="close-message">OK</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
