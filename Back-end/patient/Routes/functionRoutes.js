@@ -48,7 +48,7 @@ functionRouter.post('/is-auth', userToken, isAuthenticated);
 functionRouter.post('/sendResetOtp', sendResetOtp);
 functionRouter.post('/resetPassword', resetPassword);
 functionRouter.post("/is-logged", logged);
-functionRouter.post("/updateGmailOtp", userToken, updateGmail);
+functionRouter.post("/updateGmail", userToken, updateGmail);
 functionRouter.post("/sendUpdateGmailOtp", userToken, sendUpdateGmailOtp);
 
 

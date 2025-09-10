@@ -16,7 +16,9 @@ const userSchema = new mongoose.Schema({
     verifyOTPExpireAt: {type: Number, default: 0},
     isAccountVerified: {type: Boolean, default: false},
     resetOTP: {type: String, default: ''},
-    resetOTPExpireAt: {type: Number, default: 0}
+    resetOTPExpireAt: {type: Number, default: 0},
+    pendingNewEmail: { type: String, default: "" },
+    
 },{
     collection: 'SignUp'
 });

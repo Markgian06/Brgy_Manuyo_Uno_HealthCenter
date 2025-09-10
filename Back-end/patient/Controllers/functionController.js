@@ -497,48 +497,34 @@ export const logged = async (req, res) =>{
 
 
 export const updateGmail = async (req, res) => {
-    const validationRules = [
-        body("otp").notEmpty().withMessage("OTP is required"),
-      ];
-    
-      await Promise.all(validationRules.map(rule => rule.run(req)));
-    
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ success: false, message: errors.array()[0].msg });
+    const { otp, newEmail, userId } = req.body;
+
+    try {
+      const user = await signUpModels.findById(userId);
+      if (!user) return sendErrorResponse(res, 404, "User not found");
+  
+      // Use the existing schema fields
+      if (
+        user.verifyOTP !== otp ||                    // Use verifyOTP
+        user.verifyOTPExpireAt < Date.now() ||       // Use verifyOTPExpireAt
+        user.pendingNewEmail !== newEmail            // This was already correct
+      ) {
+        return sendErrorResponse(res, 400, "Invalid or expired OTP");
       }
-    
-      const { otp } = req.body;
-    
-      try {
-        const userId = req.user.id; // from userToken middleware
-        const user = await signUpModels.findById(userId);
-    
-        if (!user) {
-          return res.status(404).json({ success: false, message: "User not found" });
-        }
-    
-        if (!user.updateEmailOTP || user.updateEmailOTP !== otp) {
-          return res.status(400).json({ success: false, message: "Invalid OTP" });
-        }
-    
-        if (user.updateEmailOTPExpireAt < Date.now()) {
-          return res.status(400).json({ success: false, message: "OTP expired" });
-        }
-    
-        // ✅ Update email now
-        user.email = user.pendingEmail;
-        user.pendingEmail = "";
-        user.updateEmailOTP = "";
-        user.updateEmailOTPExpireAt = 0;
-    
-        await user.save();
-    
-        return res.json({ success: true, message: "Email updated successfully" });
-      } catch (error) {
-        console.error("Verify Update Email OTP error:", error);
-        return res.status(500).json({ success: false, message: "Internal server error" });
-      }
+  
+      // Update email and clear the OTP fields
+      user.email = newEmail;
+      user.verifyOTP = "";                 // Clear verifyOTP
+      user.verifyOTPExpireAt = 0;          // Clear verifyOTPExpireAt  
+      user.pendingNewEmail = "";           // Clear pendingNewEmail
+  
+      await user.save();
+  
+      res.json({ success: true, message: "Email updated successfully" });
+    } catch (err) {
+      console.error("Verify Update Gmail OTP error:", err);
+      return sendErrorResponse(res, 500, "Internal server error");
+    }
 };
 
 
@@ -548,55 +534,68 @@ export const sendUpdateGmailOtp = async (req, res) => {
         body("newEmail")
           .notEmpty().withMessage("New email is required")
           .isEmail().withMessage("Invalid email format"),
-      ];
+    ];
     
-      await Promise.all(validationRules.map(rule => rule.run(req)));
+    await Promise.all(validationRules.map(rule => rule.run(req)));
     
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
         return res.status(400).json({ success: false, message: errors.array()[0].msg });
-      }
+    }
     
-      const { newEmail } = req.body;
+    const { newEmail, userId } = req.body;
     
-      try {
-        const userId = req.user.id; // from userToken middleware
-        const user = await signUpModels.findById(userId);
-    
-        if (!user) {
-          return res.status(404).json({ success: false, message: "User not found" });
+    try {
+        const currentUser = await signUpModels.findById(userId);
+        
+        if (!currentUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
         }
-    
+        
+        // Check if the new email already exists
+        const existingEmailUser = await signUpModels.findOne({ email: newEmail });
+        if (existingEmailUser) {
+            return res.status(400).json({ success: false, message: "Email already exists in our system" });
+        }
+        
+        // Generate OTP
         const otp = String(Math.floor(100000 + Math.random() * 900000));
-        user.updateEmailOTP = otp;
-        user.updateEmailOTPExpireAt = Date.now() + 2 * 60 * 1000; // 2 minutes
-        user.pendingEmail = newEmail;
-    
-        await user.save();
-    
+        
+        // Use the existing schema fields
+        currentUser.verifyOTP = otp;                    // Use verifyOTP instead of updateEmailOtp
+        currentUser.verifyOTPExpireAt = Date.now() + 2 * 60 * 1000;  // Use verifyOTPExpireAt
+        currentUser.pendingNewEmail = newEmail;         // This one was already correct
+        
+        await currentUser.save();
+
+        // Send email
         const mailOption = {
-          from: process.env.SENDER_EMAIL,
-          to: newEmail, // Send OTP to the new Gmail
-          subject: "MANUYO UNO HEALTH CENTER ACCOUNT, Email Update OTP",
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #2c3e50;">Email Update OTP</h2>
-              <p>Your OTP for updating your email is:</p>
-              <div style="background-color: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border-radius: 5px;">
-                <h1 style="color: #007bff; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>
-              </div>
-              <p>Use this OTP to proceed with updating your email.</p>
-              <p style="color: #e74c3c;"><strong>This OTP expires in 2 minutes.</strong></p>
-              <p>If you didn’t request this, please ignore this email.</p>
-            </div>
-          `,
+            from: process.env.SENDER_EMAIL,
+            to: newEmail,
+            subject: "MANUYO UNO HEALTH CENTER ACCOUNT, Email Update OTP",
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #2c3e50;">Email Update Verification</h2>
+                    <p>Your OTP for email verification is:</p>
+                    <div style="background-color: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border-radius: 5px;">
+                        <h1 style="color: #007bff; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>
+                    </div>
+                    <p>Use this OTP to complete the email update process.</p>
+                    <p style="color: #e74c3c;"><strong>This OTP expires in 2 minutes.</strong></p>
+                    <p>If you didn't request this, please ignore this email.</p>
+                </div>
+            `,
         };
-    
+        
         await transporter.sendMail(mailOption);
-    
-        return res.json({ success: true, message: "OTP sent to new email" });
-      } catch (error) {
+        
+        return res.json({ 
+            success: true, 
+            message: `OTP sent to ${newEmail} for verification` 
+        });
+        
+    } catch (error) {
         console.error("Send Update Email OTP error:", error);
         return res.status(500).json({ success: false, message: "Internal server error" });
-      }
+    }
 };
