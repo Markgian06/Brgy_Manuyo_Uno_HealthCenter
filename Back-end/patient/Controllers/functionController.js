@@ -493,3 +493,110 @@ export const logged = async (req, res) =>{
         return res.json({ success: false });
       }
 }
+
+
+
+export const updateGmail = async (req, res) => {
+    const validationRules = [
+        body("otp").notEmpty().withMessage("OTP is required"),
+      ];
+    
+      await Promise.all(validationRules.map(rule => rule.run(req)));
+    
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, message: errors.array()[0].msg });
+      }
+    
+      const { otp } = req.body;
+    
+      try {
+        const userId = req.user.id; // from userToken middleware
+        const user = await signUpModels.findById(userId);
+    
+        if (!user) {
+          return res.status(404).json({ success: false, message: "User not found" });
+        }
+    
+        if (!user.updateEmailOTP || user.updateEmailOTP !== otp) {
+          return res.status(400).json({ success: false, message: "Invalid OTP" });
+        }
+    
+        if (user.updateEmailOTPExpireAt < Date.now()) {
+          return res.status(400).json({ success: false, message: "OTP expired" });
+        }
+    
+        // ✅ Update email now
+        user.email = user.pendingEmail;
+        user.pendingEmail = "";
+        user.updateEmailOTP = "";
+        user.updateEmailOTPExpireAt = 0;
+    
+        await user.save();
+    
+        return res.json({ success: true, message: "Email updated successfully" });
+      } catch (error) {
+        console.error("Verify Update Email OTP error:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+      }
+};
+
+
+
+export const sendUpdateGmailOtp = async (req, res) => {
+    const validationRules = [
+        body("newEmail")
+          .notEmpty().withMessage("New email is required")
+          .isEmail().withMessage("Invalid email format"),
+      ];
+    
+      await Promise.all(validationRules.map(rule => rule.run(req)));
+    
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, message: errors.array()[0].msg });
+      }
+    
+      const { newEmail } = req.body;
+    
+      try {
+        const userId = req.user.id; // from userToken middleware
+        const user = await signUpModels.findById(userId);
+    
+        if (!user) {
+          return res.status(404).json({ success: false, message: "User not found" });
+        }
+    
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+        user.updateEmailOTP = otp;
+        user.updateEmailOTPExpireAt = Date.now() + 2 * 60 * 1000; // 2 minutes
+        user.pendingEmail = newEmail;
+    
+        await user.save();
+    
+        const mailOption = {
+          from: process.env.SENDER_EMAIL,
+          to: newEmail, // Send OTP to the new Gmail
+          subject: "MANUYO UNO HEALTH CENTER ACCOUNT, Email Update OTP",
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #2c3e50;">Email Update OTP</h2>
+              <p>Your OTP for updating your email is:</p>
+              <div style="background-color: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border-radius: 5px;">
+                <h1 style="color: #007bff; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>
+              </div>
+              <p>Use this OTP to proceed with updating your email.</p>
+              <p style="color: #e74c3c;"><strong>This OTP expires in 2 minutes.</strong></p>
+              <p>If you didn’t request this, please ignore this email.</p>
+            </div>
+          `,
+        };
+    
+        await transporter.sendMail(mailOption);
+    
+        return res.json({ success: true, message: "OTP sent to new email" });
+      } catch (error) {
+        console.error("Send Update Email OTP error:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+      }
+};
