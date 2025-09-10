@@ -7,33 +7,25 @@ function showMessage(title, message) {
 
 document.addEventListener("DOMContentLoaded", async () => {
     const backLink = document.querySelector(".backtologin a");
-  
     try {
-      const response = await fetch("/is-auth", {
+      const res = await fetch("/is-logged", {
         method: "POST",
-        credentials: "include", // include cookies/session
-        headers: { "Content-Type": "application/json" }
+        credentials: "include"   // important to send cookie
       });
-  
-      const data = await response.json();
-  
+      const data = await res.json();
       if (data.success) {
-        // User is logged in → change text + redirect
         backLink.textContent = "Back to Profile";
         backLink.href = "/frontend/patient/html/profile.html";
       } else {
-        // Not logged in → default login
         backLink.textContent = "Back to Login";
         backLink.href = "/frontend/patient/html/login.html";
       }
-    } catch (error) {
-      console.error("Auth check failed:", error);
-      // fallback: login
+    } catch (err) {
+      console.error("is-logged check failed:", err);
       backLink.textContent = "Back to Login";
       backLink.href = "/frontend/patient/html/login.html";
     }
   });
-
 document.getElementById('close-message').addEventListener('click', function() {
     document.getElementById('message-box').classList.add('hidden');
 });

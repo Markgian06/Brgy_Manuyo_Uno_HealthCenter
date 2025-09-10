@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { signup, signin, logout, sendVerifyOtp, verifyEmail, isAuthenticated, sendResetOtp, resetPassword } 
+import { signup, signin, logout, sendVerifyOtp, verifyEmail, isAuthenticated, sendResetOtp, resetPassword, logged } 
 from '../Controllers/functionController.js';
 import uploads from '../Middleware/uploads.js';
 import userToken from '../Middleware/userToken.js';
@@ -46,6 +46,6 @@ functionRouter.post('/verifyEmail', userToken, verifyEmail);
 functionRouter.post('/is-auth', userToken, isAuthenticated);
 functionRouter.post('/sendResetOtp', sendResetOtp);
 functionRouter.post('/resetPassword', resetPassword);
-
+functionRouter.post("/is-logged", logged);
 
 export default functionRouter;
