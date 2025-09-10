@@ -5,6 +5,35 @@ function showMessage(title, message) {
     msgBox.classList.remove('hidden');
 }
 
+document.addEventListener("DOMContentLoaded", async () => {
+    const backLink = document.querySelector(".backtologin a");
+  
+    try {
+      const response = await fetch("/is-auth", {
+        method: "POST",
+        credentials: "include", // include cookies/session
+        headers: { "Content-Type": "application/json" }
+      });
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        // User is logged in → change text + redirect
+        backLink.textContent = "Back to Profile";
+        backLink.href = "/frontend/patient/html/profile.html";
+      } else {
+        // Not logged in → default login
+        backLink.textContent = "Back to Login";
+        backLink.href = "/frontend/patient/html/login.html";
+      }
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      // fallback: login
+      backLink.textContent = "Back to Login";
+      backLink.href = "/frontend/patient/html/login.html";
+    }
+  });
+
 document.getElementById('close-message').addEventListener('click', function() {
     document.getElementById('message-box').classList.add('hidden');
 });
@@ -82,6 +111,9 @@ resetForm.addEventListener('submit', async function(e) {
 
         if (response.ok) {
             showMessage('Success!', 'Your password has been reset successfully. You can now log in with your new password.');
+            document.getElementById("close-message").addEventListener("click", () => {
+                location.reload(); // or redirect to login/profile
+            }, { once: true });
         } else {
             showMessage('Error', result.message || 'Failed to reset password. Please check your OTP and try again.');
         }

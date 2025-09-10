@@ -44,8 +44,8 @@ functionRouter.post('/logout', logout);
 functionRouter.post('/sendVerifyOtp', userToken, sendVerifyOtp);
 functionRouter.post('/verifyEmail', userToken, verifyEmail);
 functionRouter.post('/is-auth', userToken, isAuthenticated);
-functionRouter.post('/sendResetOtp', userToken, sendResetOtp);
-functionRouter.post('/resetPassword', userToken, resetPassword);
+functionRouter.post('/sendResetOtp', sendResetOtp);
+functionRouter.post('/resetPassword', resetPassword);
 
 
 export default functionRouter;
