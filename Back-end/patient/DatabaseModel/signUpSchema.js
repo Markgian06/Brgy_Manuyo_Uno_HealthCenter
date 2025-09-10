@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    userRole:{type: String, required: true},
     patientID: { type: Number, required: true, unique: true },
     ID_image: [{type: String, required: true}],
     firstName: {type: String, required: true},
@@ -9,7 +10,7 @@ const userSchema = new mongoose.Schema({
     age: {type: String, required: true},
     gender: {type: String, required: true},
     email: {type: String, required: true, unique: true},
-    contactNum: {type: String, required: true},
+    contactNum: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     verifyOTP: {type: String, default: ''},
     verifyOTPExpireAt: {type: Number, default: 0},

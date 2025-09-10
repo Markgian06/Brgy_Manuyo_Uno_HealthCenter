@@ -49,8 +49,12 @@ export const signup = async (req, res) => {
     try {
 
         const existingUser = await signUpModels.findOne({email});
+        const existingContact = await signUpModels.findOne({contactNum});
 
         if(existingUser){
+            return res.json({success: false, message: 'User already exists'})
+        }
+        if(existingContact){
             return res.json({success: false, message: 'User already exists'})
         }
 
@@ -72,7 +76,7 @@ export const signup = async (req, res) => {
         const nextId = await getNextSequenceValue('patientID');
 
         const hashedPassword = await bcrypt.hash(password, 10)
-        const user = new signUpModels({patientID: nextId, ID_image: imageUrls, firstName, lastName, birthDate, age, gender, email, 
+        const user = new signUpModels({userRole: 'user', patientID: nextId, ID_image: imageUrls, firstName, lastName, birthDate, age, gender, email, 
             contactNum, password: hashedPassword});
             await user.save();
 
@@ -325,29 +329,46 @@ export const isAuthenticated = async (req, res) => {
 
 
 
-export const sendResetOtp = async (req, res) =>{
-
+export const sendResetOtp = async (req, res) => {
     const validationRules = [
-        body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
-     ];
+        // Updated to accept 'identifier' which can be email or contact number
+        body('identifier')
+            .notEmpty().withMessage('Email or Contact Number is required')
+            .custom(value => {
+                const isEmail = value.includes('@');
+                const isPhoneNumber = /^\d+$/.test(value);
+                if (!isEmail && !isPhoneNumber) {
+                    throw new Error('Invalid email or contact number format');
+                }
+                return true;
+            }),
+    ];
 
-     await Promise.all(validationRules.map(rule => rule.run(req)));
+    await Promise.all(validationRules.map(rule => rule.run(req)));
 
-     const errors = validationResult(req);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return sendErrorResponse(res, 400, errors.array()[0].msg);
-    };
+    }
 
-    const {email} = req.body;
+    const { identifier } = req.body;
 
     try {
-        const user = await signUpModels.findOne({email});
+        // Determine if identifier is email or phone number
+        const isEmail = identifier.includes('@');
+        let user;
+
+        if (isEmail) {
+            user = await signUpModels.findOne({ email: identifier });
+        } else {
+            user = await signUpModels.findOne({ contactNum: identifier });
+        }
 
         if (!user) {
             return sendErrorResponse(res, 404, 'User not found');
         }
 
-        const otp = String(Math.floor( 100000 + Math.random() * 900000 ));
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
 
         user.resetOTP = otp;
         user.resetOTPExpireAt = Date.now() + 2 * 60 * 1000;
@@ -356,78 +377,94 @@ export const sendResetOtp = async (req, res) =>{
 
         const mailOption = {
             from: process.env.SENDER_EMAIL,
-                to: user.email,
-                subject: "MANUYO UNO HEALTH CENTER ACCOUNT, Password Reset OTP",
-                html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                        <h2 style="color: #2c3e50;">Password Reset OTP</h2>
-                        <p>Your OTP for resetting your password is:</p>
-                        <div style="background-color: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border-radius: 5px;">
-                            <h1 style="color: #007bff; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>
-                        </div>
-                        <p>Use this OTP to proceed with resetting your password.</p>
-                        <p style="color: #e74c3c;"><strong>This OTP expires in 2 minutes.</strong></p>
-                        <p>If you didn't request this, please ignore this email.</p>
+            to: user.email, // Always send to user's email regardless of identifier type
+            subject: "MANUYO UNO HEALTH CENTER ACCOUNT, Password Reset OTP",
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #2c3e50;">Password Reset OTP</h2>
+                    <p>Your OTP for resetting your password is:</p>
+                    <div style="background-color: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border-radius: 5px;">
+                        <h1 style="color: #007bff; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>
                     </div>
-                `
-        }
+                    <p>Use this OTP to proceed with resetting your password.</p>
+                    <p style="color: #e74c3c;"><strong>This OTP expires in 2 minutes.</strong></p>
+                    <p>If you didn't request this, please ignore this email.</p>
+                </div>
+            `
+        };
+        
         await transporter.sendMail(mailOption);
 
-        res.json({success: true, message: "OTP sent to your email"});
+        res.json({ success: true, message: "OTP sent to your email" });
 
-    }
-    catch(error) {
+    } catch (error) {
         console.error("Send Reset OTP error:", error);
         return sendErrorResponse(res, 500, 'Internal server error');
     }
 };
 
 
-
 export const resetPassword = async (req, res) =>{
-
     const validationRules = [
-        body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
+        // Updated to accept 'identifier' which can be email or contact number
+        body('identifier')
+            .notEmpty().withMessage('Email or Contact Number is required')
+            .custom(value => {
+                const isEmail = value.includes('@');
+                const isPhoneNumber = /^\d+$/.test(value);
+                if (!isEmail && !isPhoneNumber) {
+                    throw new Error('Invalid email or contact number format');
+                }
+                return true;
+            }),
         body('otp').notEmpty().withMessage('OTP is required').isString(),
         body('newPassword')
-        .notEmpty().withMessage('New Password is required')
-        .isLength({min: 8}).withMessage('Password must be at least 8 characters long')
-        .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
-        .matches(/[!@#$%^&*()\-+_=<>?]/).withMessage('Password must contain at least one special character')
-        .custom((value, { req }) => {
-            if (value !== req.body.newPassword) {
-                throw new Error('Confirm new password does not match new password');
-            }
-            return true;
-        }),
+            .notEmpty().withMessage('New Password is required')
+            .isLength({min: 8}).withMessage('Password must be at least 8 characters long')
+            .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
+            .matches(/[!@#$%^&*()\-+_=<>?]/).withMessage('Password must contain at least one special character'),
+        // Added a new field for confirm password to avoid logical error
+        body('confirmNewPassword')
+            .custom((value, { req }) => {
+                if (value !== req.body.newPassword) {
+                    throw new Error('Confirm new password does not match new password');
+                }
+                return true;
+            }),
     ];
 
     await Promise.all(validationRules.map(rule => rule.run(req)));
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
        return sendErrorResponse(res, 400, errors.array()[0].msg);
     }
 
-    const {email, otp, newPassword} = req.body;
+    // Now using 'identifier' which can be email or phone number
+    const {identifier, otp, newPassword} = req.body;
 
-    try{
-        const user = await signUpModels.findOne({email});
+    try {
+        const isEmail = identifier.includes('@');
+        let user;
+
+        if (isEmail) {
+            user = await signUpModels.findOne({email: identifier});
+        } else {
+            user = await signUpModels.findOne({contactNum: identifier});
+        }
 
         if (!user) {
             return sendErrorResponse(res, 404, 'User not found');
-        };
-        
-        if(user.resetOTP === "" || user.resetOTP !== otp){
-            return sendErrorResponse(res, 400, 'Invalid OTP');
-        };
+        }
 
-        if(user.resetOTPExpireAt < Date.now()){
+        if (user.resetOTP === "" || user.resetOTP !== otp) {
+            return sendErrorResponse(res, 400, 'Invalid OTP');
+        }
+
+        if (user.resetOTPExpireAt < Date.now()) {
             return sendErrorResponse(res, 400, 'OTP Expired');
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        
         user.password = hashedPassword;
         user.resetOTP = '';
         user.resetOTPExpireAt = 0;
@@ -435,9 +472,8 @@ export const resetPassword = async (req, res) =>{
         await user.save();
 
         return res.json({success: true, message: "Password has been reset successfully"});
-    }
-    catch(error){
+    } catch (error) {
         console.error("Reset Password error:", error);
         return sendErrorResponse(res, 500, 'Internal server error');
     }
-}
+};

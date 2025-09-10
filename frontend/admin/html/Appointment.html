@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brgy. Manuyo Uno Health Center</title>
+  <link rel="icon" type="image/webp" href="/frontend/image/logo.webp">
+  <link rel="stylesheet" href="/frontend/admin/admin.css">
+  <link rel="stylesheet" href="/frontend/admin/navigation.css">
+  <link rel="stylesheet" href="/frontend/admin/Appointment.css">
+
+  <script src="/Back-end/admin//js/Appointment.js"></script>
+  <script src="/Back-end/admin/js/navigation.js"></script>
+</head>
+<body>
+  <div class="header">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <h1 style="font-size:18px;">Appointment Records</h1>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <a href="/frontend/admin/html/dashboard.html">Dashboard</a>
+    <a href="/frontend/admin/html/announcement.html">Announcements</a>
+    <a href="/frontend/admin/html/Appointment.html">Appointment Records</a>
+    <a href="/frontend/admin/html/record.html">Records</a>
+    <a href="/frontend/admin/html/services.html">Services</a>
+    <a href="/frontend/admin/html/account.html">Accounts</a>
+  </div>
+
+   <div class="content">
+    <div class="welcome-card">
+      <h2>Welcome Admin!</h2>
+      <p >Manage and monitor all appointment records efficiently</p>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <h3 id="totalCount">1</h3>
+        <p>Total Appointments</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="pendingCount">2</h3>
+        <p>Pending</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="approvedCount">3</h3>
+        <p>Approved</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="completedCount">4</h3>
+        <p>Completed</p>
+      </div>
+    </div>
+
+    <!-- Search and Filter Controls -->
+    <div class="controls-section">
+      <div class="controls-grid">
+        <input type="text" id="searchInput" class="search-box" placeholder="Search by appointment number, patient name, or email...">
+        <select id="statusFilter" class="filter-select">
+          <option value="ALL">All Status</option>
+          <option value="PENDING">Pending</option>
+          <option value="APPROVED">Approved</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="CANCELLED">Cancelled</option>
+        </select>
+        <button class="btn" onclick="refreshAppointments()">Refresh</button>
+      </div>
+    </div>
+
+    <!-- Appointments Table -->
+    <div class="appointments-table">
+      <div id="loadingIndicator" class="loading">
+        <p>Loading appointments...</p>
+      </div>
+      
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Appointment #</th>
+              <th>Patient Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Service</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appointmentsTableBody">
+            <!-- Dynamic content -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination" id="pagination">
+        <!-- Dynamic pagination -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Status Modal -->
+  <div class="modal" id="updateModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Update Appointment Status</h3>
+      </div>
+      <form id="updateForm">
+        <input type="hidden" id="updateAppointmentId">
+        <div class="form-group">
+          <label>Appointment Number:</label>
+          <input type="text" id="updateAppointmentNumber" disabled>
+        </div>
+        <div class="form-group">
+          <label>Status:</label>
+          <select id="updateStatus" required>
+            <option value="">Select Status</option>
+            <option value="PENDING">Pending</option>
+            <option value="APPROVED">Approved</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Notes (Optional):</label>
+          <textarea id="updateNotes" rows="3" placeholder="Add any notes..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn" onclick="closeUpdateModal()">Cancel</button>
+          <button type="submit" class="btn">Update Status</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

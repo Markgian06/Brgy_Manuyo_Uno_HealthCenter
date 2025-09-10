@@ -1,0 +1,27 @@
+.content {
+    padding: 90px;
+}
+
+.welcome-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.welcome-card h2 {
+    color: #333333;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.welcome-card p {
+    color: #555555;
+    font-size: 1.1em;
+    margin: 0;
+    font-weight: 400;
+}

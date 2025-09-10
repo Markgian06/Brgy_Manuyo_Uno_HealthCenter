@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brgy. Manuyo Uno Health Center</title>
+  <link rel="icon" type="image/webp" href="/frontend/image/logo.webp">
+  <link rel="stylesheet" href="/frontend/admin/admin.css">
+  <link rel="stylesheet" href="/frontend/admin/navigation.css">
+  <link rel="stylesheet" href="/frontend/admin/services.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+  
+  <script src="/Back-end/admin/js/navigation.js"></script>
+</head>
+<body>
+  <div class="header">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <h1 style="font-size:18px;">Services</h1>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <a href="/frontend/admin/html/dashboard.html">Dashboard</a>
+    <a href="/frontend/admin/html/announcement.html">Announcements</a>
+    <a href="/frontend/admin/html/Appointment.html">Appointment Records</a>
+    <a href="/frontend/admin/html/record.html">Records</a>
+    <a href="/frontend/admin/html/services.html">Services</a>
+    <a href="/frontend/admin/html/account.html">Accounts</a>
+  </div>
+
+ <div class="content">
+    <div class="welcome-card">
+        <h2>Welcome Admin!</h2>
+        <p>Upcoming Services</p>
+    </div>
+
+       <!-- CREATE SECTION -->
+        <div class="create-section">
+            <h2><i class="fas fa-plus-circle"></i> Create New Post</h2>
+            <form id="postForm">
+                <div class="form-group">
+                    <label for="postTitle">Post Title</label>
+                    <input type="text" id="postTitle" name="title" placeholder="Enter post title..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postContent">Post Content</label>
+                    <textarea id="postContent" name="content" placeholder="Write your post content..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="postCategory">Category</label>
+                        <select id="postCategory" name="category">
+                            <option value="announcement">Announcement</option>
+                            <option value="news">News</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="postStatus">Status</label>
+                        <select id="postStatus" name="status">
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Post Image</label>
+                    <div class="file-upload-area" onclick="document.getElementById('postImage').click()">
+                        <input type="file" id="postImage" name="image" accept="image/*">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #6b7280; margin-bottom: 0.5rem;"></i>
+                        <p>Click to upload image or drag and drop</p>
+                        <p style="font-size: 12px; color: #9ca3af;">PNG, JPG up to 5MB</p>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Create Post
+                </button>
+            </form>
+        </div>
+
+        <!-- POSTS SECTION -->
+        <div class="posts-section">
+            <div class="posts-header">
+                <h2><i class="fas fa-list"></i> All Posts <span id="postCount">(3)</span></h2>
+                <div class="search-filter">
+                    <input type="text" class="search-input" placeholder="Search posts..." id="searchInput">
+                    <select class="filter-select" id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Draft</option>
+                        <option value="favorite">Favorites</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="posts-grid" id="postsContainer">
+                <!-- Sample Post 1 -->
+                <div class="post-card" data-id="1">
+                    <div class="post-header">
+                        <div class="post-id">ID: #001</div>
+                        <div class="post-status status-published">Published</div>
+                    </div>
+                    
+                    <div class="post-content">
+                        <div class="post-title">System Maintenance Notice</div>
+                        <div class="post-text">System maintenance scheduled this Friday at 8 PM. Please save your work and expect brief interruptions.</div>
+                        <img src="/frontend/image/contactus.webp" alt="Post Image" class="post-image">
+                    </div>
+
+                    <div class="post-meta">
+                        <span><i class="fas fa-calendar"></i> Created: Jan 15, 2024</span>
+                        <span><i class="fas fa-tag"></i>Announcements</span>
+                    </div>
+
+                    <div class="post-actions">
+                        <button class="action-btn edit" onclick="editPost(1)">
+                            <i class="fas fa-pen"></i> Edit
+                        </button>
+                        <button class="action-btn delete" onclick="deletePost(1)">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        <select class="favorite-toggle" onchange="toggleFavorite(1, this)">
+                            <option value="0">☆ Favorite</option>
+                            <option value="1">⭐ Favorited</option>
+                        </select>
+                    </div>
+                </div>
+
+        <!-- EDIT MODAL -->
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-edit"></i> Edit Post</h3>
+                    <button class="close-modal" onclick="closeEditModal()">&times;</button>
+                </div>
+                <form id="editForm">
+                    <input type="hidden" id="editPostId">
+                    <div class="form-group">
+                        <label for="editTitle">Post Title</label>
+                        <input type="text" id="editTitle" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editContent">Post Content</label>
+                        <textarea id="editContent" name="content" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editCategory">Category</label>
+                            <select id="editCategory" name="category">
+                                <option value="announcement">Announcement</option>
+                                <option value="news">News</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editStatus">Status</label>
+                            <select id="editStatus" name="status">
+                                <option value="draft">Draft</option>
+                                <option value="published">Published</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Update Post
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    
+        
+
+</div>
+  
+</body>
+</html>

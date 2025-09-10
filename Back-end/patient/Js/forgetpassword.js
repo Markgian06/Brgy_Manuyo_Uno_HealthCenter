@@ -12,11 +12,13 @@ document.getElementById('close-message').addEventListener('click', function() {
 const otpForm = document.getElementById('otp-form');
 const resetForm = document.getElementById('reset-form');
 
+// Form for requesting OTP
 otpForm.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const email = document.getElementById('email-otp').value;
+    const identifier = document.getElementById('identifier-otp').value;
     const button = otpForm.querySelector('.submit-btn');
+
     button.textContent = 'Sending...';
     button.disabled = true;
 
@@ -24,17 +26,18 @@ otpForm.addEventListener('submit', async function(e) {
         const response = await fetch('/sendResetOtp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ identifier })
         });
 
         const result = await response.json();
 
         if (response.ok) {
-            showMessage('OTP Sent!', 'A one-time password has been sent to your email. Please enter it below to reset your password.');
-            
+            // The message now indicates the OTP is sent to their associated email
+            showMessage('OTP Sent!', 'A one-time password has been sent to your registered email address. Please enter it below to reset your password.');
+
             otpForm.classList.add('hidden');
             resetForm.classList.remove('hidden');
-            document.getElementById('email-reset').value = email; 
+            document.getElementById('identifier-reset').value = identifier;
         } else {
             showMessage('Error', result.message || 'Failed to send OTP. Please try again.');
         }
@@ -47,22 +50,32 @@ otpForm.addEventListener('submit', async function(e) {
     }
 });
 
+// Form for resetting password
 resetForm.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const email = document.getElementById('email-reset').value;
-    const newPassword = document.getElementById('newPassword').value;
+    const identifier = document.getElementById('identifier-reset').value;
     const otp = document.getElementById('otp').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
 
     const button = resetForm.querySelector('.submit-btn');
     button.textContent = 'Resetting...';
     button.disabled = true;
 
+    // Client-side validation to check if passwords match
+    if (newPassword !== confirmNewPassword) {
+        showMessage('Error', 'New password and confirm new password do not match.');
+        button.textContent = 'CONFIRM';
+        button.disabled = false;
+        return;
+    }
+
     try {
         const response = await fetch('/resetPassword', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, newPassword, otp })
+            body: JSON.stringify({ identifier, otp, newPassword, confirmNewPassword })
         });
 
         const result = await response.json();

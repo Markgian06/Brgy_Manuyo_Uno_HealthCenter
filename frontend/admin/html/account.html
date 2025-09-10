@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brgy. Manuyo Uno Health Center</title>
+  <link rel="icon" type="image/webp" href="/frontend/image/logo.webp">
+  <link rel="stylesheet" href="/frontend/admin/admin.css">
+  <link rel="stylesheet" href="/frontend/admin/navigation.css">
+  <link rel="stylesheet" href="/frontend/admin/account.css">
+
+  <script src="/Back-end/admin/js/navigation.js"></script>
+</head>
+<body>
+  <div class="header">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <h1 style="font-size:18px;">Accounts</h1>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <a href="/frontend/admin/html/dashboard.html">Dashboard</a>
+    <a href="/frontend/admin/html/announcement.html">Announcements</a>
+    <a href="/frontend/admin/html/Appointment.html">Appointment Records</a>
+    <a href="/frontend/admin/html/record.html">Records</a>
+    <a href="/frontend/admin/html/services.html">Services</a>
+    <a href="/frontend/admin/html/account.html">Accounts</a>
+  </div>
+
+    <div class="content">
+    <div class="welcome-card">
+      <h2>Welcome Admin!</h2>
+      <p >Monitor all Accounts recordefficiently</p>
+    </div>
+
+      <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Total Accounts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">20</div>
+                    <div class="stat-label">Verified Accounts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Unverified Accounts</div>
+                </div>
+            </div>
+
+            <div class="accounts-container">
+            <input type="text" class="search-bar" placeholder="Search by name, email, or patient ID...">
+            
+            <div class="filters">
+                <button class="filter-btn active">All Accounts</button>
+                <button class="filter-btn">Verified</button>
+                <button class="filter-btn">Unverified</button>
+            </div>
+
+                <!-- Sample Account 1 - Unverified -->
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="patient-id">Patient ID: 101</div>
+                    <div class="verification-status unverified">
+                        UNVERIFIED
+                    </div>
+                </div>
+
+                <div class="account-info">
+                    <div class="info-group">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">palo 123</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">palo123@gmail.com</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Contact Number</div>
+                        <div class="info-value">09111111111</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Birth Date</div>
+                        <div class="info-value">September 6, 2025</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Age</div>
+                        <div class="info-value">1</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Gender</div>
+                        <div class="info-value">Male</div>
+                    </div>
+                </div>
+
+                <div class="id-images">
+                    <div class="image-text">ID Images (2)</div>
+                    <div class="image-container">
+                        <div class="id-image">ID Image 1</div>
+                        <div class="id-image">ID Image 2</div>
+                    </div>
+                </div>
+            </div>
+  </div>
+
+</body>
+</html>

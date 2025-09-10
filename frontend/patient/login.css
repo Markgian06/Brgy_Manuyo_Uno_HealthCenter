@@ -88,7 +88,7 @@
   padding: 10px 30px;
   border: none;
   border-radius: 25px;
-  background:#004080;
+  background: linear-gradient(45deg, #4CAF50, #45a049);
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -97,7 +97,8 @@
 }
 
 .leftside button:hover {
-  background:  #005fcc;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
 }
 
 .rightside {
@@ -131,7 +132,7 @@
 .login input[type="submit"] {
   width: 100%;
   padding: 10px;
-  background: #004080;
+  background: linear-gradient(45deg, #4CAF50, #45a049);
   color: #fff;
   border: none;
   border-radius: 25px;
@@ -140,7 +141,8 @@
 }
 
 .login input[type="submit"]:hover {
-  background: #005fcc;
+   transform: translateY(-3px);
+   box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
 }
 
 .forgot {
@@ -337,7 +339,7 @@ label {
 
 button[type="submit"] {
   padding: 12px;
-  background: #004080;
+  background: linear-gradient(45deg, #4CAF50, #45a049);
   color: white;
   border: none;
   border-radius: 25px;
@@ -349,7 +351,8 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background: #005fcc;
+ transform: translateY(-3px);
+ box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
 }
 
 /* ===== Responsive ===== */

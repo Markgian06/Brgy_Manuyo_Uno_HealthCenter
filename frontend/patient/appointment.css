@@ -104,9 +104,6 @@
             }
         }
 
-        .full-width {
-            grid-column: 1 / -1;
-        }
 
         label {
             display: block;
@@ -150,15 +147,14 @@
             min-height: 100px;
         }
 
-      
-
-        /* Calendar Styles */
         .calendar-container {
             border: 2px solid #e1e5e9;
             border-radius: 12px;
             overflow: hidden;
             background: white;
-            margin-top: 10px;
+            margin: 10px auto;  
+            max-width: 520px; 
+            font-size: 0.9rem;          
         }
 
         .calendar-header {
@@ -349,14 +345,12 @@
         }
 
         /* Responsive Design */
-        /* Large desktops (1200px – 1399px) */
         @media (max-width: 1399px) {
             .appointment {
                 margin: 100px;
             }
         }
 
-        /* Medium desktops / laptops (992px – 1199px) */
         @media (max-width: 1199px) {
             .appointment {
                 margin: 60px;
@@ -372,7 +366,6 @@
             }
         }
 
-        /* Tablets landscape (768px – 991px) */
         @media (max-width: 991px) {
             .appointment {
                 margin: 40px;
@@ -406,7 +399,6 @@
             }
         }
 
-        /* Tablets portrait / small devices (≤ 767px) */
         @media (max-width: 767px) {
             .appointment {
                 margin: 20px;
@@ -468,7 +460,6 @@
             }
         }
 
-        /* Large phones / small tablets (481px – 640px) */
         @media (max-width: 640px) {
             .appointment {
                 margin: 15px;
@@ -492,7 +483,6 @@
             }
         }
 
-        /* Phones (≤ 480px) */
         @media (max-width: 480px) {
             .appointment {
                 margin: 70px 10px 10px 10px;
@@ -570,7 +560,6 @@
             }
         }
 
-        /* Very small phones (≤ 320px) */
         @media (max-width: 320px) {
             .appointment {
                 margin: 5px;
@@ -627,7 +616,6 @@
             }
         }
 
-        /* Small devices in landscape (≤ 500px height) */
         @media (max-height: 500px) and (orientation: landscape) {
             .appointment {
                 margin: 10px;

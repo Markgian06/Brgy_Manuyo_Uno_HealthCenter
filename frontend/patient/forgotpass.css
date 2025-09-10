@@ -58,7 +58,7 @@
 }
 
 .submit-btn {
-  background: #004080;
+  background: linear-gradient(45deg, #4CAF50, #45a049);
   color: #fff;
   border: none;
   padding: 12px 50px;
@@ -70,7 +70,8 @@
 }
 
 .submit-btn:hover {
-  background: #005fcc;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
 }
 
 /* Message Box */
