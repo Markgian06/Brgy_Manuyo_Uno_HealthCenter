@@ -1,4 +1,4 @@
-// Debug version of accVerification.js
+// Enhanced accVerification.js with better error handling and user experience
 document.addEventListener('DOMContentLoaded', function() {
     // Get DOM elements
     const emailDisplay = document.getElementById('emailDisplay');
@@ -8,22 +8,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const timerElement = document.getElementById('timer');
     const statusMessage = document.getElementById('statusMessage');
 
-    // Variables with debugging
+    // Variables
     let userId = localStorage.getItem('userId') || sessionStorage.getItem('userId');
-    let token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    
-    // DEBUG: Log userId information
-    console.log('=== DEBUG INFO ===');
-    console.log('localStorage userId:', localStorage.getItem('userId'));
-    console.log('sessionStorage userId:', sessionStorage.getItem('userId'));
-    console.log('Final userId:', userId);
-    console.log('All localStorage keys:', Object.keys(localStorage));
-    console.log('All sessionStorage keys:', Object.keys(sessionStorage));
-    console.log('==================');
-    
     let userEmail = '';
     let timerInterval;
-    let timeLeft = 120;
+    let timeLeft = 120; // 2 minutes in seconds
     let otpAttempts = 0;
     const maxOtpAttempts = 3;
     let resendAttempts = 0;
@@ -33,38 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
     init();
 
     async function init() {
-        // DEBUG: More detailed userId checking
         if (!userId) {
-            console.log('ERROR: No userId found');
-            console.log('Checking alternative storage keys...');
-            
-            // Check for alternative key names that might be used
-            const possibleKeys = ['user_id', 'patient_id', 'id', 'userId', 'patientId'];
-            let foundUserId = null;
-            
-            possibleKeys.forEach(key => {
-                const localValue = localStorage.getItem(key);
-                const sessionValue = sessionStorage.getItem(key);
-                console.log(`${key}: localStorage=${localValue}, sessionStorage=${sessionValue}`);
-                
-                if (localValue && !foundUserId) foundUserId = localValue;
-                if (sessionValue && !foundUserId) foundUserId = sessionValue;
-            });
-            
-            if (foundUserId) {
-                console.log('Found userId with alternative key:', foundUserId);
-                userId = foundUserId;
-            } else {
-                showStatus('Please log in to verify your account. Redirecting in 5 seconds...', 'error');
-                console.log('No userId found anywhere, redirecting to login...');
-                setTimeout(() => {
-                    window.location.href = '/frontend/patient/html/login.html';
-                }, 5000); // Increased to 5 seconds for debugging
-                return;
-            }
+            showStatus('Please log in to verify your account.', 'error');
+            setTimeout(() => {
+                window.location.href = '/frontend/patient/html/login.html';
+            }, 2000);
+            return;
         }
 
-        console.log('Using userId:', userId);
         await loadUserData();
         setupOTPInputs();
     }
@@ -72,34 +37,24 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadUserData() {
         try {
             showStatus('Loading account information...', 'info');
-            console.log('Fetching profile for userId:', userId);
             
             const response = await fetch(`/profile/${userId}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`  
+                    'Content-Type': 'application/json'
                 }
             });
 
-            console.log('Profile response status:', response.status);
-            console.log('Profile response headers:', [...response.headers.entries()]);
-
             if (!response.ok) {
-                const errorText = await response.text();
-                console.log('Profile response error:', errorText);
-                throw new Error(`Failed to load user data: ${response.status} - ${errorText}`);
+                throw new Error(`Failed to load user data: ${response.status}`);
             }
 
             const data = await response.json();
-            console.log('Profile response data:', data);
             
             if (data.success && data.data.email) {
                 userEmail = data.data.email;
                 emailDisplay.textContent = maskEmail(userEmail);
-                console.log('User email loaded:', userEmail);
-                console.log('Account verification status:', data.data.isAccountVerified);
                 
                 // Check if already verified
                 if (data.data.isAccountVerified) {
@@ -113,15 +68,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Auto-send OTP when page loads
                 await sendOTP();
             } else {
-                console.log('Invalid response data:', data);
                 throw new Error(data.message || 'Email not found');
             }
         } catch (error) {
             console.error('Load user data error:', error);
-            showStatus(`Failed to load user information: ${error.message}. Redirecting to login in 5 seconds...`, 'error');
+            showStatus('Failed to load user information. Please try logging in again.', 'error');
             setTimeout(() => {
                 window.location.href = '/frontend/patient/html/login.html';
-            }, 5000);
+            }, 3000);
         }
     }
 
@@ -136,16 +90,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setupOTPInputs() {
         otpInputs.forEach((input, index) => {
+            // Input event handler
             input.addEventListener('input', function(e) {
                 const value = e.target.value;
                 
+                // Only allow numbers
                 if (!/^\d$/.test(value) && value !== '') {
                     e.target.value = '';
                     return;
                 }
 
+                // Add visual feedback
                 if (value) {
                     e.target.classList.add('filled');
+                    // Move to next input
                     if (index < otpInputs.length - 1) {
                         otpInputs[index + 1].focus();
                     }
@@ -153,10 +111,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.target.classList.remove('filled');
                 }
 
+                // Enable/disable verify button based on all inputs filled
                 updateVerifyButtonState();
             });
 
+            // Keydown event handler
             input.addEventListener('keydown', function(e) {
+                // Handle backspace
                 if (e.key === 'Backspace' && !e.target.value && index > 0) {
                     otpInputs[index - 1].focus();
                     otpInputs[index - 1].value = '';
@@ -164,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateVerifyButtonState();
                 }
 
+                // Handle Enter key
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     if (!verifyBtn.disabled) {
@@ -172,28 +134,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
+            // Paste event handler
             input.addEventListener('paste', function(e) {
                 e.preventDefault();
                 const paste = (e.clipboardData || window.clipboardData).getData('text');
                 const numbers = paste.replace(/\D/g, '').slice(0, 6);
                 
+                // Clear all inputs first
                 otpInputs.forEach(inp => {
                     inp.value = '';
                     inp.classList.remove('filled');
                 });
                 
+                // Fill inputs with pasted numbers
                 for (let i = 0; i < numbers.length && i < otpInputs.length; i++) {
                     otpInputs[i].value = numbers[i];
                     otpInputs[i].classList.add('filled');
                 }
                 
+                // Focus on next empty input or last input
                 const nextEmptyIndex = Math.min(numbers.length, otpInputs.length - 1);
                 otpInputs[nextEmptyIndex].focus();
                 
                 updateVerifyButtonState();
             });
 
+            // Focus event handler
             input.addEventListener('focus', function() {
+                // Select all text on focus for easier replacement
                 this.select();
             });
         });
@@ -205,9 +173,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startTimer() {
-        timeLeft = 120;
+        timeLeft = 120; // Reset to 2 minutes
         resendBtn.disabled = true;
         
+        // Clear existing timer
         if (timerInterval) {
             clearInterval(timerInterval);
         }
@@ -218,6 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
+            // Add warning class when less than 30 seconds
             if (timeLeft <= 30) {
                 timerElement.classList.add('warning');
             } else {
@@ -233,6 +203,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 resendBtn.disabled = false;
                 verifyBtn.disabled = true;
                 showStatus('OTP has expired. Please request a new code.', 'error');
+                
+                // Clear inputs when expired
                 clearOTPInputs();
             }
         }, 1000);
@@ -240,6 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function sendOTP() {
         try {
+            // Check resend attempts limit
             if (resendAttempts >= maxResendAttempts) {
                 showStatus('Too many resend attempts. Please try again later.', 'error');
                 return;
@@ -249,29 +222,31 @@ document.addEventListener('DOMContentLoaded', function() {
             resendBtn.disabled = true;
             resendBtn.textContent = 'Sending...';
             
-            console.log('Sending OTP for userId:', userId);
-            
-            const response = await fetch('/send-verify-otp', {
+            const response = await fetch('/sendVerifyOtp', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`  
+                    'Content-Type': 'application/json'
                 },
                 credentials: 'include',
                 body: JSON.stringify({ userId: userId })
             });
 
-            console.log('Send OTP response status:', response.status);
             const data = await response.json();
-            console.log('Send OTP response data:', data);
             
             if (data.success) {
                 resendAttempts++;
                 showStatus(`Verification code sent to your email! (Attempt ${resendAttempts}/${maxResendAttempts})`, 'success');
                 startTimer();
+                
+                // Clear previous OTP inputs
                 clearOTPInputs();
+                
+                // Reset verification attempts
                 otpAttempts = 0;
+                
+                // Focus first input
                 otpInputs[0].focus();
+                
                 resendBtn.textContent = 'Resend Code';
             } else {
                 throw new Error(data.message || 'Failed to send OTP');
@@ -292,6 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Check attempt limits
         if (otpAttempts >= maxOtpAttempts) {
             showStatus('Too many failed attempts. Please request a new code.', 'error');
             clearOTPInputs();
@@ -304,13 +280,10 @@ document.addEventListener('DOMContentLoaded', function() {
             verifyBtn.disabled = true;
             verifyBtn.innerHTML = '<span class="loading-spinner"></span> Verifying...';
             
-            console.log('Verifying OTP:', otp, 'for userId:', userId);
-            
-            const response = await fetch('/verify-email', {
+            const response = await fetch('/verifyEmail', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`  
+                    'Content-Type': 'application/json'
                 },
                 credentials: 'include',
                 body: JSON.stringify({ 
@@ -319,9 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
             });
 
-            console.log('Verify OTP response status:', response.status);
             const data = await response.json();
-            console.log('Verify OTP response data:', data);
             
             if (data.success) {
                 clearInterval(timerInterval);
@@ -331,10 +302,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 verifyBtn.style.backgroundColor = '#10b981';
                 verifyBtn.style.borderColor = '#10b981';
                 
+                // Show success alert if available
                 if (typeof showAlert === 'function') {
                     showAlert('Account verified successfully!', 'success', 'formAlert');
                 }
                 
+                // Add success class to inputs
                 otpInputs.forEach(input => input.classList.add('success'));
                 
                 setTimeout(() => {
@@ -352,11 +325,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 verifyBtn.disabled = false;
                 verifyBtn.textContent = 'Verify Account';
                 
+                // Add error animation to inputs
                 otpInputs.forEach(input => {
                     input.classList.add('error');
                     setTimeout(() => input.classList.remove('error'), 600);
                 });
                 
+                // Clear inputs and focus first one
                 clearOTPInputs();
                 otpInputs[0].focus();
             } else {
@@ -381,6 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
         statusMessage.className = `status-message status-${type}`;
         statusMessage.style.display = 'block';
         
+        // Auto-hide success and info messages after 5 seconds
         if (type === 'success' || type === 'info') {
             setTimeout(() => {
                 if (statusMessage.textContent === message) {
@@ -392,19 +368,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listeners
     verifyBtn.addEventListener('click', verifyOTP);
+    
     resendBtn.addEventListener('click', async function() {
         clearInterval(timerInterval);
         await sendOTP();
     });
 
+    // Global keyboard handler
     document.addEventListener('keydown', function(e) {
+        // Handle Escape key to go back
         if (e.key === 'Escape') {
             if (confirm('Are you sure you want to go back to your profile?')) {
                 window.location.href = '/frontend/patient/html/profile.html';
-            }s
+            }
         }
     });
 
+    // Prevent page refresh/close during verification
     window.addEventListener('beforeunload', function(e) {
         if (timeLeft > 0 && timeLeft < 120) {
             e.preventDefault();
@@ -413,6 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Cleanup on page unload
     window.addEventListener('unload', function() {
         if (timerInterval) {
             clearInterval(timerInterval);

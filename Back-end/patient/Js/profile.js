@@ -46,14 +46,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Account verification button event listener
     if (verifyAccountBtn) {
         verifyAccountBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // Debug: Check if userId exists before navigating
+            const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId');
+            console.log('UserId before navigation:', userId);
+            
+            if (!userId) {
+                alert('Session expired. Please log in again.');
+                window.location.href = '/frontend/patient/html/login.html';
+                return;
+            }
+            
             window.location.href = '/frontend/patient/html/accVerification.html';
         });
     }
-
     // Load profile when page loads
     loadProfile();
 
@@ -120,62 +129,34 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateVerificationStatus(isVerified) {
         if (!verificationStatusDiv) return;
         
-        const benefitsDiv = document.getElementById('verificationBenefits');
-        
         if (isVerified) {
             verificationStatusDiv.innerHTML = `
-                <div class="verification-status verified" style="
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    padding: 16px;
-                    border-radius: 8px;
-                    margin-bottom: 16px;
-                    background: #dcfce7;
-                    border: 1px solid #22c55e;
-                    color: #15803d;
-                ">
-                    <span style="font-size: 20px; font-weight: bold;">✓</span>
-                    <span style="font-weight: 600; font-size: 1rem;">Account Verified</span>
+                <div class="verification-status verified">
+                    <span class="status-icon">✓</span>
+                    <span class="status-text">Account Verified</span>
                 </div>
             `;
             
-            // Hide verify button and benefits if account is verified
+            // Hide verify button if account is verified
             if (verifyAccountBtn) {
                 verifyAccountBtn.style.display = 'none';
             }
-            if (benefitsDiv) {
-                benefitsDiv.style.display = 'none';
-            }
         } else {
             verificationStatusDiv.innerHTML = `
-                <div class="verification-status unverified" style="
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    padding: 16px;
-                    border-radius: 8px;
-                    margin-bottom: 16px;
-                    background: #fef3c7;
-                    border: 1px solid #f59e0b;
-                    color: #92400e;
-                ">
-                    <span style="font-size: 20px; font-weight: bold;">⚠</span>
-                    <div>
-                        <span style="font-weight: 600; font-size: 1rem;">Account Not Verified</span>
-                        <small style="display: block; font-size: 0.875rem; margin-top: 4px; opacity: 0.8;">
-                            Please verify your email to access all features
-                        </small>
-                    </div>
+                <div class="verification-status unverified">
+                    <span class="status-icon">⚠</span>
+                    <span class="status-text">Account Not Verified</span>
+                    <small class="status-note">Please verify your email to access all features</small>
                 </div>
             `;
             
-            // Show verify button and benefits if account is not verified
+            // Show verify button if account is not verified
             if (verifyAccountBtn) {
-                verifyAccountBtn.style.display = 'inline-flex';
-            }
-            if (benefitsDiv) {
-                benefitsDiv.style.display = 'block';
+                verifyAccountBtn.style.display = 'inline-block';
+                verifyAccountBtn.innerHTML = `
+                    <span class="btn-icon">📧</span>
+                    Verify Account
+                `;
             }
         }
     }
