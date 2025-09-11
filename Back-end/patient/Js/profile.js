@@ -1,4 +1,4 @@
-// Clean version without console logs
+// Enhanced Profile.js with Account Verification
 document.addEventListener('DOMContentLoaded', function() {
     // Get DOM elements
     const patientName = document.getElementById('patientName');
@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const updateEmailPhoneBtn = document.getElementById('updateEmailPhone');
     const updatePasswordBtn = document.getElementById('updatePassword');
     const requestRecordBtn = document.getElementById('requestRecordBtn');
+    
+    // Account verification elements
+    const verificationStatusDiv = document.getElementById('verificationStatus');
+    const verifyAccountBtn = document.getElementById('verifyAccountBtn');
 
     // Make email and password fields read-only
     if (emailPhoneInput) {
@@ -25,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         passwordInput.placeholder = '••••••••••';
     }
 
+    // Event listeners for update buttons
     if (updateEmailPhoneBtn) {
         updateEmailPhoneBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -38,6 +43,14 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             localStorage.setItem('updateType', 'password');
             window.location.href = '/frontend/patient/html/forgetpassword.html';
+        });
+    }
+
+    // Account verification button event listener
+    if (verifyAccountBtn) {
+        verifyAccountBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = '/frontend/patient/html/accVerification.html';
         });
     }
 
@@ -86,6 +99,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     emailPhoneInput.value = data.data.email || data.data.contactNum || 'Not provided';
                 }
                 
+                // Update verification status
+                updateVerificationStatus(data.data.isAccountVerified);
+                
                 // Store userId for future requests if we didn't have it
                 if (!userId && data.data.userId) {
                     localStorage.setItem('userId', data.data.userId);
@@ -96,11 +112,75 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
         } catch (error) {
+            console.error('Profile load error:', error);
             showError('Cannot connect to server. Please try again.');
         }
     }
 
-    // Request medical record button (keep this functionality)
+    function updateVerificationStatus(isVerified) {
+        if (!verificationStatusDiv) return;
+        
+        const benefitsDiv = document.getElementById('verificationBenefits');
+        
+        if (isVerified) {
+            verificationStatusDiv.innerHTML = `
+                <div class="verification-status verified" style="
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 16px;
+                    border-radius: 8px;
+                    margin-bottom: 16px;
+                    background: #dcfce7;
+                    border: 1px solid #22c55e;
+                    color: #15803d;
+                ">
+                    <span style="font-size: 20px; font-weight: bold;">✓</span>
+                    <span style="font-weight: 600; font-size: 1rem;">Account Verified</span>
+                </div>
+            `;
+            
+            // Hide verify button and benefits if account is verified
+            if (verifyAccountBtn) {
+                verifyAccountBtn.style.display = 'none';
+            }
+            if (benefitsDiv) {
+                benefitsDiv.style.display = 'none';
+            }
+        } else {
+            verificationStatusDiv.innerHTML = `
+                <div class="verification-status unverified" style="
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 16px;
+                    border-radius: 8px;
+                    margin-bottom: 16px;
+                    background: #fef3c7;
+                    border: 1px solid #f59e0b;
+                    color: #92400e;
+                ">
+                    <span style="font-size: 20px; font-weight: bold;">⚠</span>
+                    <div>
+                        <span style="font-weight: 600; font-size: 1rem;">Account Not Verified</span>
+                        <small style="display: block; font-size: 0.875rem; margin-top: 4px; opacity: 0.8;">
+                            Please verify your email to access all features
+                        </small>
+                    </div>
+                </div>
+            `;
+            
+            // Show verify button and benefits if account is not verified
+            if (verifyAccountBtn) {
+                verifyAccountBtn.style.display = 'inline-flex';
+            }
+            if (benefitsDiv) {
+                benefitsDiv.style.display = 'block';
+            }
+        }
+    }
+
+    // Request medical record button
     if (requestRecordBtn) {
         requestRecordBtn.addEventListener('click', async function() {
             if (!confirm('Request your medical records?')) return;
@@ -116,14 +196,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const data = await response.json();
                 if (data.success) {
-                    alert('Medical record request submitted!');
+                    showAlert('Medical record request submitted!', 'success', 'formAlert');
                     requestRecordBtn.textContent = 'Request Sent';
                     requestRecordBtn.disabled = true;
                 } else {
-                    alert('Request failed: ' + data.message);
+                    showAlert('Request failed: ' + data.message, 'error', 'formAlert');
                 }
             } catch (error) {
-                alert('Request failed. Please try again.');
+                console.error('Request error:', error);
+                showAlert('Request failed. Please try again.', 'error', 'formAlert');
             }
         });
     }
@@ -133,44 +214,48 @@ document.addEventListener('DOMContentLoaded', function() {
             patientName.textContent = message;
             patientName.style.color = 'red';
         }
-        alert(message);
+        if (typeof showAlert === 'function') {
+            showAlert(message, 'error', 'formAlert');
+        } else {
+            alert(message);
+        }
     }
 });
 
-
-
+// Logout functionality
 document.addEventListener('DOMContentLoaded', function() {
     const logoutBtn = document.getElementById('logoutBtn');
     
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async function(e) {
-            e.preventDefault(); // Prevent default button behavior
+            e.preventDefault();
             
             try {
                 const response = await fetch('/logout', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        // Include authorization header if you're using tokens
                         'Authorization': `Bearer ${localStorage.getItem('token') || ''}` 
                     },
-                    credentials: 'include' // Include cookies if using session-based auth
+                    credentials: 'include'
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data.message); // Should log "Logged Out"
+                    console.log(data.message);
                     
-                    // Clear any stored tokens
+                    // Clear stored data
                     localStorage.removeItem('token');
                     sessionStorage.removeItem('token');
                     localStorage.removeItem('userId');
                     sessionStorage.removeItem('userId');
+                    localStorage.removeItem('updateType');
 
-                    // Show success alert using your existing alert.js
-                    showAlert('Successfully logged out! Redirecting...', 'success', 'formAlert');
+                    // Show success alert
+                    if (typeof showAlert === 'function') {
+                        showAlert('Successfully logged out! Redirecting...', 'success', 'formAlert');
+                    }
                     
-                    // Redirect to login page after showing the alert (2 second delay)
                     setTimeout(() => {
                         window.location.href = '/frontend/patient/html/login.html';
                     }, 2000);
@@ -180,8 +265,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } catch (error) {
                 console.error('Logout error:', error);
-                // Use your alert.js instead of browser alert
-                showAlert('Logout failed. Please try again.', 'error', 'formAlert');
+                if (typeof showAlert === 'function') {
+                    showAlert('Logout failed. Please try again.', 'error', 'formAlert');
+                } else {
+                    alert('Logout failed. Please try again.');
+                }
             }
         });
     }

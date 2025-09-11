@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Verification - Brgy. Manuyo Uno Health Center</title>
+    <link rel="icon" type="image/webp" href="/frontend/image/logo.webp">
+    
+    <link rel="stylesheet" href="/frontend/patient/navigation.css">
+    <link rel="stylesheet" href="/frontend/patient/alert.css">
+    <link rel="stylesheet" href="/frontend/patient/footer.css">
+    <link rel="stylesheet" href="/frontend/patient/accVerification.css">
+    
+    <script src="/Back-end/patient/Js/alert.js" defer></script>
+    <script src="/Back-end/patient/Js/navigation.js" defer></script>
+    <script src="/Back-end/patient/Js/accVerification.js" defer></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo-container" id="logoContainer">
+                <img src="/frontend/image/logo.webp" alt="Logo" class="logo" />
+                <span class="brand-name">Barangay Manuyo Uno <br> Health Center</span>
+            </div>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/frontend/patient/html/about.html" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="/frontend/patient/html/services.html" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="/frontend/patient/html/contactus.html" class="nav-link">Contact Us</a></li>
+                <li class="nav-item">
+                    <a href="/frontend/patient/html/login.html" class="nav-link">Login</a>
+                </li>
+            </ul>
+            
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="verification-container">
+        <div class="verification-card">
+            <div class="logo-section">
+                <img src="/frontend/image/logo.webp" alt="Health Center Logo">
+                <div class="brand-name">Barangay Manuyo Uno<br>Health Center</div>
+            </div>
+
+            <div class="verification-header">
+                <h1 class="verification-title">Verify Your Account</h1>
+                <p class="verification-subtitle">
+                    We've sent a 6-digit verification code to your email address.
+                </p>
+                <div class="email-display" id="emailDisplay">
+                    Loading email...
+                </div>
+            </div>
+
+            <div id="statusMessage" class="status-message" style="display: none;"></div>
+
+            <div class="otp-section">
+                <div class="otp-inputs">
+                    <input type="text" class="otp-input" maxlength="1" id="otp1" />
+                    <input type="text" class="otp-input" maxlength="1" id="otp2" />
+                    <input type="text" class="otp-input" maxlength="1" id="otp3" />
+                    <input type="text" class="otp-input" maxlength="1" id="otp4" />
+                    <input type="text" class="otp-input" maxlength="1" id="otp5" />
+                    <input type="text" class="otp-input" maxlength="1" id="otp6" />
+                </div>
+
+                <div class="timer-section">
+                    <div class="timer" id="timer">02:00</div>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">
+                        Time remaining to enter OTP
+                    </p>
+                </div>
+            </div>
+
+            <button id="verifyBtn" class="button verify-btn">
+                Verify Account
+            </button>
+
+            <button id="resendBtn" class="button resend-btn" disabled>
+                Resend Code
+            </button>
+
+            <div style="margin-top: 1.5rem;">
+                <a href="/frontend/patient/html/profile.html" class="back-link">
+                    ← Back to Profile
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="formAlert" class="alert"></div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="copyright">
+                <img src="/frontend/image/copyright.webp" alt="">
+                2025 Barangay Manuyo Uno All rights reserved.
+            </div>
+            <div class="location">
+                <h4>Location</h4>
+                <div class="loc-info">
+                    <img src="/frontend/image/map.webp" alt="Location icon">
+                    <p>123 Manuyo Uno, Las Piñas,<br> Metro Manila, Philippines</p>
+                </div>
+            </div>
+            <div class="Contact">
+                <h4>Contact Us</h4>
+                <div class="cont-info">
+                    <img src="/frontend/image/phone.webp" alt="Contact icon">
+                    <p>+1 1234 567819</p>
+                </div>
+            </div>
+            <div class="Socials">
+                <h4>Socials</h4>
+                <div class="social-icons">
+                    <a href="#"><img src="/frontend/image/facebook.webp" alt=""></a>
+                    <a href="#"><img src="/frontend/image/gmail.webp" alt=""></a>
+                </div>
+            </div>
+            <div class="Hours">
+                <h4>Hours</h4>
+                <div class="Hours-info">
+                    <img src="/frontend/image/clock.webp" alt="Contact icon">
+                    <p>Open Hours: Mon-Fri 8AM–5PM<br>Saturday – Sunday: Closed</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
