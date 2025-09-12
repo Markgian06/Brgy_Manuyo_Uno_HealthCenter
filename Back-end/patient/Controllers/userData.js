@@ -95,7 +95,14 @@ export const checkAuth = async (req, res) => {
   
       if (!user) return res.json({ loggedIn: false });
   
-      res.json({ loggedIn: true, user });
+      res.json({
+        loggedIn: true,
+        user: {
+          _id: user._id,
+          email: user.email,
+          isAccountVerified: user.isAccountVerified
+        }
+      });
     } catch (error) {
       console.error("Auth check error:", error);
       res.json({ loggedIn: false });

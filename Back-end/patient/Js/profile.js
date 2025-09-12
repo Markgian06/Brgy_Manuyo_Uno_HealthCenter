@@ -1,6 +1,6 @@
-// Enhanced Profile.js with Account Verification
+// Enhanced Profile.js with Account Verification (cookie/session-based only)
 document.addEventListener('DOMContentLoaded', function() {
-    // Get DOM elements
+    // DOM elements
     const patientName = document.getElementById('patientName');
     const patientId = document.getElementById('patientId');
     const patientAge = document.getElementById('patientAge');
@@ -10,18 +10,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const updateEmailPhoneBtn = document.getElementById('updateEmailPhone');
     const updatePasswordBtn = document.getElementById('updatePassword');
     const requestRecordBtn = document.getElementById('requestRecordBtn');
-    
-    // Account verification elements
+
+    // Verification UI
     const verificationStatusDiv = document.getElementById('verificationStatus');
     const verifyAccountBtn = document.getElementById('verifyAccountBtn');
 
-    // Make email and password fields read-only
+    // Lock email & password fields
     if (emailPhoneInput) {
         emailPhoneInput.readOnly = true;
         emailPhoneInput.style.backgroundColor = '#f3f4f6';
         emailPhoneInput.style.cursor = 'not-allowed';
     }
-    
     if (passwordInput) {
         passwordInput.readOnly = true;
         passwordInput.style.backgroundColor = '#f3f4f6';
@@ -31,104 +30,74 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listeners for update buttons
     if (updateEmailPhoneBtn) {
-        updateEmailPhoneBtn.addEventListener('click', function(e) {
+        updateEmailPhoneBtn.addEventListener('click', e => {
             e.preventDefault();
             localStorage.setItem('updateType', 'email');
             window.location.href = '/frontend/patient/html/updateGmail.html';
         });
     }
-    
     if (updatePasswordBtn) {
-        updatePasswordBtn.addEventListener('click', function(e) {
+        updatePasswordBtn.addEventListener('click', e => {
             e.preventDefault();
             localStorage.setItem('updateType', 'password');
             window.location.href = '/frontend/patient/html/forgetpassword.html';
         });
     }
 
+    // Verify account navigation
     if (verifyAccountBtn) {
-        verifyAccountBtn.addEventListener('click', function(e) {
+        verifyAccountBtn.addEventListener('click', e => {
             e.preventDefault();
-            
-            // Debug: Check if userId exists before navigating
-            const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId');
-            console.log('UserId before navigation:', userId);
-            
-            if (!userId) {
-                alert('Session expired. Please log in again.');
-                window.location.href = '/frontend/patient/html/login.html';
-                return;
-            }
-            
             window.location.href = '/frontend/patient/html/accVerification.html';
         });
     }
-    // Load profile when page loads
+
+    // Load profile immediately
     loadProfile();
 
     async function loadProfile() {
         try {
-            let userId = localStorage.getItem('userId') || sessionStorage.getItem('userId');
-            let response;
-            
-            if (userId) {
-                response = await fetch(`/profile/${userId}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-            } else {
-                response = await fetch('/profile', {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-            }
-            
+            // ✅ No localStorage.userId — rely only on cookie
+            const response = await fetch('/profile', {
+                method: 'GET',
+                credentials: 'include', // important: send cookie!
+                headers: { 'Content-Type': 'application/json' }
+            });
+
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                throw new Error(`HTTP ${response.status}`);
             }
 
             const data = await response.json();
 
             if (data.success) {
-                // Populate all the profile fields
+                // Populate profile fields
                 if (patientName) patientName.textContent = data.data.fullName || 'N/A';
                 if (patientId) patientId.textContent = data.data.patientID || 'N/A';
                 if (patientAge) patientAge.textContent = data.data.age || 'N/A';
                 if (patientGender) patientGender.textContent = data.data.gender || 'N/A';
-                
-                // Show email in the read-only field
+
                 if (emailPhoneInput) {
                     emailPhoneInput.value = data.data.email || data.data.contactNum || 'Not provided';
                 }
-                
+
                 // Update verification status
                 updateVerificationStatus(data.data.isAccountVerified);
-                
-                // Store userId for future requests if we didn't have it
-                if (!userId && data.data.userId) {
-                    localStorage.setItem('userId', data.data.userId);
-                }
-                
             } else {
                 showError('Failed to load profile: ' + data.message);
             }
-
-        } catch (error) {
-            console.error('Profile load error:', error);
-            showError('Cannot connect to server. Please try again.');
+        } catch (err) {
+            console.error('Profile load error:', err);
+            showError('Session expired. Please log in again.');
+            setTimeout(() => {
+                window.location.href = '/frontend/patient/html/login.html';
+            }, 2000);
         }
     }
 
     function updateVerificationStatus(isVerified) {
         if (!verificationStatusDiv) return;
-        
+
         if (isVerified) {
             verificationStatusDiv.innerHTML = `
                 <div class="verification-status verified">
@@ -136,11 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span class="status-text">Account Verified</span>
                 </div>
             `;
-            
-            // Hide verify button if account is verified
-            if (verifyAccountBtn) {
-                verifyAccountBtn.style.display = 'none';
-            }
+            if (verifyAccountBtn) verifyAccountBtn.style.display = 'none';
         } else {
             verificationStatusDiv.innerHTML = `
                 <div class="verification-status unverified">
@@ -149,32 +114,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     <small class="status-note">Please verify your email to access all features</small>
                 </div>
             `;
-            
-            // Show verify button if account is not verified
             if (verifyAccountBtn) {
                 verifyAccountBtn.style.display = 'inline-block';
-                verifyAccountBtn.innerHTML = `
-                    <span class="btn-icon">📧</span>
-                    Verify Account
-                `;
+                verifyAccountBtn.innerHTML = `<span class="btn-icon">📧</span> Verify Account`;
             }
         }
     }
 
-    // Request medical record button
+    // Request medical record
     if (requestRecordBtn) {
         requestRecordBtn.addEventListener('click', async function() {
             if (!confirm('Request your medical records?')) return;
-
             try {
                 const response = await fetch('/api/patient/profile/request-medical-record', {
                     method: 'POST',
                     credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Content-Type': 'application/json' }
                 });
-
                 const data = await response.json();
                 if (data.success) {
                     showAlert('Medical record request submitted!', 'success', 'formAlert');
@@ -183,8 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     showAlert('Request failed: ' + data.message, 'error', 'formAlert');
                 }
-            } catch (error) {
-                console.error('Request error:', error);
+            } catch (err) {
+                console.error('Request error:', err);
                 showAlert('Request failed. Please try again.', 'error', 'formAlert');
             }
         });
@@ -203,54 +159,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Logout functionality
+// Logout
 document.addEventListener('DOMContentLoaded', function() {
     const logoutBtn = document.getElementById('logoutBtn');
-    
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async function(e) {
             e.preventDefault();
-            
             try {
                 const response = await fetch('/logout', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token') || ''}` 
-                    },
-                    credentials: 'include'
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' }
                 });
-
                 if (response.ok) {
-                    const data = await response.json();
-                    console.log(data.message);
-                    
-                    // Clear stored data
-                    localStorage.removeItem('token');
-                    sessionStorage.removeItem('token');
-                    localStorage.removeItem('userId');
-                    sessionStorage.removeItem('userId');
-                    localStorage.removeItem('updateType');
-
-                    // Show success alert
+                    localStorage.clear();
+                    sessionStorage.clear();
                     if (typeof showAlert === 'function') {
                         showAlert('Successfully logged out! Redirecting...', 'success', 'formAlert');
                     }
-                    
                     setTimeout(() => {
                         window.location.href = '/frontend/patient/html/login.html';
                     }, 2000);
-                    
                 } else {
                     throw new Error('Logout failed');
                 }
-            } catch (error) {
-                console.error('Logout error:', error);
-                if (typeof showAlert === 'function') {
-                    showAlert('Logout failed. Please try again.', 'error', 'formAlert');
-                } else {
-                    alert('Logout failed. Please try again.');
-                }
+            } catch (err) {
+                console.error('Logout error:', err);
+                alert('Logout failed. Please try again.');
             }
         });
     }
