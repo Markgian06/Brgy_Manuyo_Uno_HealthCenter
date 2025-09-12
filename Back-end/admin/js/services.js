@@ -109,15 +109,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     card.querySelector(".post-actions").innerHTML = `
       <button class="action-btn save" onclick="saveInlineEdit('${id}')">
-        💾 Save
+         Save
       </button>
       <button class="action-btn cancel" onclick="cancelInlineEdit('${id}')">
-        ❌ Cancel
+         Cancel
       </button>
     `;
   };
 
-  // Cancel inline edit → reload posts
   window.cancelInlineEdit = function (id) {
     renderPosts(allPosts);
   };
