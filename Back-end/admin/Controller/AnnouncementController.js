@@ -21,11 +21,14 @@ export const createAnnouncement = async (req, res) => {
 
 
 export const updateAnnouncement = async (req, res) => {
-  const { type } = req.body;
+  const { text, type } = req.body;
   const announcement = await Announcement.findById(req.params.id);
 
   if (announcement) {
+    announcement.text = text || announcement.text;
     announcement.type = type || announcement.type;
+    announcement.updatedAt = new Date(); 
+
     const updated = await announcement.save();
     res.json(updated);
   } else {
