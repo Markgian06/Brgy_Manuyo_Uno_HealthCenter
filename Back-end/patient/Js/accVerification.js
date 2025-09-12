@@ -129,6 +129,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (!data.success) throw new Error(data.message);
 
             showStatus('Verification code sent to your email.', 'success');
+            alert('✅ Verification code has been sent to your email!');
             startTimer();
 
         } catch (err) {
@@ -156,6 +157,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (!data.success) throw new Error(data.message);
 
             showStatus('Account verified successfully! Redirecting...', 'success');
+            alert('✅ Successfully Verify Account');
             setTimeout(() => {
                 window.location.href = '/frontend/patient/html/profile.html';
             }, 2000);
