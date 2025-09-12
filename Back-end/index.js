@@ -4,8 +4,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import functionRouter from './patient/Routes/functionRoutes.js';
 import dbConnection from './patient/Controllers/dbConnection.js';
-import contactRoutes from './patient/Routes/contactRoutes.js';
-import appointmentRoutes from './patient/Routes/appointmentRoutes.js';
+import contactRoutes from './patient/routes/contactRoutes.js';
+import appointmentRoutes from './patient/routes/appointmentRoutes.js';
 import userRouter from './patient/routes/userRoute.js';
 import path from 'path';
 
