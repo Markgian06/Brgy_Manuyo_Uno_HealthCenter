@@ -404,79 +404,64 @@ export const sendResetOtp = async (req, res) => {
 };
 
 
-export const resetPassword = async (req, res) =>{
-    const validationRules = [
-        // Updated to accept 'identifier' which can be email or contact number
-        body('identifier')
-            .notEmpty().withMessage('Email or Contact Number is required')
-            .custom(value => {
-                const isEmail = value.includes('@');
-                const isPhoneNumber = /^\d+$/.test(value);
-                if (!isEmail && !isPhoneNumber) {
-                    throw new Error('Invalid email or contact number format');
-                }
-                return true;
-            }),
-        body('otp').notEmpty().withMessage('OTP is required').isString(),
-        body('newPassword')
-            .notEmpty().withMessage('New Password is required')
-            .isLength({min: 8}).withMessage('Password must be at least 8 characters long')
-            .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
-            .matches(/[!@#$%^&*()\-+_=<>?]/).withMessage('Password must contain at least one special character'),
-        // Added a new field for confirm password to avoid logical error
-        body('confirmNewPassword')
-            .custom((value, { req }) => {
-                if (value !== req.body.newPassword) {
-                    throw new Error('Confirm new password does not match new password');
-                }
-                return true;
-            }),
-    ];
 
-    await Promise.all(validationRules.map(rule => rule.run(req)));
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-       return sendErrorResponse(res, 400, errors.array()[0].msg);
+export const resetPassword = async (req, res) => {
+    const { identifier, otp, newPassword, confirmNewPassword } = req.body;
+  
+    // Validate password
+    if (!newPassword || !confirmNewPassword) {
+      return sendErrorResponse(res, 400, "New password and confirm password are required");
     }
-
-    // Now using 'identifier' which can be email or phone number
-    const {identifier, otp, newPassword} = req.body;
-
+    if (newPassword !== confirmNewPassword) {
+      return sendErrorResponse(res, 400, "Passwords do not match");
+    }
+    if (newPassword.length < 8) {
+      return sendErrorResponse(res, 400, "Password must be at least 8 characters long");
+    }
+    if (!/[A-Z]/.test(newPassword)) {
+      return sendErrorResponse(res, 400, "Password must contain at least one uppercase letter");
+    }
+    if (!/[!@#$%^&*()\-+_=<>?]/.test(newPassword)) {
+      return sendErrorResponse(res, 400, "Password must contain at least one special character");
+    }
+  
     try {
-        const isEmail = identifier.includes('@');
-        let user;
-
-        if (isEmail) {
-            user = await signUpModels.findOne({email: identifier});
-        } else {
-            user = await signUpModels.findOne({contactNum: identifier});
-        }
-
-        if (!user) {
-            return sendErrorResponse(res, 404, 'User not found');
-        }
-
-        if (user.resetOTP === "" || user.resetOTP !== otp) {
-            return sendErrorResponse(res, 400, 'Invalid OTP');
-        }
-
-        if (user.resetOTPExpireAt < Date.now()) {
-            return sendErrorResponse(res, 400, 'OTP Expired');
-        }
-
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.password = hashedPassword;
-        user.resetOTP = '';
-        user.resetOTPExpireAt = 0;
-
-        await user.save();
-
-        return res.json({success: true, message: "Password has been reset successfully"});
+      const isEmail = identifier.includes('@');
+      let user;
+  
+      if (isEmail) {
+        user = await signUpModels.findOne({ email: identifier });
+      } else {
+        user = await signUpModels.findOne({ contactNum: identifier });
+      }
+  
+      if (!user) {
+        return sendErrorResponse(res, 404, "User not found");
+      }
+  
+      if (!user.resetOTP || user.resetOTP !== otp) {
+        return sendErrorResponse(res, 400, "Invalid OTP");
+      }
+  
+      if (user.resetOTPExpireAt < Date.now()) {
+        return sendErrorResponse(res, 400, "OTP expired");
+      }
+  
+      // Hash and save new password
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
+      user.resetOTP = '';
+      user.resetOTPExpireAt = 0;
+  
+      await user.save();
+  
+      return res.json({ success: true, message: "Password reset successful" });
     } catch (error) {
-        console.error("Reset Password error:", error);
-        return sendErrorResponse(res, 500, 'Internal server error');
+      console.error("Reset Password error:", error);
+      return sendErrorResponse(res, 500, "Internal server error");
     }
-};
+  };
+  
 
 
 
@@ -599,3 +584,42 @@ export const sendUpdateGmailOtp = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
+
+
+
+export const verifyResetOtp = async (req, res) => {
+    const { identifier, otp } = req.body;
+  
+    if (!identifier || !otp) {
+      return sendErrorResponse(res, 400, "Identifier and OTP are required");
+    }
+  
+    try {
+      const isEmail = identifier.includes('@');
+      let user;
+  
+      if (isEmail) {
+        user = await signUpModels.findOne({ email: identifier });
+      } else {
+        user = await signUpModels.findOne({ contactNum: identifier });
+      }
+  
+      if (!user) {
+        return sendErrorResponse(res, 404, "User not found");
+      }
+  
+      if (!user.resetOTP || user.resetOTP !== otp) {
+        return sendErrorResponse(res, 400, "Invalid OTP");
+      }
+  
+      if (user.resetOTPExpireAt < Date.now()) {
+        return sendErrorResponse(res, 400, "OTP expired");
+      }
+  
+      // Do not reset password here, just confirm OTP is correct
+      return res.json({ success: true, message: "OTP verified successfully" });
+    } catch (error) {
+      console.error("Verify OTP error:", error);
+      return sendErrorResponse(res, 500, "Internal server error");
+    }
+  };

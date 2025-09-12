@@ -39,6 +39,10 @@ app.get("/frontend/patient/html/updateGmail.html", userToken, (req, res) => {
   res.sendFile(path.resolve(__dirname, "../frontend/patient/html/updateGmail.html"));
 });
 
+app.get("/frontend/patient/html/updateGmail.html", userToken, (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/patient/html/accVerification.html"));
+});
+
 app.use('/frontend', express.static('frontend'));
 app.use('/Back-end', express.static('Back-end'));
 app.use(functionRouter);

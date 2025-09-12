@@ -50,7 +50,7 @@ export const getPatientProfile = async (req, res) => {
 
         // Find user by MongoDB _id
         const patient = await signUpModels.findById(userId)
-            .select('patientID firstName lastName birthDate age gender email contactNum');
+        .select('patientID firstName lastName birthDate age gender email contactNum isAccountVerified');
 
         if (!patient) {
             return res.status(404).json({ 
@@ -69,7 +69,9 @@ export const getPatientProfile = async (req, res) => {
             age: patient.age,
             gender: patient.gender,
             email: patient.email,
-            contactNum: patient.contactNum
+            contactNum: patient.contactNum,
+            isAccountVerified: patient.isAccountVerified
+
         };
 
         res.status(200).json({
