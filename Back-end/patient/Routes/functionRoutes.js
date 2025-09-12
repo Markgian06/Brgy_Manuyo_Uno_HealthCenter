@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import { signup, signin, logout, sendVerifyOtp, verifyEmail,
-     isAuthenticated, sendResetOtp, resetPassword, logged, updateGmail, sendUpdateGmailOtp } 
+     isAuthenticated, sendResetOtp, resetPassword, logged, updateGmail, sendUpdateGmailOtp, verifyResetOtp } 
 from '../Controllers/functionController.js';
 import uploads from '../Middleware/uploads.js';
 import userToken from '../Middleware/userToken.js';
@@ -47,6 +47,7 @@ functionRouter.post('/verifyEmail', userToken, verifyEmail);
 functionRouter.post('/is-auth', userToken, isAuthenticated);
 functionRouter.post('/sendResetOtp', sendResetOtp);
 functionRouter.post('/resetPassword', resetPassword);
+functionRouter.post('/verifyResetOtp', verifyResetOtp);
 functionRouter.post("/is-logged", logged);
 functionRouter.post("/updateGmail", userToken, updateGmail);
 functionRouter.post("/sendUpdateGmailOtp", userToken, sendUpdateGmailOtp);

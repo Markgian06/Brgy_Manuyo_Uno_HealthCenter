@@ -3,45 +3,65 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Update Gmail</title>
+   <title>Update Email - Brgy. Manuyo Uno Health Center</title>
+   <link rel="icon" type="image/webp" href="/frontend/image/logo.webp">
+
+   <link rel="stylesheet" href="/frontend/patient/alert.css">
    <link rel="stylesheet" href="/frontend/patient/updateGmail.css">
+   <script src="/Back-end/patient/Js/alert.js" defer></script>
    <script src="/Back-end/patient/Js/updateGmail.js" defer></script>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <section class="FP">
-    <div class="form-container">
-      <h2>Update Gmail</h2>
 
-      <!-- Step 1: Enter new Gmail -->
-      <form id="gmail-form" class="w-full">
-        <div class="input-group">
-          <div class="input-wrapper">
-              <label for="newGmail">New Gmail:</label>
-              <input type="email" id="newGmail" name="newGmail" required>
-          </div>
-        </div>
-        <button type="submit" class="submit-btn">SEND OTP</button>
-      </form>
-      <a href="/frontend/patient/html/profile.html">Back to profile</a>
-      <!-- Step 2: Verify OTP -->
-      <form id="otp-form" class="w-full hidden">
-        <div class="input-group">
-          <div class="input-wrapper">
-              <label for="otp">Enter OTP:</label>
-              <input type="text" id="otp" name="otp" required>
-          </div>
-        </div>
-        <button type="submit" class="submit-btn">VERIFY & UPDATE</button>
-      </form>
+  <div class="container">
+    <h2>Update Your Email</h2>
 
-      <div id="message-box" class="message-box hidden">
-        <div class="message-content">
-          <h3 id="message-title"></h3>
-          <p id="message-text"></p>
-          <button id="close-message">OK</button>
-        </div>
+    <!-- Step 1: Enter New Email -->
+    <form id="gmail-form" class="form-step">
+      <div class="step-info">
+        Enter your new email address to receive a verification code.
       </div>
+      <div class="input-wrapper">
+        <label for="newGmail">New Email Address</label>
+        <input type="email" id="newGmail" name="newGmail" placeholder="Enter your new email address" required>
+      </div>
+      <button type="submit" class="submit-btn">Send OTP</button>
+    </form>
+
+    <!-- Step 2: Enter OTP -->
+    <form id="otp-form" class="form-step hidden">
+      <div class="step-info">
+        Enter the 6-digit verification code sent to your new email address.
+      </div>
+      
+      <div class="otp-container">
+        <input type="text" maxlength="1" class="otp-input" required>
+        <input type="text" maxlength="1" class="otp-input" required>
+        <input type="text" maxlength="1" class="otp-input" required>
+        <input type="text" maxlength="1" class="otp-input" required>
+        <input type="text" maxlength="1" class="otp-input" required>
+        <input type="text" maxlength="1" class="otp-input" required>
+      </div>
+
+      <button type="submit" class="submit-btn">Verify & Update</button>
+    </form>
+
+    <!-- Back link -->
+    <div class="backtologin">
+      <a href="/frontend/patient/html/profile.html">Back to Profile</a>
     </div>
-  </section>
+  </div>
+
+  <!-- Message Box -->
+  <div id="message-box" class="hidden">
+    <div class="message-content">
+      <h3 id="message-title"></h3>
+      <p id="message-text"></p>
+      <button id="close-message">Close</button>
+    </div>
+  </div>
+  <div id="formAlert" class="alert"></div>
+
 </body>
 </html>

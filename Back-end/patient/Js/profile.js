@@ -79,6 +79,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (emailPhoneInput) {
                     emailPhoneInput.value = data.data.email || data.data.contactNum || 'Not provided';
+
+                    if (data.data.isAccountVerified) {
+                        patientName.innerHTML += ` 
+                            <span style="color:#1DA1F2; font-size:16px; margin-left:6px;" title="Verified">
+                                ☑️
+                            </span>`;
+                    }
                 }
 
                 // Update verification status
@@ -98,27 +105,27 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateVerificationStatus(isVerified) {
         if (!verificationStatusDiv) return;
 
-        if (isVerified) {
-            verificationStatusDiv.innerHTML = `
-                <div class="verification-status verified">
-                    <span class="status-icon">✓</span>
-                    <span class="status-text">Account Verified</span>
-                </div>
-            `;
-            if (verifyAccountBtn) verifyAccountBtn.style.display = 'none';
-        } else {
-            verificationStatusDiv.innerHTML = `
-                <div class="verification-status unverified">
-                    <span class="status-icon">⚠</span>
-                    <span class="status-text">Account Not Verified</span>
-                    <small class="status-note">Please verify your email to access all features</small>
-                </div>
-            `;
-            if (verifyAccountBtn) {
-                verifyAccountBtn.style.display = 'inline-block';
-                verifyAccountBtn.innerHTML = `<span class="btn-icon">📧</span> Verify Account`;
-            }
+  if (isVerified) {
+        verificationStatusDiv.innerHTML = `
+            <div class="verification-status verified" style="color:green; font-weight:bold;">
+                <span class="status-icon">✅</span>
+                <span class="status-text">Account Verified</span>
+            </div>
+        `;
+        if (verifyAccountBtn) verifyAccountBtn.style.display = 'none';
+    } else {
+        verificationStatusDiv.innerHTML = `
+            <div class="verification-status unverified" style="color:red;">
+                <span class="status-icon">⚠</span>
+                <span class="status-text">Account Not Verified</span>
+                <small class="status-note">Please verify your email to access all features</small>
+            </div>
+        `;
+        if (verifyAccountBtn) {
+            verifyAccountBtn.style.display = 'inline-block';
+            verifyAccountBtn.innerHTML = `<span class="btn-icon">📧</span> Verify Account`;
         }
+    }
     }
 
     // Request medical record
