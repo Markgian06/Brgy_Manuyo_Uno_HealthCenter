@@ -32,30 +32,42 @@
   <div class="content">
     <div class="welcome-card">
       <h2>Welcome Admin!</h2>
-      <p>Remember to check patient notifications daily for updates.</p>
+      <p>Create, Update, and Organize Announcements</p>
     </div>
-    
+          
+         <div class="stats-container">
+            <div class="stats">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">Total Announcements</div>
+            </div>
+            <div class="stats">
+                <div class="stats-number" id="favoriteCount">0</div>
+                <div class="stat-label">Favorites</div>
+            </div>
+            <div class="stats">
+                <div class="stats-number" id="unfavoriteCount">0</div>
+                <div class="stat-label">Unfavorite</div>
+            </div>
+        </div>
 
-       <!-- New post form -->
-    <div class="new-post">
-        <textarea placeholder="Write a new announcement..."></textarea>
-        <button><i class="fas fa-plus"></i> Add Announcement</button>
-    </div>
+        <div class="form-section">
+            <h2><i class="fas fa-plus-circle"></i> CREATE NEW ANNOUNCEMENT</h2>
+            <textarea id="newAnnouncementText" placeholder="Write your announcement here..."></textarea>
+            <button class="btn" onclick="announcementController.create()">
+                <i class="fas fa-paper-plane"></i> Add Announcement
+            </button>
+        </div>
 
-    <!-- Announcements list -->
-        <div class="announcement-card">
-        <div class="announcement-card-header">
-        <p>Another announcement example for testing the layout.</p>
-        <div class="announcement-actions">
-            <button class="btn-update"><i class="fas fa-pen"></i> Update</button>
-            <button class="btn-delete"><i class="fas fa-trash"></i> Delete</button>
-            <select class="favorite-select">
-                <option value="1">⭐ Favorite</option>
-                <option value="0">☆  Remove Favorite</option>
-            </select>
+        <div class="filters">
+          <button class="filter-btn active" onclick="announcementController.filter('all', this)">All</button>
+          <button class="filter-btn" onclick="announcementController.filter('favorite', this)">Favorites</button> 
+          <button class="filter-btn" onclick="announcementController.filter('unfavorite', this)">Unfavorites</button>
         </div>
+
+        <div class="announcements" id="announcementsContainer">
+            <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading Announcements...</div>
+
         </div>
-        </div>
-</div>
+  </div>
 </body>
 </html>
