@@ -82,13 +82,13 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
             const data = await res.json();
 
-            if (!data.loggedIn) {
-                showStatus('Session expired. Please log in again.', 'error');
-                setTimeout(() => {
-                    window.location.href = '/frontend/patient/html/login.html';
-                }, 2000);
-                return;
-            }
+            // if (!data.loggedIn) {
+            //     showStatus('Session expired. Please log in again.', 'error');
+            //     setTimeout(() => {
+            //         window.location.href = '/frontend/patient/html/login.html';
+            //     }, 2000);
+            //     return;
+            // }
             
             userId = data.user._id;   // always reliable
             userEmail = data.user.email;
@@ -110,9 +110,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         } catch (err) {
             console.error('Init error:', err);
             showStatus('Unable to verify session. Please log in again.', 'error');
-            setTimeout(() => {
-                window.location.href = '/frontend/patient/html/login.html';
-            }, 2000);
+            // setTimeout(() => {
+            //     window.location.href = '/frontend/patient/html/login.html';
+            // }, 2000);
         }
     }
 
@@ -158,9 +158,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             showStatus('Account verified successfully! Redirecting...', 'success');
             alert('✅ Successfully Verify Account');
-            setTimeout(() => {
-                window.location.href = '/frontend/patient/html/profile.html';
-            }, 2000);
+            // setTimeout(() => {
+            //     window.location.href = '/frontend/patient/html/profile.html';
+            // }, 2000);
 
         } catch (err) {
             console.error('Verify OTP error:', err);
