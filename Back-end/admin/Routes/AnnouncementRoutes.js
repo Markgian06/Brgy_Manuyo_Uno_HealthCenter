@@ -8,6 +8,7 @@ import {
 
 const router = express.Router();
 
+
 router.route("/")
   .get(getAnnouncements)
   .post(createAnnouncement);
