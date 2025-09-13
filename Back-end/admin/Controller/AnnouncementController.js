@@ -1,10 +1,21 @@
 import Announcement from "../Models/AnnouncementModels.js";
 
-
 export const getAnnouncements = async (req, res) => {
-  const announcements = await Announcement.find({});
-  res.json(announcements);
+  try {
+    const { q } = req.query;
+    let filter = {};
+
+    if (q) {
+      filter = { text: { $regex: q, $options: "i" } };
+    }
+
+    const announcements = await Announcement.find(filter).sort({ createdAt: -1 });
+    res.json({ data: announcements });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching announcements", error });
+  }
 };
+
 
 export const createAnnouncement = async (req, res) => {
   const { text, type } = req.body;
@@ -48,5 +59,3 @@ export const deleteAnnouncement = async (req, res) => {
     throw new Error("Announcement not found");
   }
 };
-
-
