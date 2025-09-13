@@ -1,4 +1,5 @@
 import express from "express";
+import upload from "../Middleware/ServicesUpload.js"; 
 import {
   getPosts,
   createPost,
@@ -8,6 +9,7 @@ import {
 } from "../Controller/ServicesController.js";
 
 const router = express.Router();
+router.post("/", upload.single("image"), createPost);
 
 router.get("/", getPosts);
 router.post("/", createPost);

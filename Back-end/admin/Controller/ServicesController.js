@@ -14,18 +14,40 @@ export const getPosts = async (req, res) => {
 export const createPost = async (req, res) => {
   try {
     const { title, content, category, status } = req.body;
+
     if (!title || !content) {
       return res.status(400).json({ error: "Title and content are required" });
     }
 
-    const newPost = new Post({ title, content, category, status });
-    await newPost.save();
+    let imageBuffer = null;
+    let imageType = null;
 
+    if (req.file) {
+      imageBuffer = req.file.buffer; // multer memory storage
+      imageType = req.file.mimetype;
+    } else if (req.body.imageBase64) {
+      // If you send Base64 string from frontend
+      const base64Data = req.body.imageBase64.split(",")[1];
+      imageBuffer = Buffer.from(base64Data, "base64");
+      imageType = req.body.imageType;
+    }
+
+    const newPost = new Post({
+      title,
+      content,
+      category,
+      status,
+      image: imageBuffer,
+      imageType: imageType,
+    });
+
+    await newPost.save();
     res.status(201).json(newPost);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // UPDATE post
 export const updatePost = async (req, res) => {
@@ -65,15 +87,21 @@ export const deletePost = async (req, res) => {
 export const toggleFavorite = async (req, res) => {
   try {
     const { id } = req.params;
-    const post = await Post.findById(id);
+    console.log("Toggling favorite for:", id);
 
+    const post = await Post.findById(id);
     if (!post) return res.status(404).json({ error: "Post not found" });
+
+    console.log("Before toggle:", post.favorite);
 
     post.favorite = !post.favorite;
     await post.save();
 
+    console.log("After toggle:", post.favorite);
+
     res.json(post);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };

@@ -15,6 +15,8 @@ import userToken from "./patient/Middleware/userToken.js";
 //admin
 import announcementRoutes from "./admin/Routes/AnnouncementRoutes.js";
 import postRoutes from "./admin/Routes/ServicesRoutes.js";
+
+
 const app = express();
 const port = process.env.PORT || 5000;
 const __filename = fileURLToPath(import.meta.url);
