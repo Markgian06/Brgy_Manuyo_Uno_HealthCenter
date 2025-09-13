@@ -5,6 +5,11 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // Reference to User model
+        default: null // Allow null for backwards compatibility
+    },
     firstName: {
         type: String,
         required: true,
@@ -52,6 +57,10 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    doctorName: {
+        type: String,
+        default: '' // Optional field for doctor assignment
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -64,5 +73,9 @@ const appointmentSchema = new mongoose.Schema({
     timestamps: true
 });
 
+// Index for better query performance
+appointmentSchema.index({ userId: 1, createdAt: -1 });
+appointmentSchema.index({ email: 1, createdAt: -1 });
+appointmentSchema.index({ selectedDate: 1, selectedTime: 1 });
 
 export default mongoose.model('Appointment', appointmentSchema);

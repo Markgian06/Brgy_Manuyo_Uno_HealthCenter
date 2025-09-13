@@ -44,7 +44,7 @@ app.get("/frontend/patient/html/updateGmail.html", userToken, (req, res) => {
   res.sendFile(path.resolve(__dirname, "../frontend/patient/html/updateGmail.html"));
 });
 
-app.get("/frontend/patient/html/updateGmail.html", userToken, (req, res) => {
+app.get("/frontend/patient/html/accVerification.html", userToken, (req, res) => {
   res.sendFile(path.resolve(__dirname, "../frontend/patient/html/accVerification.html"));
 });
 

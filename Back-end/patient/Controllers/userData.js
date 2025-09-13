@@ -110,3 +110,96 @@ export const checkAuth = async (req, res) => {
       res.json({ loggedIn: false });
     }
   };
+
+
+  export const authenticateAPI = async (req, res, next) => {
+    const { token } = req.cookies;
+
+    if (!token) {
+        return res.status(401).json({
+            success: false,
+            message: 'Authentication required. Please login.'
+        });
+    }
+
+    try {
+        const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (!tokenDecode.id) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid token'
+            });
+        }
+
+        // Fetch user details from database
+        const user = await signUpModels.findById(tokenDecode.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        if (!user.isAccountVerified) {
+            return res.status(401).json({
+                success: false,
+                message: 'Account not verified'
+            });
+        }
+
+        // Set user data in req.user for API endpoints
+        req.user = {
+            id: user._id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            isAccountVerified: user.isAccountVerified
+        };
+
+        next();
+
+    } catch (error) {
+        console.error('JWT API Authentication error:', error);
+        return res.status(401).json({
+            success: false,
+            message: 'Invalid or expired token'
+        });
+    }
+};
+
+// Optional API authentication (doesn't fail if no token)
+export const optionalAPIAuth = async (req, res, next) => {
+    const { token } = req.cookies;
+
+    if (!token) {
+        // No token, continue without authentication
+        return next();
+    }
+
+    try {
+        const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (tokenDecode.id) {
+            const user = await signUpModels.findById(tokenDecode.id);
+
+            if (user && user.isAccountVerified) {
+                req.user = {
+                    id: user._id,
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    isAccountVerified: user.isAccountVerified
+                };
+            }
+        }
+
+        next();
+
+    } catch (error) {
+        // Token invalid, continue without authentication
+        console.log('Optional auth failed:', error.message);
+        next();
+    }
+};
