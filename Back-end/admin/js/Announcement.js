@@ -94,7 +94,7 @@ const announcementController = {
 
     if (!textEl || !actionsEl || !dateEl) return console.error("Element not found for id:", id);
 
-    textEl.innerHTML = `<input type="text" id="edit-input-${id}" value="${currentText}" style="width: 100%;">`;
+    textEl.innerHTML = `<input type="text" id="edit-input-${id}" value="${currentText}" style="edit-input">`;
 
     actionsEl.innerHTML = `
       <button id="save-btn-${id}">Save</button>

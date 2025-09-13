@@ -1,5 +1,5 @@
 const API_URL = "http://localhost:5000/api/posts";
-let allPosts = []; // store all posts globally
+let allPosts = []; 
 
 document.addEventListener("DOMContentLoaded", () => {
   // Load all posts

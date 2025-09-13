@@ -171,6 +171,22 @@
     background: #fff5f5;
 }
 
+
+    .edit-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    }
+
+    .edit-input:focus {
+    border-color: #0a253f;
+    box-shadow: 0 0 5px rgba(10, 37, 63, 0.4);
+    }
+
+
 .announcement-actions {
     display: flex;
     gap: 10px;
